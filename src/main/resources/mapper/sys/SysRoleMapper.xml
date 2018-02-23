@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cars.plat.sys.dao.SysRoleDao">
+    <!-- 增加角色 -->
+    <insert id="addRole" parameterType="SysRole">
+      insert into DEMO_SYS_ROLE (ROLE_ID,ROLE_CODE,ROLE_NAME,DESCRIPTION,CREATE_USER)
+        VALUES (#{roleId},#{roleCode},#{roleName},#{description},#{createUser})
+    </insert>
+    <!-- 更新角色 -->
+    <update id="updateRole" parameterType="SysRole">
+      update DEMO_SYS_ROLE set
+        ROLE_CODE=#{roleCode},ROLE_NAME=#{roleName},DESCRIPTION=#{description},LAST_MODIFIED_USER=#{lastModifiedUser},LAST_MODIFIED_DATE=#{lastModifiedDate}
+      where ROLE_ID=#{roleId}
+    </update>
+    <!-- 删除角色 -->
+    <delete id="deleteRole" parameterType="String">
+      delete from DEMO_SYS_ROLE where ROLE_ID=#{roleId}
+    </delete>
+    <!-- 用于查询所有角色 -->
+    <select id="listRoleForUser" resultType="SysRole">
+        select * from DEMO_SYS_ROLE order by role_code
+    </select>
+    <!-- 查询所有角色 -->
+    <select id="listRole"  parameterType="SysRole" resultType="SysRole">
+        <include refid="pageStart"></include>
+        select * from DEMO_SYS_ROLE order by role_code
+        <include refid="pageEnd"></include>
+    </select>
+    <select id="count" resultType="Integer">
+        select count(*) from DEMO_SYS_ROLE order by last_modified_date desc
+    </select>
+    <!-- 获取角色信息 -->
+    <select id="getRole" parameterType="String" resultType="SysRole">
+        select * from DEMO_SYS_ROLE where ROLE_ID=#{roleId}
+    </select>
+
+    <sql id="pageStart">
+        select *
+        from (select tmp.*,
+        ROWNUM RN
+        from (
+    </sql>
+    <sql id="pageEnd">
+        ) tmp
+        where ROWNUM &lt;= (#{pageIndex}<![CDATA[*]]>#{pageSize}) )
+        where RN &gt; ((#{pageIndex}-1)<![CDATA[*]]>#{pageSize})
+    </sql>
+</mapper>

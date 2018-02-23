@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cars.plat.sys.dao.SysResourceDao">
+
+    <!-- 查询用户拥有的资源 -->
+    <select id="loadUserResource" parameterType="java.util.HashMap" resultType="SysResource">
+        SELECT re.* FROM DEMO_SYS_RESOURCE re
+              LEFT JOIN DEMO_SYS_ROLE_RESOURCE rr
+                ON re.RESOURCE_ID = rr.RESOURCE_ID
+              LEFT JOIN DEMO_SYS_USER u
+                ON rr.ROLE_ID = u.ROLE_ID
+            WHERE u.USER_ID = #{userId}
+            <if test="parentId!=null">
+                AND re.PARENT_ID = #{parentId}
+            </if>
+            <if test="resourceType!=null">
+                AND re.RESOURCE_TYPE = #{resourceType}
+            </if>
+          ORDER BY display_order
+    </select>
+
+    <!-- 查询所有资源 -->
+    <select id="listResource" parameterType="String" resultType="SysResource">
+      select * from DEMO_SYS_RESOURCE order by DISPLAY_ORDER
+    </select>
+
+    <!-- 根据资源类型查询资源 -->
+    <select id="listResourceByType" parameterType="String" resultType="SysResource">
+        select t.resource_id,
+        t.resource_name,
+        t.parent_id,
+        t.resource_url,
+        t.target,
+        t.icon,
+        t.display_order,
+        t.resource_type,
+        t.description,
+        (select count(*) from DEMO_sys_resource where parent_id = t.resource_id) cnt
+        from DEMO_sys_resource t
+        where resource_type=#{resourceType}
+        order by display_order
+    </select>
+
+    <!-- 根据ID查询资源 -->
+    <select id="getResourceById" parameterType="String" resultType="SysResource">
+        select t.resource_id,
+            t.resource_name,
+            t.parent_id,
+            t.resource_url,
+            t.target,
+            t.icon,
+            t.display_order,
+            t.resource_type,
+            t.description,
+            (select resource_name from DEMO_sys_resource where resource_id = t.parent_id) parent_name
+            from DEMO_sys_resource t
+        where RESOURCE_ID = #{resourceId}
+    </select>
+
+    <!-- 新增资源 -->
+    <insert id="addResource" parameterType="SysResource">
+      insert into DEMO_SYS_RESOURCE (RESOURCE_ID,RESOURCE_NAME,RESOURCE_URL,RESOURCE_TYPE,PARENT_ID,TARGET,ICON,DESCRIPTION,DISPLAY_ORDER)
+        VALUES (#{resourceId},#{resourceName},#{resourceUrl},#{resourceType},#{parentId},#{target},#{icon},#{description},#{displayOrder})
+    </insert>
+
+    <!-- 修改资源 -->
+    <update id="updateResource" parameterType="SysResource">
+      update DEMO_SYS_RESOURCE
+        set RESOURCE_NAME=#{resourceName},RESOURCE_URL=#{resourceUrl},
+            RESOURCE_TYPE=#{resourceType},PARENT_ID=#{parentId},
+            TARGET=#{target},ICON=#{icon},DESCRIPTION=#{description},DISPLAY_ORDER=#{displayOrder}
+        where RESOURCE_ID=#{resourceId}
+    </update>
+
+    <!-- 删除资源 -->
+    <delete id="deleteResource" parameterType="String">
+      delete from DEMO_SYS_RESOURCE where RESOURCE_ID=#{resourceId}
+    </delete>
+</mapper>

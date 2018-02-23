@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cars.plat.sys.dao.SysLogDao">
+    <!-- 插入操作日志 -->
+    <insert id="addLog" parameterType="SysLog">
+      insert into DEMO_SYS_LOG(LOG_ID, USER_NAME, OPERA_IP, OPERA_DATE, OPERA_URL, METHOD_NAME)
+      VALUES (#{logId},#{userName},#{operaIp},to_date(#{operaDate},'yyyy-MM-dd hh24:mi:ss') ,#{operaUrl},#{methodName} )
+    </insert>
+
+
+    <sql id="pageStart">
+        select *
+        from (select tmp.*,
+        ROWNUM RN
+        from (
+    </sql>
+    <sql id="pageEnd">
+        ) tmp
+        where ROWNUM &lt;= (#{pageIndex}<![CDATA[*]]>#{pageSize}) )
+        where RN &gt; ((#{pageIndex}-1)<![CDATA[*]]>#{pageSize})
+    </sql>
+</mapper>
