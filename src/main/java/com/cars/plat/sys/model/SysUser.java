@@ -1,14 +1,20 @@
 package com.cars.plat.sys.model;
 
 import com.cars.plat.util.page.Page;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
  * Created by wangyupeng on 2017/8/18.
  */
 public class SysUser extends Page {
+    @NotEmpty(message = "用户名不允许为空")
     private String userName;//主键,登陆账号，唯一
+    @NotEmpty(message="密码不能为空")
     private String passWord;//密码
     private String oldPassWord;//旧密码
     private String roleId;//角色ID

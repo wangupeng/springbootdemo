@@ -17,10 +17,10 @@ public interface SysUserDao {
 
     /**
      * 删除用户
-     * @param userId
+     * @param userName
      * @return
      */
-    int deleteUser(String userId);
+    int deleteUser(String userName);
 
     /**
      * 修改用户
@@ -50,10 +50,10 @@ public interface SysUserDao {
 
     /**
      * 根据用户ID获取用户信息
-     * @param userId
+     * @param userName
      * @return
      */
-    SysUser getUserByUserId(String userId);
+    //SysUser getUserByuserName(String userName);
     /**
      * 根据用户ID获取用户信息
      * @param userName
@@ -63,17 +63,17 @@ public interface SysUserDao {
 
     /**
      * 锁定用户
-     * @param userId
+     * @param userName
      * @return
      */
-    int lockUser(String userId);
+    int lockUser(String userName);
 
     /**
      * 解锁用户
-     * @param userId
+     * @param userName
      * @return
      */
-    int unlockUser(String userId);
+    int unlockUser(String userName);
 
     /**
      * 重置密码
@@ -86,6 +86,6 @@ public interface SysUserDao {
      * 修改密码
      * @return
      */
-    SysUser getOldPassSalt(String userId);
+    SysUser getOldPassSalt(String userName);
     int updatePassWord(SysUser sysUser);
 }

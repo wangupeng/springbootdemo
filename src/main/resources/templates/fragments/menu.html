@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="menu">
+<aside class="Hui-aside">
+	<div class="menu_dropdown bk_2" id="menu">
+	</div>
+
+	<script type="text/javascript">
+        /*加载菜单*/
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url:'sysResource/loadMenu',
+            dataType:"json",
+            async:false,
+            success: function(data) {
+                var html="",parentId = "";
+                for(var i=0;i<data.length;i++){
+                    if(data[i].parentId=="0"){
+                        parentId = data[i].resourceId;
+
+                        html+="<dl id='menu-system'>"+
+                            "<dt><i class='Hui-iconfont'>&#xe62e;</i>"+data[i].resourceName+"<i class='Hui-iconfont menu_dropdown-arrow'>&#xe6d5;</i></dt><dd><ul class='submenu'>";
+                        for(var j=0;j<data.length;j++){
+                            var resourceUrl = data[j].resourceUrl;
+                            if(data[j].parentId==parentId){
+                                html+="<li id='"+resourceUrl.substr(1,resourceUrl.length)+"'><a href='lm' title='系统设置'>"+data[j].resourceName+"</a></li>";
+                            }
+                        }
+                    }
+                    html+="</li></ul></dd></dl>";
+                }
+                $("#menu").append(html);
+            }
+        });
+        $(function(){
+            $(".submenu li").find("a").click(function() {
+                //当前选择的下标
+                var index = $(this).parent().attr("id");
+                //记录下标
+                jQuery.jCookie('current', index, 30, {
+                    path : '/'
+                });
+            });
+            var current = jQuery.jCookie('current');
+            if (current != null && current != '') {
+                $('.current').removeClass('current').parent().parent().css('display','');;
+                var $current = $(document.getElementById(current));
+                $current.addClass("current").parent().parent().css('display','block').prev().addClass('selected');
+            }
+        });
+	</script>
+</aside>
+<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+</div>
+</body>
+</html>

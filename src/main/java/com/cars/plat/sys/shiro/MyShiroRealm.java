@@ -80,8 +80,7 @@ public class MyShiroRealm extends AuthorizingRealm {
      */
     @Override
     public void clearCachedAuthorizationInfo(PrincipalCollection principalCollection) {
-        SimplePrincipalCollection principals = new SimplePrincipalCollection(
-                principalCollection, getName());
+        SimplePrincipalCollection principals = new SimplePrincipalCollection(principalCollection, getName());
         super.clearCachedAuthorizationInfo(principals);
     }
 

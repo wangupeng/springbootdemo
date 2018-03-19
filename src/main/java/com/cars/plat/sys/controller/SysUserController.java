@@ -77,14 +77,14 @@ public class SysUserController {
 
     /**
      * 修改用户
-     * @param userId
+     * @param userName
      * @return
      */
     @RequestMapping("/toUpdateUser")
-    public ModelAndView toUpdateUser(String userId){
+    public ModelAndView toUpdateUser(String userName){
         ModelAndView mv = new ModelAndView();
         //根据用户ID查询用户信息
-        SysUser sysUser = userService.getUserByUserId(userId);
+        SysUser sysUser = userService.getUserByUserName(userName);
         mv.addObject("sysUser",sysUser);
 
         //查询所有角色
@@ -105,45 +105,45 @@ public class SysUserController {
 
     /**
      * 删除用户
-     * @param userId
+     * @param userName
      * @return
      */
     @RequestMapping("/deleteUser")
-    public String deleteUser(String userId){
-        userService.deleteUser(userId);
+    public String deleteUser(String userName){
+        userService.deleteUser(userName);
         return "redirect:/sysUser";
     }
 
     /**
      * 锁定用户
-     * @param userId
+     * @param userName
      * @return
      */
     @RequestMapping("/lockUser")
-    public String lockUser(String userId){
-        userService.lockUser(userId);
+    public String lockUser(String userName){
+        userService.lockUser(userName);
         return "redirect:/sysUser";
     }
 
     /**
      * 解锁用户
-     * @param userId
+     * @param userName
      * @return
      */
     @RequestMapping("/unlockUser")
-    public String unlockUser(String userId){
-        userService.unlockUser(userId);
+    public String unlockUser(String userName){
+        userService.unlockUser(userName);
         return "redirect:/sysUser";
     }
 
     /**
      * 重置密码
-     * @param userId
+     * @param userName
      * @return
      */
     @RequestMapping("/resetPassWord")
-    public String resetPassWord(String userId){
-        userService.resetPassWord(userId);
+    public String resetPassWord(String userName){
+        userService.resetPassWord(userName);
         return "redirect:/sysUser";
     }
 
@@ -159,7 +159,7 @@ public class SysUserController {
 
         //todo
         /*int n = 0;
-        if(userService.checkOldPassWord(sysUser2.getUserId(),sysUser.getOldPassWord())){
+        if(userService.checkOldPassWord(sysUser2.getuserName(),sysUser.getOldPassWord())){
             n = userService.updatePassWord(sysUser);
             mv.addObject("updatePassSuccess",n);
         }else{

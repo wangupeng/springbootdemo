@@ -37,7 +37,7 @@ public class SysResourceController {
         Map<String,Object> map = new HashMap<>();
         SysUser sysUser = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
         //todo
-//        map.put("userId",sysUser.getUserId());
+//        map.put("userName",sysUser.getuserName());
         List<SysResource> listResource = sysResourceService.listResource();
 
         mv.addObject("listResource",listResource);
@@ -130,8 +130,7 @@ public class SysResourceController {
         Map<String,Object> map = new HashMap<>();
         SysUser sysUser = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
         map.put("resourceType",1);
-        //todo
-//        map.put("userId",sysUser.getUserId());
+        map.put("userName",sysUser.getUserName());
         List<SysResource> resourceList = sysResourceService.loadUserResource(map);
         return resourceList;
     }
@@ -145,7 +144,7 @@ public class SysResourceController {
     public List<SysResource> loadUserResource(){
         Map<String,Object> map = new HashMap<>();
         SysUser sysUser = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
-        map.put("userId",sysUser.getUserId());
+        map.put("userName",sysUser.getuserName());
 
         List<SysResource> resourceList = EhCacheUtil.get("resourceCache", "resources");
         if (resourceList == null) {

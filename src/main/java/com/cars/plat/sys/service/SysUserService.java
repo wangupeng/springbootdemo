@@ -46,10 +46,10 @@ public class SysUserService {
      * @param sysUser
      * @return
      */
-    public List<SysUser> listUserByInner(SysUser sysUser){
+    /*public List<SysUser> listUserByInner(SysUser sysUser){
         List<SysUser> list = userDao.listUserByInner(sysUser);
         return list;
-    }
+    }*/
 
     /**
      * 新增用户
@@ -74,12 +74,12 @@ public class SysUserService {
 
     /**
      * 删除用户
-     * @param userId
+     * @param userName
      * @return
      */
     @Transactional
-    public int deleteUser(String userId){
-        int n = userDao.deleteUser(userId);
+    public int deleteUser(String userName){
+        int n = userDao.deleteUser(userName);
         return n;
     }
 
@@ -101,36 +101,36 @@ public class SysUserService {
 
     /**
      * 锁定用户
-     * @param userId
+     * @param userName
      * @return
      */
     @Transactional
-    public int lockUser(String userId){
-        int n = userDao.lockUser(userId);
+    public int lockUser(String userName){
+        int n = userDao.lockUser(userName);
         return n;
     }
 
     /**
      * 解锁用户
-     * @param userId
+     * @param userName
      * @return
      */
     @Transactional
-    public int unlockUser(String userId){
-        int n = userDao.unlockUser(userId);
+    public int unlockUser(String userName){
+        int n = userDao.unlockUser(userName);
         return n;
     }
 
     /**
      * 重置密码
-     * @param userId
+     * @param userName
      * @return
      */
     @Transactional
-    public int resetPassWord(String userId){
+    public int resetPassWord(String userName){
         SysUser sysUser = new SysUser();
         //todo 重置密码
-//        sysUser.setUserId(userId);
+//        sysUser.setuserName(userName);
         //密码加密，及存储盐值
         sysUser.setPassWord("123456");//设置默认密码
         PasswordHelper passwordHelper = new PasswordHelper();
@@ -143,15 +143,15 @@ public class SysUserService {
 
     /**
      * 判断页面获取的旧密码是否与数据库存储密码相同
-     * @param userId
+     * @param userName
      * @param oldPassWord
      * @return
      */
-    public boolean checkOldPassWord(String userId,String oldPassWord){
+    public boolean checkOldPassWord(String userName,String oldPassWord){
         boolean flag = false;
         if(StringUtil.isNotNullOrEmpty(oldPassWord)){
             //获取数据库存储的密码和盐
-            SysUser sysUser = userDao.getOldPassSalt(userId);
+            SysUser sysUser = userDao.getOldPassSalt(userName);
             //对页面获取的旧密码用数据库查出的盐加密，与数据库查出的密码比较
             PasswordHelper passwordHelper = new PasswordHelper();
             String pOldPassWord = passwordHelper.encryptPasswordWithSalt(oldPassWord,sysUser.getSalt());
@@ -173,7 +173,7 @@ public class SysUserService {
         SysUser sysUser2 = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
         //密码加密，及存储盐值
         //todo 修改密码
-//        sysUser.setUserId(sysUser2.getUserId());
+//        sysUser.setuserName(sysUser2.getuserName());
         PasswordHelper passwordHelper = new PasswordHelper();
         passwordHelper.encryptPassword(sysUser);
 
@@ -183,13 +183,13 @@ public class SysUserService {
 
     /**
      * 通过用户ID获取用户信息
-     * @param userId
+     * @param userName
      * @return
      */
-    public SysUser getUserByUserId(String userId){
-        SysUser sysUser = userDao.getUserByUserId(userId);
+    /*public SysUser getUserByuserName(String userName){
+        SysUser sysUser = userDao.getUserByUserName(userName);
         return sysUser;
-    }
+    }*/
     /**
      * 通过用户名获取用户信息
      * @param userName

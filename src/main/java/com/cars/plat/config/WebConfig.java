@@ -1,21 +1,29 @@
 package com.cars.plat.config;
 
+import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.templateresolver.UrlTemplateResolver;
 
 /**
  * Created by wangyupeng on 2017/8/19.
  */
-@Configuration
+//@Configuration
 public class WebConfig  extends WebMvcConfigurerAdapter {
+    /*@Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        configurer.setUseSuffixPatternMatch(false)
+                .setUseTrailingSlashMatch(true);
+    }*/
     @Bean
-    public FilterRegistrationBean siteMeshFilter(){
-        FilterRegistrationBean fitler = new FilterRegistrationBean();
-        WebSiteMeshFilter siteMeshFilter = new WebSiteMeshFilter();
-        fitler.setFilter(siteMeshFilter);
-        return fitler;
+    public TemplateEngine templateEngine() {
+        TemplateEngine templateEngine = new TemplateEngine();
+        templateEngine.addDialect(new LayoutDialect());
+        return templateEngine;
     }
 }

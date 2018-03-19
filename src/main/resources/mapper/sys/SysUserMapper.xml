@@ -7,9 +7,6 @@
         select u.*,r.role_name from DEMO_SYS_USER u,DEMO_SYS_ROLE r
         where 1=1
         AND u.role_id=r.role_id(+)
-        <if test="userId!= null and userId != '' ">
-            AND u.USER_ID = #{userId}
-        </if>
         <if test="userName!= null and userName != '' ">
             AND u.USER_NAME = #{userName}
         </if>
@@ -30,9 +27,6 @@
         select count(*) from DEMO_SYS_USER u,DEMO_SYS_ROLE r
         where 1=1
         AND u.role_id=r.role_id(+)
-        <if test="userId!= null and userId != '' ">
-            AND u.USER_ID = #{userId}
-        </if>
         <if test="userName!= null and userName != '' ">
             AND u.USER_NAME = #{userName}
         </if>
@@ -57,10 +51,10 @@
         order by  u.company_code,u.REAL_NAME DESC
     </select>
 
-    <!-- 根据用户ID查询用户信息 -->
-    <select id="getUserByUserId" parameterType="String" resultType="SysUser">
-        select * from DEMO_SYS_USER where  USER_ID = #{userId}
-    </select>
+    <!-- 根据用户名查询用户信息
+    <select id="getUserByuserName" parameterType="String" resultType="SysUser">
+        select * from DEMO_SYS_USER where  USER_NAME = #{userName}
+    </select>-->
     <!-- 根据用户名查询用户信息 -->
     <select id="getUserByUserName" parameterType="String" resultType="SysUser">
         select u.*,r.role_name from DEMO_SYS_USER u,DEMO_SYS_ROLE r
@@ -71,14 +65,14 @@
     <!-- 新增用户 -->
     <insert id="addUser" parameterType="SysUser">
         insert into DEMO_SYS_USER
-          (USER_ID,USER_NAME,PASS_WORD,ROLE_ID,SALT,MOBILE,REAL_NAME,CREATE_USER,LAST_MODIFIED_USER)
+          (USER_NAME,PASS_WORD,ROLE_ID,SALT,MOBILE,REAL_NAME,CREATE_USER,LAST_MODIFIED_USER)
         VALUES
-          (#{userId},#{userName},#{passWord},#{roleId},#{salt},#{mobile},#{realName},#{createUser},#{lastModifiedUser})
+          (#{userName},#{passWord},#{roleId},#{salt},#{mobile},#{realName},#{createUser},#{lastModifiedUser})
     </insert>
 
     <!-- 删除用户 -->
     <delete id="deleteUser" parameterType="String">
-        delete from DEMO_SYS_USER where USER_ID=#{userId}
+        delete from DEMO_SYS_USER where USER_NAME=#{userName}
     </delete>
 
     <!-- 更新用户 -->
@@ -86,28 +80,28 @@
         update DEMO_SYS_USER
           set ROLE_ID=#{roleId},REAL_NAME=#{realName},MOBILE=#{mobile},
             LAST_MODIFIED_USER=#{lastModifiedUser},LAST_MODIFIED_DATE=#{lastModifiedDate}
-        where USER_ID=#{userId}
+        where USER_NAME=#{userName}
     </update>
 
     <!-- 锁定用户 -->
     <update id="lockUser" parameterType="String">
-        update DEMO_SYS_USER set STATUS='2' where USER_ID=#{userId}
+        update DEMO_SYS_USER set STATUS='2' where USER_NAME=#{userName}
     </update>
     <!-- 解锁用户 -->
     <update id="unlockUser" parameterType="String">
-        update DEMO_SYS_USER set STATUS='1' where USER_ID=#{userId}
+        update DEMO_SYS_USER set STATUS='1' where USER_NAME=#{userName}
     </update>
     <!-- 重置密码 -->
     <update id="resetPassWord" parameterType="SysUser">
-        update DEMO_SYS_USER set PASS_WORD=#{passWord} where USER_ID=#{userId}
+        update DEMO_SYS_USER set PASS_WORD=#{passWord} where USER_NAME=#{userName}
     </update>
 
     <!-- 修改用户密码 -->
     <select id="getOldPassSalt" parameterType="String" resultType="SysUser">
-      select PASS_WORD,SALT from DEMO_SYS_USER where USER_ID=#{userId}
+      select PASS_WORD,SALT from DEMO_SYS_USER where USER_NAME=#{userName}
     </select>
     <update id="updatePassWord" parameterType="SysUser">
-        update DEMO_SYS_USER set PASS_WORD=#{passWord},SALT=#{salt} where USER_ID=#{userId}
+        update DEMO_SYS_USER set PASS_WORD=#{passWord},SALT=#{salt} where USER_NAME=#{userName}
     </update>
 
     <sql id="pageStart">
