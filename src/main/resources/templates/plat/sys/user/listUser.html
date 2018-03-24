@@ -1,0 +1,160 @@
+﻿<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout}">
+	<head>
+		<title>用户列表</title>
+	</head>
+<body>
+
+<div layout:fragment="content">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> <a href="index" class="maincolor">首页</a>
+		<span class="c-gray en">&gt;</span> 用户管理
+		<span class="c-gray en">&gt;</span> 用户列表
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" >
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<form action="sysUser" method="post" class="form form-horizontal">
+				<div class="text-l" th:object="${sysUser}">
+					用户名：<input type="text" class="input-text" style="width:100px" id="userName" name="userName" th:value="*{userName}">
+					姓名：<input type="text" class="input-text" style="width:100px" id="realName" name="realName" th:value="*{realName}">
+					<button type="submit" class="btn btn-success"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+				</div>
+			</form>
+
+			<div class="cl pd-5 bg-1 bk-gray mt-20">
+				<span class="l">
+					<a href="sysUser/toAddUser" class="btn btn-primary radius"  shiro:hasPermission="/sysUser/delete"><i class="Hui-iconfont">&#xe600;</i> 新增用户</a>
+					<a href="javascript:;" onclick="datadel()" class="btn btn-danger radius" shiro:hasPermission="/sysUser/add"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+				</span>
+			</div>
+
+			<table class="table table-border table-bordered table-hover table-bg table-sort dataTables_wrapper" id="dataTables-smsSendOrder">
+				<thead>
+					<tr class="text-c">
+						<th width="25"><input type="checkbox" name="" value=""></th>
+						<th width="40">序号</th>
+						<th width="80">用户名</th>
+						<th width="100">姓名</th>
+						<th width="80">角色</th>
+						<th width="100">手机号</th>
+						<th width="80">创建用户</th>
+						<th width="100">创建时间</th>
+						<th width="70">状态</th>
+						<th width="100">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="text-c" th:if="${pageInfo.list.empty}">
+						<td colspan="4">无数据</td>
+					</tr>
+					<tr class="text-c" th:each="user,status : ${pageInfo.list}">
+						<td><input type="checkbox" value="2" name=""></td>
+						<td th:text="${status.index+1}"></td>
+						<td th:text="${user.userName}">
+							<u style="cursor:pointer" class="text-primary" onclick="member_show('张三','member-show.html','10001','360','400')"></u>
+						</td>
+						<td th:text="${user.realName}"></td>
+						<td th:text="${user.roleName}"></td>
+						<td th:text="${user.mobile}"></td>
+						<td th:text="${user.createUser}"></td>
+						<td th:text="${#dates.format(user.createDate,'yyyy-MM-dd HH:mm:ss')}"></td><!--th:text="${#dates.format(user.date)}"-->
+						<td class="td-status">
+							<span th:class="${user.status == '1'}?'label label-success radius':'label label-default radius'" th:text="${user.status == '1'}?'正常':'已锁定'"></span>
+						</td>
+						<td class="td-manage">
+							<a title="修改" th:href="@{'sysUser/toUpdateUser?userName='+${user.userName}}" shiro:hasPermission="/sysUser/update"  class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6df;</i></a>
+							<a th:title="${user.status == '1'}?'锁定':'解锁'" th:onclick="${user.status == '1'}?'javascript:lockUser(\''+${user.userName}+'\')':'javascript:unlockUser(\''+${user.userName}+'\')'" shiro:hasPermission="/sysUser/lock" href="javascript:;" data-toggle="tooltip" data-placement="top" style="text-decoration:none">
+								<i class="Hui-iconfont f-16" th:text="${user.status == '1'}?'&#xe60e;':'&#xe605;'"></i>
+							</a>
+							<a title="重置密码" th:onclick="'javascript:resetPassWord(\''+${user.userName}+'\')'" class="ml-5" href="javascript:;" shiro:hasPermission="/sysUser/reset" data-toggle="tooltip" data-placement="top" style="text-decoration:none" >
+								<i class="Hui-iconfont f-16">&#xe63f;</i>
+							</a>
+							<!--<a title="重置密码" onClick="change_password('修改密码','change-password.html','10001','600','270')" class="ml-5" href="javascript:;" style="text-decoration:none" >
+								<i class="Hui-iconfont f-16">&#xe63f;</i>
+							</a>-->
+							<a title="删除" th:onclick="'javascript:deleteUser(\''+${user.userName}+'\')'" href="javascript:;" shiro:hasPermission="/sysUser/delete" class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6e2;</i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+            <div th:replace="fragments/page :: pageNav(${pageInfo})"></div>
+		</article>
+	</div>
+<script type="text/javascript" th:inline="none">
+    $(function(){
+    });
+
+/*管理员-删除*/
+function deleteUser(userName){
+    layer.confirm("确认要删除吗？", {icon: 3, title:'提示'}, function(index){
+        $.post("sysUser/deleteUser",{userName: userName}, function(result) {
+            if(result==1){
+                layer.msg('删除成功!', { icon: 1, time: 1000 },function () {
+                	location.reload();
+                });
+			}else{
+                layer.msg('删除失败!', { icon: 2, time: 1000 },function () {
+                    location.reload();
+                });
+			}
+        });
+    });
+}
+
+/*锁定*/
+function lockUser(userName){
+	layer.confirm('确认要锁定吗？',{icon: 3, title:'提示'},function(index){
+        $.post("sysUser/lockUser",{userName: userName}, function(result) {
+            if(result==1){
+                layer.msg('已锁定!', { icon: 1, time: 1000 },function () {
+                    location.reload();
+                });
+            }else{
+                layer.msg('锁定失败!', { icon: 2, time: 1000 },function () {
+                    location.reload();
+                });
+            }
+        });
+	});
+}
+
+/*解锁*/
+function unlockUser(userName){
+	layer.confirm('确认要解锁吗？',function(index){
+        $.post("sysUser/unlockUser",{userName: userName}, function(result) {
+            if(result==1){
+                layer.msg('已锁定!', { icon: 1, time: 1000 },function () {
+                    location.reload();
+                });
+            }else{
+                layer.msg('锁定失败!', { icon: 2, time: 1000 },function () {
+                    location.reload();
+                });
+            }
+        });
+	});
+}
+
+/*重置密码*/
+function resetPassWord(userName){
+	layer.confirm("确认要重置密码吗？", {icon: 3, title:'提示'}, function(index){
+		$.post("sysUser/resetPassWord",{userName: userName}, function(result) {
+			if(result==1){
+				layer.msg('重置密码成功!', { icon: 1, time: 1000 },function () {
+					location.reload();
+				});
+			}else{
+				layer.msg('重置密码失败!', { icon: 2, time: 1000 },function () {
+					location.reload();
+				});
+			}
+		});
+	});
+}
+</script> 
+</div>
+</body>
+</html>

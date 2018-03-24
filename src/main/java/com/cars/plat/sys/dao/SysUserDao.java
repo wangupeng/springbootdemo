@@ -9,6 +9,11 @@ import java.util.List;
 public interface SysUserDao {
 
     /**
+     * 用户列表
+     * @return
+     */
+    List<SysUser> listUser(SysUser sysUser);
+    /**
      * 新增用户
      * @param sysUser
      * @return
@@ -28,34 +33,9 @@ public interface SysUserDao {
      * @return
      */
     int updateUser(SysUser sysUser);
-    /**
-     * 获取用户信息
-     * @return
-     */
-    List<SysUser> listUser(SysUser sysUser);
 
     /**
-     * 查询总数
-     * @param sysUser
-     * @return
-     */
-    int count(SysUser sysUser);
-
-    /**
-     *
-     * @param sysUser
-     * @return
-     */
-    List<SysUser> listUserByInner(SysUser sysUser);
-
-    /**
-     * 根据用户ID获取用户信息
-     * @param userName
-     * @return
-     */
-    //SysUser getUserByuserName(String userName);
-    /**
-     * 根据用户ID获取用户信息
+     * 根据用户名获取用户信息
      * @param userName
      * @return
      */
@@ -83,9 +63,14 @@ public interface SysUserDao {
     int resetPassWord(SysUser sysUser);
 
     /**
-     * 修改密码
+     * 获取旧密码的盐
+     * @param userName
      * @return
      */
     SysUser getOldPassSalt(String userName);
+    /**
+     * 修改密码
+     * @return
+     */
     int updatePassWord(SysUser sysUser);
 }

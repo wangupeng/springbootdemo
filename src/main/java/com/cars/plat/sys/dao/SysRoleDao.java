@@ -35,12 +35,7 @@ public interface SysRoleDao {
      * 查询角色
      * @return
      */
-    List<SysRole> listRole(SysRole sysRole);
-    /**
-     * 查询角色
-     * @return
-     */
-    List<SysRole> listRoleForUser();
+    List<SysRole> listRole();
 
     /**
      * 查询总数

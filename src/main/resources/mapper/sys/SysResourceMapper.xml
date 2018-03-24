@@ -8,7 +8,7 @@
               LEFT JOIN DEMO_SYS_ROLE_RESOURCE rr
                 ON re.RESOURCE_ID = rr.RESOURCE_ID
               LEFT JOIN DEMO_SYS_USER u
-                ON rr.ROLE_ID = u.ROLE_ID
+                ON rr.ROLE_ID = u.ROLE_CODE
             WHERE u.USER_NAME=#{userName}
             <if test="parentId!=null">
                 AND re.PARENT_ID = #{parentId}

@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout}">
+<head>
+	<title>用户列表</title>
+</head>
+<body>
+<div layout:fragment="content">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> <a href="index" class="maincolor">首页</a>
+		<span class="c-gray en">&gt;</span> 用户管理
+		<span class="c-gray en">&gt;</span> 新增用户
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+	<div class="Hui-article">
+		<article class="cl pd-25">
+			<form action="addUser" method="post" class="form form-horizontal" id="addUserForm">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>用户名：</label>
+					<div class="formControls col-xs-4 col-sm-5">
+						<input type="text" name="userName" id="userName" class="input-text" autocomplete="off" placeholder="4~16个字符，字母/中文/数字/下划线"/>
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>姓名：</label>
+					<div class="formControls col-xs-4 col-sm-5">
+						<input type="text" name="realName" class="input-text" autocomplete="off" placeholder="2~10个中文"/>
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">手机号：</label>
+					<div class="formControls col-xs-4 col-sm-5">
+						<input type="text" name="mobile" class="input-text" autocomplete="off" placeholder="手机号"/>
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色：</label>
+					<div class="formControls col-xs-4 col-sm-5">
+						<span class="select-box">
+							<select class="select" size="1" name="roleCode">
+								<option value="" selected="">请选择角色</option>
+								<option th:each="role,roleStat:${listRole}" th:value="${role.roleCode}" th:text="${role.roleName}"></option>
+							</select>
+						</span>
+					</div>
+				</div>
+
+				<div class="row cl">
+					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+						<input class="btn btn-primary radius" type="submit" value="保存">
+						<input class="btn btn-primary radius" type="button" onclick="history.back(-1)" value="返回">
+					</div>
+				</div>
+			</form>
+		</article>
+	</div>
+
+<script type="text/javascript" src="" th:src="@{/h-ui/lib/jquery.validation/1.14.0/jquery.validate.js}"></script>
+<script type="text/javascript" src="" th:src="@{/h-ui/lib/jquery.validation/1.14.0/validate-methods.js}"></script>
+<script type="text/javascript" src="" th:src="@{/h-ui/lib/jquery.validation/1.14.0/messages_zh.js}"></script>
+<script type="text/javascript">
+$(function(){
+	$("#addUserForm").validate({
+		rules:{
+            userName:{
+				required:true,
+				minlength:3,
+				maxlength:16,
+                remote: {
+                    url: "checkExist", //后台处理程序
+                    type: "post", //数据发送方式
+                    //dataType: "json", //接受数据格式
+                    data: { //要传递的数据
+                        userName: function () {
+                            return $("#userName").val();
+                        }
+                    }
+                }
+			},realName:{
+                required:true,
+                minlength:2,
+                maxlength:10
+            },/*mobile:{
+                required:true,
+                isPhone:true,
+            },*/
+			roleCode:{
+				required:true,
+			},
+		},
+        messages: {
+            userName: {
+                remote: "用户名已存在！"
+            }
+        },
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			form.submit();
+		}
+	});
+});
+</script>
+</div>
+</body>
+</html>

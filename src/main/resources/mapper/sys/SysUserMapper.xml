@@ -3,10 +3,9 @@
 <mapper namespace="com.cars.plat.sys.dao.SysUserDao">
     <!-- 用户列表 -->
     <select id="listUser" parameterType="SysUser" resultType="SysUser">
-        <include refid="pageStart"></include>
         select u.*,r.role_name from DEMO_SYS_USER u,DEMO_SYS_ROLE r
         where 1=1
-        AND u.role_id=r.role_id(+)
+        AND u.ROLE_CODE=r.ROLE_CODE(+)
         <if test="userName!= null and userName != '' ">
             AND u.USER_NAME = #{userName}
         </if>
@@ -16,72 +15,39 @@
         <if test="status!= null and status != '' ">
             AND u.STATUS = #{status}
         </if>
-        <if test="roleId!= null and roleId != '' ">
-            AND u.ROLE_ID = #{roleId}
+        <if test="roleCode!= null and roleCode != '' ">
+            AND u.ROLE_CODE = #{roleCode}
         </if>
         order by u.LAST_MODIFIED_DATE DESC
-        <include refid="pageEnd"></include>
-    </select>
-
-    <select id="count" parameterType="SysUser" resultType="Integer">
-        select count(*) from DEMO_SYS_USER u,DEMO_SYS_ROLE r
-        where 1=1
-        AND u.role_id=r.role_id(+)
-        <if test="userName!= null and userName != '' ">
-            AND u.USER_NAME = #{userName}
-        </if>
-        <if test="realName!= null and realName != '' ">
-            AND u.REAL_NAME like '%'||#{realName}||'%'
-        </if>
-        <if test="status!= null and status != '' ">
-            AND u.STATUS = #{status}
-        </if>
-        <if test="roleId!= null and roleId != '' ">
-            AND u.ROLE_ID = #{roleId}
-        </if>
-    </select>
-
-    <!-- 根据用户标识查询用户 -->
-    <select id="listUserByInner" parameterType="SysUser" resultType="SysUser">
-        select u.* from DEMO_SYS_USER u
-          where u.INNER_FLAG = #{innerFlag}
-          <if test="companyCode!=null and companyCode!=''">
-              and u.COMPANY_CODE = #{companyCode}
-          </if>
-        order by  u.company_code,u.REAL_NAME DESC
-    </select>
-
-    <!-- 根据用户名查询用户信息
-    <select id="getUserByuserName" parameterType="String" resultType="SysUser">
-        select * from DEMO_SYS_USER where  USER_NAME = #{userName}
-    </select>-->
-    <!-- 根据用户名查询用户信息 -->
-    <select id="getUserByUserName" parameterType="String" resultType="SysUser">
-        select u.*,r.role_name from DEMO_SYS_USER u,DEMO_SYS_ROLE r
-        where u.role_id = r.role_id(+)
-        and u.USER_NAME = #{userName}
     </select>
 
     <!-- 新增用户 -->
     <insert id="addUser" parameterType="SysUser">
         insert into DEMO_SYS_USER
-          (USER_NAME,PASS_WORD,ROLE_ID,SALT,MOBILE,REAL_NAME,CREATE_USER,LAST_MODIFIED_USER)
+        (USER_NAME,PASS_WORD,ROLE_CODE,SALT,MOBILE,REAL_NAME,CREATE_USER,LAST_MODIFIED_USER)
         VALUES
-          (#{userName},#{passWord},#{roleId},#{salt},#{mobile},#{realName},#{createUser},#{lastModifiedUser})
+        (#{userName},#{passWord},#{roleCode},#{salt},#{mobile},#{realName},#{createUser},#{lastModifiedUser})
     </insert>
+
+    <!-- 更新用户 -->
+    <update id="updateUser" parameterType="SysUser">
+        update DEMO_SYS_USER
+        set ROLE_CODE=#{roleCode},REAL_NAME=#{realName},MOBILE=#{mobile},
+        LAST_MODIFIED_USER=#{lastModifiedUser},LAST_MODIFIED_DATE=#{lastModifiedDate}
+        where USER_NAME=#{userName}
+    </update>
 
     <!-- 删除用户 -->
     <delete id="deleteUser" parameterType="String">
         delete from DEMO_SYS_USER where USER_NAME=#{userName}
     </delete>
 
-    <!-- 更新用户 -->
-    <update id="updateUser" parameterType="SysUser">
-        update DEMO_SYS_USER
-          set ROLE_ID=#{roleId},REAL_NAME=#{realName},MOBILE=#{mobile},
-            LAST_MODIFIED_USER=#{lastModifiedUser},LAST_MODIFIED_DATE=#{lastModifiedDate}
-        where USER_NAME=#{userName}
-    </update>
+    <!-- 根据用户名查询用户信息 -->
+    <select id="getUserByUserName" parameterType="String" resultType="SysUser">
+        select u.*,r.role_name from DEMO_SYS_USER u,DEMO_SYS_ROLE r
+        where u.ROLE_CODE = r.ROLE_CODE(+)
+        and u.USER_NAME = #{userName}
+    </select>
 
     <!-- 锁定用户 -->
     <update id="lockUser" parameterType="String">
@@ -91,28 +57,19 @@
     <update id="unlockUser" parameterType="String">
         update DEMO_SYS_USER set STATUS='1' where USER_NAME=#{userName}
     </update>
+
     <!-- 重置密码 -->
     <update id="resetPassWord" parameterType="SysUser">
         update DEMO_SYS_USER set PASS_WORD=#{passWord} where USER_NAME=#{userName}
     </update>
 
-    <!-- 修改用户密码 -->
+    <!-- 获取旧密码盐 -->
     <select id="getOldPassSalt" parameterType="String" resultType="SysUser">
       select PASS_WORD,SALT from DEMO_SYS_USER where USER_NAME=#{userName}
     </select>
+
+    <!-- 修改用户密码 -->
     <update id="updatePassWord" parameterType="SysUser">
         update DEMO_SYS_USER set PASS_WORD=#{passWord},SALT=#{salt} where USER_NAME=#{userName}
     </update>
-
-    <sql id="pageStart">
-        select *
-        from (select tmp.*,
-        ROWNUM RN
-        from (
-    </sql>
-    <sql id="pageEnd">
-        ) tmp
-        where ROWNUM &lt;= (#{pageIndex}<![CDATA[*]]>#{pageSize}) )
-        where RN &gt; ((#{pageIndex}-1)<![CDATA[*]]>#{pageSize})
-    </sql>
 </mapper>

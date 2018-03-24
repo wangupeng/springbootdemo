@@ -1,8 +1,10 @@
 package com.cars.plat.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import com.cars.plat.sys.model.SysResource;
 import com.cars.plat.sys.service.SysResourceService;
 import com.cars.plat.sys.shiro.MyShiroRealm;
+import com.cars.plat.util.string.StringUtil;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
@@ -15,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,22 +49,22 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/logout", "logout");
 
         //配置记住我或认证通过可以访问的地址
-        filterChainDefinitionMap.put("/index", "user");
-        filterChainDefinitionMap.put("/", "user");
+//        filterChainDefinitionMap.put("/index", "user");
+//        filterChainDefinitionMap.put("/", "user");
 
         //anon:所有url都都可以匿名访问
         filterChainDefinitionMap.put("/resources/**","anon");
 
         //权限资源关系（将resourceUrl作为权限）
-        /*List<SysResource> resourcList = sysResourceService.listResource();
+        List<SysResource> resourcList = sysResourceService.listResource();
         for(SysResource resource:resourcList){
             if (StringUtil.isNotNullOrEmpty(resource.getResourceUrl())) {
                 String permission = "perms[" + resource.getResourceUrl()+ "]";
                 filterChainDefinitionMap.put(resource.getResourceUrl(),permission);
             }
-        }*/
+        }
         //authc:所有url都必须认证通过才可以访问
-        filterChainDefinitionMap.put("/**", "anon");
+        filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
@@ -127,10 +130,11 @@ public class ShiroConfig {
     public ShiroDialect shiroDialect() {
         return new ShiroDialect();
     }
-    @Bean
+
+    /*@Bean
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
-    }
+    }*/
 
     /**
      * 凭证匹配器

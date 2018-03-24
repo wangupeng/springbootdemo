@@ -5,6 +5,8 @@ import com.cars.plat.sys.model.SysUser;
 import com.cars.plat.sys.service.SysRoleService;
 import com.cars.plat.sys.service.SysUserService;
 import com.cars.plat.util.result.ResultEnum;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,28 +31,18 @@ public class SysUserController {
     /**
      * 用户列表
      * @param sysUser
-     * @param sysRole
      * @return
      */
     @RequestMapping
-    public ModelAndView listUser(SysUser sysUser, SysRole sysRole){
+    public ModelAndView listUser(SysUser sysUser){
         ModelAndView mv = new ModelAndView();
-        //添加分页
-        int totalRecords = userService.count(sysUser); //总数
-//        PageNavigate pageNavigate = new PageNavigate("", sysUser.getPageIndex(), totalRecords);//定义分页对象,传入url、当前页、总记录数
-//        mv.addObject("pageNavigate", pageNavigate);// 设置分页的变量
-
+        PageHelper.startPage(sysUser.getPageIndex(), sysUser.getPageSize());
         //查询用户列表
         List<SysUser> listUser = userService.listUser(sysUser);
-        mv.addObject("listUser",listUser);
-
-        //查询所有角色
-        List<SysRole> listRole = sysRoleService.listRoleForUser();
-        mv.addObject("listRole",listRole);
+        PageInfo<SysUser> pageInfo = new PageInfo<SysUser>(listUser);
+        mv.addObject("pageInfo",pageInfo);
 
         mv.addObject("sysUser",sysUser);
-        mv.addObject("sysRole",sysRole);
-
         mv.setViewName("plat/sys/user/listUser");
         return mv;
     }
@@ -64,7 +56,7 @@ public class SysUserController {
     public ModelAndView toAddUser(SysUser sysUser){
         ModelAndView mv = new ModelAndView();
         //查询所有角色
-        List<SysRole> listRole = sysRoleService.listRoleForUser();
+        List<SysRole> listRole = sysRoleService.listRole();
         mv.addObject("listRole",listRole);
         mv.setViewName("plat/sys/user/addUser");
         return mv;
@@ -88,8 +80,9 @@ public class SysUserController {
         mv.addObject("sysUser",sysUser);
 
         //查询所有角色
-        List<SysRole> listRole = sysRoleService.listRoleForUser();
+        List<SysRole> listRole = sysRoleService.listRole();
         mv.addObject("listRole",listRole);
+
         mv.setViewName("plat/sys/user/updateUser");
         return mv;
     }
@@ -98,7 +91,6 @@ public class SysUserController {
         ModelAndView mv = new ModelAndView();
         int n = userService.updateUser(sysUser);
         attr.addFlashAttribute("message", ResultEnum.UPDATE_SUCCESS);
-//        return "redirect:/sysUser";
         mv.setViewName("redirect:/sysUser");
         return mv;
     }
@@ -108,10 +100,10 @@ public class SysUserController {
      * @param userName
      * @return
      */
+    @ResponseBody
     @RequestMapping("/deleteUser")
-    public String deleteUser(String userName){
-        userService.deleteUser(userName);
-        return "redirect:/sysUser";
+    public int deleteUser(String userName){
+        return userService.deleteUser(userName);
     }
 
     /**
@@ -119,10 +111,10 @@ public class SysUserController {
      * @param userName
      * @return
      */
+    @ResponseBody
     @RequestMapping("/lockUser")
-    public String lockUser(String userName){
-        userService.lockUser(userName);
-        return "redirect:/sysUser";
+    public int lockUser(String userName){
+        return userService.lockUser(userName);
     }
 
     /**
@@ -130,10 +122,10 @@ public class SysUserController {
      * @param userName
      * @return
      */
+    @ResponseBody
     @RequestMapping("/unlockUser")
-    public String unlockUser(String userName){
-        userService.unlockUser(userName);
-        return "redirect:/sysUser";
+    public int unlockUser(String userName){
+        return userService.unlockUser(userName);
     }
 
     /**
@@ -141,32 +133,25 @@ public class SysUserController {
      * @param userName
      * @return
      */
+    @ResponseBody
     @RequestMapping("/resetPassWord")
-    public String resetPassWord(String userName){
-        userService.resetPassWord(userName);
-        return "redirect:/sysUser";
+    public int resetPassWord(String userName){
+        return userService.resetPassWord(userName);
     }
 
-    @RequestMapping("/toUpdatePassWord")
-    public String toUpdatePassWord(){
-        return "plat/sys/user/updatePassWord";
-    }
-
+    @ResponseBody
     @RequestMapping("/updatePassWord")
-    public ModelAndView updatePassWord(SysUser sysUser){
-        SysUser sysUser2 = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
+    public int updatePassWord(SysUser sysUser){
+        SysUser user = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
         ModelAndView mv = new ModelAndView();
 
-        //todo
-        /*int n = 0;
-        if(userService.checkOldPassWord(sysUser2.getuserName(),sysUser.getOldPassWord())){
+        int n = 0;
+        if(userService.checkOldPassWord(user.getUserName(),sysUser.getOldPassWord())){
             n = userService.updatePassWord(sysUser);
-            mv.addObject("updatePassSuccess",n);
         }else{
-            mv.addObject("oldPassError","原密码输入错误！");
-        }*/
-        mv.setViewName("plat/sys/user/updatePassWord");
-        return mv;
+            n=2;
+        }
+        return n;
     }
 
     @RequestMapping("/checkExist")

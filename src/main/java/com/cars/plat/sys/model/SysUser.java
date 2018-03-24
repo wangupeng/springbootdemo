@@ -17,7 +17,7 @@ public class SysUser extends Page {
     @NotEmpty(message="密码不能为空")
     private String passWord;//密码
     private String oldPassWord;//旧密码
-    private String roleId;//角色ID
+    private String roleCode;//角色ID
     private String roleName;
     private String salt;//加密用的盐
     private String mobile;//手机号
@@ -55,12 +55,12 @@ public class SysUser extends Page {
         this.oldPassWord = oldPassWord;
     }
 
-    public String getRoleId() {
-        return roleId;
+    public String getRoleCode() {
+        return roleCode;
     }
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
     }
 
     public String getRoleName() {
@@ -165,7 +165,7 @@ public class SysUser extends Page {
                 ", userName='" + userName + '\'' +
                 ", passWord='" + passWord + '\'' +
                 ", oldPassWord='" + oldPassWord + '\'' +
-                ", roleId='" + roleId + '\'' +
+                ", roleCode='" + roleCode + '\'' +
                 ", roleName='" + roleName + '\'' +
                 ", salt='" + salt + '\'' +
                 ", mobile='" + mobile + '\'' +

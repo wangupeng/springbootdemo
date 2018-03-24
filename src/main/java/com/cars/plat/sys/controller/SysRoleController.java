@@ -36,8 +36,8 @@ public class SysRoleController {
 //        PageNavigate pageNavigate = new PageNavigate("", sysRole.getPageIndex(), totalRecords);//定义分页对象,传入url、当前页、总记录数
 //        mv.addObject("pageNavigate", pageNavigate);// 设置分页的变量
 
-        List<SysRole> listRole = sysRoleService.listRole(sysRole);
-        mv.addObject("listRole",listRole);
+//        List<SysRole> listRole = sysRoleService.listRole(sysRole);
+//        mv.addObject("listRole",listRole);
         mv.setViewName("plat/sys/role/listRole");
         return mv;
     }

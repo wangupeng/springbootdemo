@@ -147,19 +147,10 @@ public class SysRoleService {
      * 查询所有角色
      * @return
      */
-    public List<SysRole> listRole(SysRole sysRole){
-        List<SysRole> list = sysRoleDao.listRole(sysRole);
+    public List<SysRole> listRole(){
+        List<SysRole> list = sysRoleDao.listRole();
         return list;
     }
-    /**
-     * 查询所有角色
-     * @return
-     */
-    public List<SysRole> listRoleForUser(){
-        List<SysRole> list = sysRoleDao.listRoleForUser();
-        return list;
-    }
-
 
     /**
      * 查询总数

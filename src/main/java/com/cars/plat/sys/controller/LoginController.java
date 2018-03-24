@@ -37,7 +37,6 @@ public class LoginController {
         try {
             subject.login(token);
             return "redirect:index";
-//            return "plat/sys/index";
         }catch (LockedAccountException lae) {
             token.clear();
             request.setAttribute("msg", "用户已经被锁定不能登录，请与管理员联系！");
@@ -52,14 +51,5 @@ public class LoginController {
     @RequestMapping("/index")
     public String index(){
         return "plat/sys/index";
-        //return "plat/demo/signup/signup";
-        //return "greeting";
-    }
-
-    @RequestMapping("/lm")
-    public String lm(){
-        return "plat/sys/system-category";
-        //return "plat/demo/signup/signup";
-        //return "greeting";
     }
 }

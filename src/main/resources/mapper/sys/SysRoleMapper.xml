@@ -16,15 +16,10 @@
     <delete id="deleteRole" parameterType="String">
       delete from DEMO_SYS_ROLE where ROLE_ID=#{roleId}
     </delete>
-    <!-- 用于查询所有角色 -->
-    <select id="listRoleForUser" resultType="SysRole">
-        select * from DEMO_SYS_ROLE order by role_code
-    </select>
+
     <!-- 查询所有角色 -->
-    <select id="listRole"  parameterType="SysRole" resultType="SysRole">
-        <include refid="pageStart"></include>
+    <select id="listRole" resultType="SysRole">
         select * from DEMO_SYS_ROLE order by role_code
-        <include refid="pageEnd"></include>
     </select>
     <select id="count" resultType="Integer">
         select count(*) from DEMO_SYS_ROLE order by last_modified_date desc
