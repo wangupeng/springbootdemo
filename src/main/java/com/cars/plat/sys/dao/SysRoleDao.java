@@ -26,10 +26,10 @@ public interface SysRoleDao {
 
     /**
      * 删除角色
-     * @param roleId
+     * @param roleCode
      * @return
      */
-    int deleteRole(String roleId);
+    int deleteRole(String roleCode);
 
     /**
      * 查询角色
@@ -44,10 +44,10 @@ public interface SysRoleDao {
     int count();
     /**
      * 获取角色信息
-     * @param roleId
+     * @param roleCode
      * @return
      */
-    SysRole getRole(String roleId);
+    SysRole getRoleByCode(String roleCode);
 
     /**
      * 删除角色资源表中某个角色ID的角色资源关系

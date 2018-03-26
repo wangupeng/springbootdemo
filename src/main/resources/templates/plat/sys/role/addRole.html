@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout}">
+<head>
+	<title>新增角色</title>
+</head>
+<body>
+<div layout:fragment="content">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> <a href="index" class="maincolor">首页</a>
+		<span class="c-gray en">&gt;</span> 用户管理
+		<span class="c-gray en">&gt;</span> 新增角色
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+	<div class="Hui-article">
+		<article class="cl pd-25">
+			<form action="addRole" method="post" class="form form-horizontal" id="addRoleForm">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色代码：</label>
+					<div class="formControls col-xs-4 col-sm-5">
+						<input type="text" name="roleCode" id="roleCode" class="input-text" autocomplete="off" placeholder="3~20个字符，字母/中文/数字/下划线"/>
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色名称：</label>
+					<div class="formControls col-xs-4 col-sm-5">
+						<input type="text" name="roleName" class="input-text" autocomplete="off" placeholder="2~10个中文"/>
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">角色说明：</label>
+					<div class="formControls col-xs-4 col-sm-5">
+						<textarea name="description" cols="" rows="" class="textarea" placeholder="0～50个中文"></textarea>
+					</div>
+				</div>
+
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">角色权限：</label>
+					<div class="formControls col-xs-4 col-sm-5">
+						<div class="panel panel-default">
+							<div class="panel-header">面板标题</div>
+							<div class="panel-body">面板内容</div>
+						</div>
+
+						<ul id="Huifold1" class="Huifold">
+							<li class="item">
+								<h4>标题<b>+</b></h4>
+								<div class="info"> 内容<br>很多内容 </div>
+							</li>
+							<li class="item">
+								<h4>标题<b>+</b></h4>
+								<div class="info"></div>
+							</li>
+							<li class="item">
+								<h4>标题<b>+</b></h4>
+								<div class="info"></div>
+							</li>
+						</ul>
+
+						<div class="widget-box">
+							<div class="widget-header">
+								<h4 class="widget-title">
+									<label>
+										<input name="module" class="ace father" type="checkbox" id="mod_${sysResource.resourceId }" value="${sysResource.resourceId }" />
+										<span class="lbl"><i class="ace-icon fa fa-pencil-square-o"></i> ${sysResource.resourceName }</span>
+									</label>
+								</h4>
+								<div class="widget-toolbar">
+									<a href="#" data-action="collapse"> <i class="ace-icon fa fa-chevron-up"></i>
+									</a>
+								</div>
+							</div>
+
+							<div class="widget-body">
+								<div class="widget-main">
+									<!--<c:forEach items="${listResource }" var="secModule" varStatus="st">
+										<c:if test="${sysResource.resourceId eq secModule.parentId }">
+											<label>
+												<input name="module" id="mod_${secModule.resourceId }" type="checkbox" value="${secModule.resourceId }" class="ace children" />
+												<span class="lbl"> <i class="ace-icon fa fa-pencil-square-o"></i> ${secModule.resourceName}</span>
+											</label>
+											<c:forEach items="${listResource }" var="sysFunction" varStatus="st">
+												<c:if test="${sysFunction.parentId eq secModule.resourceId }">
+													<label class="checkbox inline" style="color: blue">
+														<input name="function" id="function_${sysFunction.resourceId }" type="checkbox" value="${sysFunction.resourceId }" class="ace children" />
+														<span class="lbl"> <i class="ace-icon fa fa-align-justify"></i> ${sysFunction.resourceName }</span> </label>
+												</c:if>
+											</c:forEach>
+											<br />
+										</c:if>
+									</c:forEach>-->
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+
+				<!--<div class="form-group">
+					<label class="col-sm-1 control-label">角色权限：</label>
+					<div class="col-sm-11">
+						<c:forEach items="${listResource }" var="sysResource" varStatus="st">
+							<c:if test="${sysResource.parentId eq 0 }">
+								<div class="widget-box">
+									<div class="widget-header">
+										<h4 class="widget-title">
+											<label>
+												<input name="module" class="ace father" type="checkbox" id="mod_${sysResource.resourceId }" value="${sysResource.resourceId }" />
+												<span class="lbl"><i class="ace-icon fa fa-pencil-square-o"></i> ${sysResource.resourceName }</span>
+											</label>
+										</h4>
+										<div class="widget-toolbar">
+											<a href="#" data-action="collapse"> <i class="ace-icon fa fa-chevron-up"></i>
+											</a>
+										</div>
+									</div>
+
+									<div class="widget-body">
+										<div class="widget-main">
+											<c:forEach items="${listResource }" var="secModule" varStatus="st">
+												<c:if test="${sysResource.resourceId eq secModule.parentId }">
+													<label>
+														<input name="module" id="mod_${secModule.resourceId }" type="checkbox" value="${secModule.resourceId }" class="ace children" />
+														<span class="lbl"> <i class="ace-icon fa fa-pencil-square-o"></i> ${secModule.resourceName}</span>
+													</label>
+													<c:forEach items="${listResource }" var="sysFunction" varStatus="st">
+														<c:if test="${sysFunction.parentId eq secModule.resourceId }">
+															<label class="checkbox inline" style="color: blue">
+																<input name="function" id="function_${sysFunction.resourceId }" type="checkbox" value="${sysFunction.resourceId }" class="ace children" />
+																<span class="lbl"> <i class="ace-icon fa fa-align-justify"></i> ${sysFunction.resourceName }</span> </label>
+														</c:if>
+													</c:forEach>
+													<br />
+												</c:if>
+											</c:forEach>
+										</div>
+									</div>
+								</div>
+							</c:if>
+						</c:forEach>
+
+					</div>
+				</div>-->
+
+				<div class="row cl">
+					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+						<input class="btn btn-primary radius" type="submit" value="保存">
+						<input class="btn btn-primary radius" type="button" onclick="history.back(-1)" value="返回">
+					</div>
+				</div>
+			</form>
+		</article>
+	</div>
+<script type="text/javascript">
+$(function(){
+
+    $("#Huifold-demo3").Huifold({
+        titCell:'.item h4',
+        mainCell:'.item .info',
+        type:3,
+        trigger:'click',
+        className:"selected",
+        speed:"first",
+    });
+
+	$("#addRoleForm").validate({
+		rules:{
+            roleCode:{
+				required:true,
+				minlength:3,
+				maxlength:20,
+                remote: {
+                    url: "checkExist", //后台处理程序
+                    type: "post", //数据发送方式
+                    //dataType: "json", //接受数据格式
+                    data: { //要传递的数据
+                        roleCode: function () {
+                            return $("#roleCode").val();
+                        }
+                    }
+                }
+			},roleName:{
+                required:true,
+                minlength:2,
+                maxlength:10
+            }
+		},
+        messages: {
+            roleCode: {
+                remote: "角色代码已存在！"
+            }
+        },
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			form.submit();
+		}
+	});
+});
+</script>
+
+
+
+</div>
+</body>
+</html>

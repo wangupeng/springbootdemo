@@ -8,7 +8,6 @@ import java.util.Date;
  * Created by wangyupeng on 2017/8/18.
  */
 public class SysRole extends Page {
-    private String roleId;//主键，用户id，用yyyyMMddHHmiss表示
     private String roleCode;//角色代码
     private String roleName;//角色名称
     private String description;//描述
@@ -20,7 +19,6 @@ public class SysRole extends Page {
     @Override
     public String toString() {
         return "Role{" +
-                "roleId='" + roleId + '\'' +
                 ", roleCode='" + roleCode + '\'' +
                 ", roleName='" + roleName + '\'' +
                 ", description='" + description + '\'' +
@@ -29,14 +27,6 @@ public class SysRole extends Page {
                 ", lastModifiedUser='" + lastModifiedUser + '\'' +
                 ", lastModifiedDate=" + lastModifiedDate +
                 '}';
-    }
-
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
     }
 
     public String getRoleCode() {

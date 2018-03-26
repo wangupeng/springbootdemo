@@ -1,0 +1,89 @@
+﻿<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout}">
+	<head>
+		<title>角色列表</title>
+	</head>
+<body>
+
+<div layout:fragment="content">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> <a href="index" class="maincolor">首页</a>
+		<span class="c-gray en">&gt;</span> 角色管理
+		<span class="c-gray en">&gt;</span> 角色列表
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" >
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<!--<form action="sysUser" method="post" class="form form-horizontal">
+				<div class="text-l" th:object="${sysUser}">
+					用户名：<input type="text" class="input-text" style="width:100px" id="userName" name="userName" th:value="*{userName}">
+					姓名：<input type="text" class="input-text" style="width:100px" id="realName" name="realName" th:value="*{realName}">
+					<button type="submit" class="btn btn-success"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+				</div>
+			</form>-->
+
+			<div class="cl pd-5 bg-1 bk-gray mt-20">
+				<span class="l">
+					<a href="sysRole/toAddRole" class="btn btn-primary radius"  shiro:hasPermission="/sysRole/delete"><i class="Hui-iconfont">&#xe600;</i> 新增用户</a>
+					<!--<a href="javascript:;" onclick="deleteRole()" class="btn btn-danger radius" shiro:hasPermission="/sysRole/delete"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>-->
+				</span>
+			</div>
+
+			<table class="table table-border table-bordered table-hover table-bg table-sort dataTables_wrapper" id="dataTables-smsSendOrder">
+				<thead>
+					<tr class="text-c">
+						<th width="25"><input type="checkbox" name="" value=""></th>
+						<th width="40">序号</th>
+						<th width="100">角色代码</th>
+						<th width="100">角色名称</th>
+						<th width="120">描述</th>
+						<th width="80">创建用户</th>
+						<th width="100">创建时间</th>
+						<th width="100">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="text-c" th:if="${pageInfo.list.empty}">
+						<td colspan="4">无数据</td>
+					</tr>
+					<tr class="text-c" th:each="role,status : ${pageInfo.list}">
+						<td><input type="checkbox" value="2" name=""></td>
+						<td th:text="${status.index+1}"></td>
+						<td th:text="${role.roleCode}"></td>
+						<td th:text="${role.roleName}"></td>
+						<td th:text="${role.description}"></td>
+						<td th:text="${role.createUser}"></td>
+						<td th:text="${#dates.format(role.createDate,'yyyy-MM-dd HH:mm:ss')}"></td><!--th:text="${#dates.format(user.date)}"-->
+						<td class="td-manage">
+							<a title="修改" th:href="@{'sysRole/toUpdateRole?roleCode='+${role.roleCode}}" shiro:hasPermission="/sysRole/update"  class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6df;</i></a>
+							<a title="删除" th:onclick="'javascript:deleteRole(\''+${role.roleCode}+'\')'" href="javascript:;" shiro:hasPermission="/sysRole/delete" class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6e2;</i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+            <div th:replace="fragments/page :: pageNav(${pageInfo})"></div>
+		</article>
+	</div>
+<script type="text/javascript" th:inline="none">
+/*管理员-删除*/
+function deleteRole(userName){
+    layer.confirm("确认要删除吗？", {icon: 3, title:'提示'}, function(index){
+        $.post("sysRole/deleteRole",{userName: userName}, function(result) {
+            if(result==1){
+                layer.msg('删除成功!', { icon: 1, time: 1000 },function () {
+                	location.reload();
+                });
+			}else{
+                layer.msg('删除失败!', { icon: 2, time: 1000 },function () {
+                    location.reload();
+                });
+			}
+        });
+    });
+}
+</script>
+</div>
+</body>
+</html>

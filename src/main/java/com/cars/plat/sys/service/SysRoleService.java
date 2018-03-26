@@ -35,9 +35,6 @@ public class SysRoleService {
      */
     @Transactional
     public int addRole(SysRole sysRole, String moduleArr, String functionArr){
-        //取当前时间为角色ID
-        sysRole.setRoleId(DateUtil.getShortSystemTime());
-
         //获取当前登录用户
         SysUser sysUser = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
         sysRole.setCreateUser(sysUser.getUserName());
@@ -49,7 +46,7 @@ public class SysRoleService {
         for (int i = 0; i < moduleSplit.length; i++) {
             if (StringUtil.isNotNullOrEmpty(moduleSplit[i])) {
                 SysRoleResource sysRoleResource = new SysRoleResource();
-                sysRoleResource.setRoleId(sysRole.getRoleId());
+                sysRoleResource.setRoleId(sysRole.getRoleCode());
                 sysRoleResource.setResourceId(moduleSplit[i]);
                 sysRoleResourceDao.addRoleResource (sysRoleResource);
             }
@@ -59,7 +56,7 @@ public class SysRoleService {
         for (int i = 0; i < functionSplit.length; i++) {
             if (StringUtil.isNotNullOrEmpty(functionSplit[i])) {
                 SysRoleResource sysRoleResource = new SysRoleResource();
-                sysRoleResource.setRoleId(sysRole.getRoleId());
+                sysRoleResource.setRoleId(sysRole.getRoleCode());
                 sysRoleResource.setResourceId(functionSplit[i]);
                 sysRoleResourceDao.addRoleResource(sysRoleResource);
             }
@@ -84,14 +81,14 @@ public class SysRoleService {
         int n2 = 0,n3 = 0;
         if(n1>0){
             //更新角色成功，删除角色资源对应关系
-            n2 = sysRoleResourceDao.deleteRoleResourceByRoleId(sysRole.getRoleId());
+            n2 = sysRoleResourceDao.deleteRoleResourceByRoleId(sysRole.getRoleCode());
 
             //删除角色资源对应关系成功，增加新的角色资源对应关系
             String[] moduleSplit = moduleArr.split("@@");
             for (int i = 0; i < moduleSplit.length; i++) {
                 if (StringUtil.isNotNullOrEmpty(moduleSplit[i])) {
                     SysRoleResource sysRoleResource = new SysRoleResource();
-                    sysRoleResource.setRoleId(sysRole.getRoleId());
+                    sysRoleResource.setRoleId(sysRole.getRoleCode());
                     sysRoleResource.setResourceId(moduleSplit[i]);
                     sysRoleResourceDao.addRoleResource (sysRoleResource);
                 }
@@ -101,7 +98,7 @@ public class SysRoleService {
             for (int i = 0; i < functionSplit.length; i++) {
                 if (StringUtil.isNotNullOrEmpty(functionSplit[i])) {
                     SysRoleResource sysRoleResource = new SysRoleResource();
-                    sysRoleResource.setRoleId(sysRole.getRoleId());
+                    sysRoleResource.setRoleId(sysRole.getRoleCode());
                     sysRoleResource.setResourceId(functionSplit[i]);
                     sysRoleResourceDao.addRoleResource(sysRoleResource);
                 }
@@ -128,17 +125,17 @@ public class SysRoleService {
 
     /**
      * 删除角色
-     * @param roleId
+     * @param roleCode
      * @return
      */
     @Transactional
-    public int deleteRole(String roleId){
+    public int deleteRole(String roleCode){
         //删除角色
-        int n1 = sysRoleDao.deleteRole(roleId);
+        int n1 = sysRoleDao.deleteRole(roleCode);
         int n2 = 0;
         if(n1>0){
             //删除角色成功，删除角色资源对应关系
-            n2 = sysRoleResourceDao.deleteRoleResourceByRoleId(roleId);
+            n2 = sysRoleResourceDao.deleteRoleResourceByRoleId(roleCode);
         }
         return n2;
     }
@@ -153,20 +150,12 @@ public class SysRoleService {
     }
 
     /**
-     * 查询总数
-     * @return
-     */
-    public int count(){
-        int count = sysRoleDao.count();
-        return count;
-    }
-    /**
      * 根据角色ID获取角色信息
-     * @param roleId
+     * @param roleCode
      * @return
      */
-    public SysRole getRole(String roleId){
-        SysRole sysRole = sysRoleDao.getRole(roleId);
+    public SysRole getRoleByCode(String roleCode){
+        SysRole sysRole = sysRoleDao.getRoleByCode(roleCode);
         return sysRole;
     }
 }

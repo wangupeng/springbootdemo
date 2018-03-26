@@ -35,17 +35,13 @@ public class ShiroConfig {
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
-        // 设置登陆页面，置默是Web工程根目录下的"/login.jsp"页面
         shiroFilterFactoryBean.setLoginUrl("/login");
-        // 登录成功后要跳转的链接
-        //shiroFilterFactoryBean.setSuccessUrl("/index");
-        //未授权界面;
+        shiroFilterFactoryBean.setSuccessUrl("/index");
         //shiroFilterFactoryBean.setUnauthorizedUrl("/403");
 
         //过滤链定义，从上向下顺序执行，一般将 /**放在最为下边
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
         filterChainDefinitionMap.put("/login", "anon");
-        //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/logout", "logout");
 
         //配置记住我或认证通过可以访问的地址
@@ -53,16 +49,19 @@ public class ShiroConfig {
 //        filterChainDefinitionMap.put("/", "user");
 
         //anon:所有url都都可以匿名访问
-        filterChainDefinitionMap.put("/resources/**","anon");
+        filterChainDefinitionMap.put("/css/**","anon");
+        filterChainDefinitionMap.put("/h-ui/**","anon");
+        filterChainDefinitionMap.put("/images/**","anon");
+        filterChainDefinitionMap.put("/js/**","anon");
 
         //权限资源关系（将resourceUrl作为权限）
-        List<SysResource> resourcList = sysResourceService.listResource();
+        /*List<SysResource> resourcList = sysResourceService.listResource();
         for(SysResource resource:resourcList){
             if (StringUtil.isNotNullOrEmpty(resource.getResourceUrl())) {
                 String permission = "perms[" + resource.getResourceUrl()+ "]";
                 filterChainDefinitionMap.put(resource.getResourceUrl(),permission);
             }
-        }
+        }*/
         //authc:所有url都必须认证通过才可以访问
         filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
@@ -131,10 +130,10 @@ public class ShiroConfig {
         return new ShiroDialect();
     }
 
-    /*@Bean
+    @Bean
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
-    }*/
+    }
 
     /**
      * 凭证匹配器

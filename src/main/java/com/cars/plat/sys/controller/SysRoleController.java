@@ -2,11 +2,15 @@ package com.cars.plat.sys.controller;
 
 import com.cars.plat.sys.model.SysResource;
 import com.cars.plat.sys.model.SysRole;
+import com.cars.plat.sys.model.SysUser;
 import com.cars.plat.sys.service.SysResourceService;
 import com.cars.plat.sys.service.SysRoleService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,13 +35,10 @@ public class SysRoleController {
     @RequestMapping
     public ModelAndView listRole(SysRole sysRole){
         ModelAndView mv = new ModelAndView();
-        //添加分页
-        int totalRecords = sysRoleService.count(); //总数
-//        PageNavigate pageNavigate = new PageNavigate("", sysRole.getPageIndex(), totalRecords);//定义分页对象,传入url、当前页、总记录数
-//        mv.addObject("pageNavigate", pageNavigate);// 设置分页的变量
-
-//        List<SysRole> listRole = sysRoleService.listRole(sysRole);
-//        mv.addObject("listRole",listRole);
+        PageHelper.startPage(sysRole.getPageIndex(), sysRole.getPageSize());
+        List<SysRole> listRole = sysRoleService.listRole();
+        PageInfo<SysRole> pageInfo = new PageInfo<SysRole>(listRole);
+        mv.addObject("pageInfo",pageInfo);
         mv.setViewName("plat/sys/role/listRole");
         return mv;
     }
@@ -62,23 +63,19 @@ public class SysRoleController {
 
         int n = sysRoleService.addRole(sysRole, moduleArr, functionArr);
 */
-       /* if (n == 0)
-            return "forward:/error.htm?msg=" + StringUtil.encodeUrl("角色新增失败");
-        else
-            return "forward:/success.htm?msg=" + StringUtil.encodeUrl("角色新增成功");*/
         return "redirect:/sysRole";
     }
 
     /**
      * 修改角色
-     * @param roleId
+     * @param roleCode
      * @return
      */
     @RequestMapping("/toUpdateRole")
-    public ModelAndView toUpdateRole(String roleId){
+    public ModelAndView toUpdateRole(String roleCode){
         ModelAndView mv = new ModelAndView();
         //查询角色信息
-        SysRole sysRole = sysRoleService.getRole(roleId);
+        SysRole sysRole = sysRoleService.getRoleByCode(roleCode);
         mv.addObject("sysRole",sysRole);
 
         //查询所有资源
@@ -86,13 +83,14 @@ public class SysRoleController {
         mv.addObject("listResource",listResource);
 
         //查询已选择的资源
-        String checkButton = sysRoleService.checkedResource(sysRole.getRoleId());
+        String checkButton = sysRoleService.checkedResource(sysRole.getRoleCode());
         mv.addObject("checkButton", checkButton);
 
         mv.setViewName("plat/sys/role/updateRole");
         return mv;
     }
     @RequestMapping("/updateRole")
+    @ResponseBody
     public String updateRole(HttpServletRequest request, HttpServletResponse response, SysRole sysRole){
 
         /*String moduleArr = WebUtil.getSafeStr(request.getParameter("moduleArr"));
@@ -104,12 +102,23 @@ public class SysRoleController {
 
     /**
      * 删除角色
-     * @param roleId
+     * @param roleCode
      * @return
      */
     @RequestMapping("/deleteRole")
-    public String deleteRole(String roleId){
-        sysRoleService.deleteRole(roleId);
-        return "redirect:/sysRole";
+    @ResponseBody
+    public int deleteRole(String roleCode){
+        return sysRoleService.deleteRole(roleCode);
+    }
+
+    @RequestMapping("/checkExist")
+    @ResponseBody
+    public String checkExist(String roleCode){
+        SysRole sysRole = sysRoleService.getRoleByCode(roleCode);
+        String existFlag = "false";
+        if(sysRole==null){
+            existFlag ="true";
+        }
+        return existFlag;
     }
 }
