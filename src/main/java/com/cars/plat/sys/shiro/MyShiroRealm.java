@@ -74,7 +74,6 @@ public class MyShiroRealm extends AuthorizingRealm {
         return info;
     }
 
-
     /**
      * 指定principalCollection 清除
      */

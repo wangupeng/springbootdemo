@@ -9,7 +9,7 @@
         <if test="parentId!=null">
             AND PARENT_ID = #{parentId}
         </if>
-        order by DISPLAY_ORDER
+        order by RESOURCE_TYPE,PARENT_ID,DISPLAY_ORDER
     </select>
 
     <!-- 新增资源 -->
@@ -48,8 +48,6 @@
             </if>
           ORDER BY display_order
     </select>
-
-
 
     <!-- 根据资源类型查询资源 -->
     <select id="listResourceByType" parameterType="String" resultType="SysResource">
