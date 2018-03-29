@@ -52,47 +52,21 @@ public class SysUserController {
      * @param sysUser
      * @return
      */
-    @RequestMapping("/toAddUser")
-    public ModelAndView toAddUser(SysUser sysUser){
-        ModelAndView mv = new ModelAndView();
-        //查询所有角色
-        List<SysRole> listRole = sysRoleService.listRole();
-        mv.addObject("listRole",listRole);
-        mv.setViewName("plat/sys/user/addUser");
-        return mv;
-    }
+    @ResponseBody
     @RequestMapping("/addUser")
-    public String addUser(SysUser sysUser){
-        int n = userService.addUser(sysUser);
-        return "redirect:/sysUser";
+    public int addUser(SysUser sysUser){
+        return userService.addUser(sysUser);
     }
 
     /**
      * 修改用户
-     * @param userName
+     * @param sysUser
      * @return
      */
-    @RequestMapping("/toUpdateUser")
-    public ModelAndView toUpdateUser(String userName){
-        ModelAndView mv = new ModelAndView();
-        //根据用户ID查询用户信息
-        SysUser sysUser = userService.getUserByUserName(userName);
-        mv.addObject("sysUser",sysUser);
-
-        //查询所有角色
-        List<SysRole> listRole = sysRoleService.listRole();
-        mv.addObject("listRole",listRole);
-
-        mv.setViewName("plat/sys/user/updateUser");
-        return mv;
-    }
+    @ResponseBody
     @RequestMapping("/updateUser")
-    public ModelAndView updateUser(SysUser sysUser, RedirectAttributes attr){
-        ModelAndView mv = new ModelAndView();
-        int n = userService.updateUser(sysUser);
-        attr.addFlashAttribute("message", ResultEnum.UPDATE_SUCCESS);
-        mv.setViewName("redirect:/sysUser");
-        return mv;
+    public int updateUser(SysUser sysUser){
+        return userService.updateUser(sysUser);
     }
 
     /**
@@ -139,19 +113,34 @@ public class SysUserController {
         return userService.resetPassWord(userName);
     }
 
+    /**
+     * 修改密码
+     * @param sysUser
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/updatePassWord")
     public int updatePassWord(SysUser sysUser){
         SysUser user = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
-        ModelAndView mv = new ModelAndView();
-
         int n = 0;
         if(userService.checkOldPassWord(user.getUserName(),sysUser.getOldPassWord())){
             n = userService.updatePassWord(sysUser);
         }else{
+            //原密码不正确
             n=2;
         }
         return n;
+    }
+
+    /**
+     * 根据用户名获取用户
+     * @param userName
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getUserByUserName")
+    public SysUser getUserByUserName(String userName){
+        return userService.getUserByUserName(userName);
     }
 
     @RequestMapping("/checkExist")

@@ -1,64 +1,85 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout2}">
 <head>
 	<title>用户列表</title>
 </head>
 <body>
 <div layout:fragment="content">
-	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> <a href="index" class="maincolor">首页</a>
-		<span class="c-gray en">&gt;</span> 用户管理
-		<span class="c-gray en">&gt;</span> 修改用户
-		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
-			<i class="Hui-iconfont">&#xe68f;</i>
-		</a>
-	</nav>
-	<div class="Hui-article">
-		<article class="cl pd-25">
-			<form action="updateUser" method="post" class="form form-horizontal" id="updateUserForm" th:object="${sysUser}">
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>用户名：</label>
-						<div class="formControls col-xs-4 col-sm-5">
-							<input type="text" name="userName" th:value="*{userName}" readonly class="input-text" autocomplete="off"/>
-						</div>
-					</div>
+    <article class="cl pd-10">
+        <form action="updateUser" method="post" class="form form-horizontal" id="updateUserForm">
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>用户名：</label>
+                    <div class="formControls col-xs-8 col-sm-8">
+                        <input type="text" name="userName" id="userName" readonly class="input-text" autocomplete="off"/>
+                    </div>
+                </div>
 
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>姓名：</label>
-						<div class="formControls col-xs-4 col-sm-5">
-							<input type="text" name="realName" th:value="*{realName}" class="input-text" autocomplete="off" placeholder="2~10个中文"/>
-						</div>
-					</div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>姓名：</label>
+                    <div class="formControls col-xs-8 col-sm-8">
+                        <input type="text" name="realName" id="realName" class="input-text" autocomplete="off" placeholder="2~10个中文"/>
+                    </div>
+                </div>
 
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3">手机号：</label>
-						<div class="formControls col-xs-4 col-sm-5">
-							<input type="text" name="mobile" th:value="*{mobile}" class="input-text" autocomplete="off" placeholder="手机号"/>
-						</div>
-					</div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-3">手机号：</label>
+                    <div class="formControls col-xs-8 col-sm-8">
+                        <input type="text" name="mobile" id="mobile" class="input-text" autocomplete="off" placeholder="手机号"/>
+                    </div>
+                </div>
 
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色：</label>
-						<div class="formControls col-xs-4 col-sm-5">
-							<span class="select-box">
-								<select th:field="*{roleCode}" name="roleCode" class="select">
-									<option value="" selected="">请选择角色</option>
-									<option th:each="role:${listRole}" th:value="${role.roleCode}" th:text="${role.roleName}"></option>
-								</select>
-							</span>
-						</div>
-					</div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>角色：</label>
+                    <div class="formControls col-xs-8 col-sm-8">
+                        <span class="select-box">
+                            <select name="roleCode" id="roleCode" class="select">
+                                <option value="" selected="">请选择角色</option>
+                                <!--<option th:each="role:${listRole}" th:value="${role.roleCode}" th:text="${role.roleName}"></option>-->
+                            </select>
+                        </span>
+                    </div>
+                </div>
 
-					<div class="row cl">
-						<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-4">
-							<input class="btn btn-primary radius" type="submit" value="修改">
-							<input class="btn btn-primary radius" type="button" onclick="history.back(-1)" value="返回">
-						</div>
-					</div>
-			</form>
-		</article>
-	</div>
+                <div class="row cl">
+                    <div class="col-xs-12 col-sm-12 text-c">
+                        <input class="btn btn-primary radius" type="submit" value="修改">
+                    </div>
+                </div>
+        </form>
+    </article>
 <script type="text/javascript">
 $(function(){
+    var roleCode="";
+    $.ajax({
+        type:'post',
+        url:'getUserByUserName',
+        data:{
+            userName: parent.data.userName,
+        },
+        success:function(data){
+            $("#userName").val(data.userName);
+            $("#realName").val(data.realName);
+            $("#mobile").val(data.mobile);
+            roleCode=data.roleCode;
+        }
+    });
+
+    $.ajax({
+        type:'post',
+        url:'../sysRole/getRole',
+        traditional: true,
+        data:{},
+        success:function(data){
+            $.each(data,function(i,item){
+                if(item.roleCode==roleCode){
+                    $("#roleCode").append("<option value='"+item.roleCode+"' selected>"+item.roleName+"</option>");
+                }else{
+                    $("#roleCode").append("<option value='"+item.roleCode+"'>"+item.roleName+"</option>");
+                }
+            });
+        }
+    });
+
 	$("#updateUserForm").validate({
 		rules:{
             realName:{
@@ -77,7 +98,20 @@ $(function(){
 		focusCleanup:true,
 		success:"valid",
 		submitHandler:function(form){
-			form.submit();
+            $(form).ajaxSubmit({
+                dataType:"json",
+                success:function(result){
+                    if(result==1){
+                        layer.msg('修改用户成功!', { icon: 1, time: 1000 },function () {
+                            window.parent.location.reload();
+                        });
+                    }else{
+                        layer.msg('修改用户失败!', { icon: 2, time: 1000 },function () {
+                            window.parent.location.reload();
+                        });
+                    }
+                }
+            });
 		}
 	});
 });

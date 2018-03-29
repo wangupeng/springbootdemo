@@ -120,6 +120,17 @@ public class SysRoleController {
     }
 
     /**
+     * ajax获取角色
+     * @param sysRole
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getRole")
+    public List<SysRole> getRole(SysRole sysRole){
+        return sysRoleService.listRole();
+    }
+
+    /**
      * 判断roleCode是否已存在
      * @param roleCode
      * @return
