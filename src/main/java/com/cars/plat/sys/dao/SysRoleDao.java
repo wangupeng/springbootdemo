@@ -11,11 +11,24 @@ import java.util.List;
 @Mapper
 public interface SysRoleDao {
     /**
+     * 查询角色
+     * @return
+     */
+    List<SysRole> listRole();
+
+    /**
      * 新增角色
      * @param sysRole
      * @return
      */
     int addRole(SysRole sysRole);
+
+    /**
+     * 根据roleCode获取角色信息
+     * @param roleCode
+     * @return
+     */
+    SysRole getRoleByCode(String roleCode);
 
     /**
      * 修改
@@ -30,29 +43,4 @@ public interface SysRoleDao {
      * @return
      */
     int deleteRole(String roleCode);
-
-    /**
-     * 查询角色
-     * @return
-     */
-    List<SysRole> listRole();
-
-    /**
-     * 查询总数
-     * @return
-     */
-    int count();
-    /**
-     * 获取角色信息
-     * @param roleCode
-     * @return
-     */
-    SysRole getRoleByCode(String roleCode);
-
-    /**
-     * 删除角色资源表中某个角色ID的角色资源关系
-     * @param roleId
-     * @return
-     */
-    int deleteRoleResourceByRoleId(String roleId);
 }

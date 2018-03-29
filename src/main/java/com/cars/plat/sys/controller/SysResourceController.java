@@ -1,9 +1,12 @@
 package com.cars.plat.sys.controller;
 
 import com.cars.plat.sys.model.SysResource;
+import com.cars.plat.sys.model.SysRole;
 import com.cars.plat.sys.model.SysUser;
 import com.cars.plat.sys.service.SysResourceService;
 import com.cars.plat.util.cache.EhCacheUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,47 +30,20 @@ public class SysResourceController {
     @Autowired
     private SysResourceService sysResourceService;
 
-    /**
-     * 显示所有资源列表
-     * @return
-     */
     @RequestMapping
-    public ModelAndView listResource(){
-        ModelAndView mv = new ModelAndView();
-//        List<SysResource> listResource = sysResourceService.listResource();
-        Map<String,Object> map = new HashMap<>();
-        SysUser sysUser = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
-        //todo
-//        map.put("userName",sysUser.getuserName());
-        List<SysResource> listResource = sysResourceService.listResource();
-
-        mv.addObject("listResource",listResource);
-        mv.setViewName("plat/sys/resource/listResource");
-        return mv;
+    public String listResource(){
+        return "plat/sys/resource/listResource";
     }
 
     /**
-     * 转到新增资源页面
-     * @param request
-     * @param response
-     * @param sysResource
+     * 根据parentId查询资源
      * @return
      */
-    @RequestMapping("/toAddResource")
-    public ModelAndView toAddResource(HttpServletRequest request, HttpServletResponse response, SysResource sysResource){
-        ModelAndView mv = new ModelAndView();
-        String ztree = sysResourceService.createZtreeByModule();//模块列表
-        mv.addObject("ztree", ztree);
-        if (sysResource.getParentId() != null && !sysResource.getParentId().equals("0")) {
-            SysResource parent = sysResourceService.getResourceById(sysResource.getParentId());
-            sysResource.setParentName(parent.getResourceName());
-            sysResource.setResourceType("2");//设置为增加功能按钮界面
-        } else {
-            sysResource.setResourceType("1");//设置为模块
-        }
-        mv.addObject("sysResource", sysResource);
-        mv.setViewName("plat/sys/resource/addResource");
-        return mv;
+    @ResponseBody
+    @RequestMapping("/listResourceByParentId")
+    public List<SysResource> listResourceByParentId(SysResource sysResource){
+        List<SysResource> listResource = sysResourceService.listResource(sysResource);
+        return listResource;
     }
 
     /**
@@ -74,39 +51,27 @@ public class SysResourceController {
      * @param sysResource
      * @return
      */
+    @ResponseBody
     @RequestMapping("/addResource")
-    public String addResource(SysResource sysResource){
-        int n = sysResourceService.addResource(sysResource);
-        return "redirect:/sysResource";
-    }
-
-    /**
-     * 转到修改资源页面
-     * @param resourceId
-     * @return
-     */
-    @RequestMapping("/toUpdateResource")
-    public ModelAndView toUpdateResource(String resourceId){
-        ModelAndView mv = new ModelAndView();
-        String ztree = sysResourceService.createZtreeByModule();//模块列表
-        mv.addObject("ztree", ztree);
-
-        SysResource sysResource = sysResourceService.getResourceById(resourceId);
-        mv.addObject("sysResource",sysResource);
-
-        mv.setViewName("plat/sys/resource/updateResource");
-        return mv;
+    public int addResource(SysResource sysResource){
+        return sysResourceService.addResource(sysResource);
     }
 
     /**
      * 修改资源
-     * @param sysResource
+     * @param resourceId
      * @return
      */
+    @ResponseBody
+    @RequestMapping("/getResourceById")
+    public SysResource getResourceById(String resourceId){
+        return sysResourceService.getResourceById(resourceId);
+    }
+
+    @ResponseBody
     @RequestMapping("/updateResource")
-    public String updateResource(SysResource sysResource){
-        int n = sysResourceService.updateResource(sysResource);
-        return "redirect:/sysResource";
+    public int updateResource(SysResource sysResource){
+        return sysResourceService.updateResource(sysResource);
     }
 
     /**
@@ -114,10 +79,35 @@ public class SysResourceController {
      * @param resourceId
      * @return
      */
+    @ResponseBody
     @RequestMapping("/deleteResource")
-    public String deleteResource(String resourceId){
-        int n = sysResourceService.deleteResource(resourceId);
-        return "redirect:/sysResource";
+    public int deleteResource(String resourceId){
+        return sysResourceService.deleteResource(resourceId);
+    }
+
+
+    /**
+     * 获取 模块 资源
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/listModuleResource")
+    public List<Map<String,String>> listModuleResource(){
+        List<SysResource> listResource = sysResourceService.listResourceByType("1");
+        SysResource s = new SysResource();
+        s.setResourceId("0");
+        s.setResourceName("资源管理");
+        listResource.add(s);
+
+        List<Map<String,String>> list = new ArrayList<>();
+        for (SysResource sysResource : listResource) {
+            Map<String,String> map = new HashMap<>();
+            map.put("id",sysResource.getResourceId());
+            map.put("pid",sysResource.getParentId());
+            map.put("name",sysResource.getResourceName());
+            list.add(map);
+        }
+        return list;
     }
 
     /**
@@ -133,6 +123,17 @@ public class SysResourceController {
         map.put("userName",sysUser.getUserName());
         List<SysResource> resourceList = sysResourceService.loadUserResource(map);
         return resourceList;
+    }
+
+    /**
+     * 生成所有资源Ztree的树节点
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/createResourceZtree")
+    public List<Map<String,String>> createResourceZtree(){
+        List<Map<String,String>> list = sysResourceService.createResourceZtree(null);
+        return list;
     }
 
     /**

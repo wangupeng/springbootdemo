@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,35 +25,29 @@ public class SysResourceService {
     private SysRoleResourceDao sysRoleResourceDao;
 
     /**
-     * 查询所有资源
+     * 查询资源
      * @return
      */
-    public List<SysResource> listResource(){
-        List<SysResource> list = sysResourceDao.listResource();
+    public List<SysResource> listResource(SysResource sysResource){
+        List<SysResource> list = sysResourceDao.listResource(sysResource);
         return list;
     }
 
     /**
-     * 生成Ztree的树节点,新增模块时使用，只有模块上下级
+     * 生成所有资源Ztree的树节点
      * @return
      */
-    public String createZtreeByModule() {
-        List<SysResource> listModule = sysResourceDao.listResourceByType("1");// 模块列表
-        StringBuilder sb = new StringBuilder();
-        for (SysResource sysModule : listModule) {
-            if (sysModule.getParentId().equals("0")) {
-                String parentId = sysModule.getResourceId();
-                sb.append("{id : \"" + sysModule.getResourceId() + "\",pId :\"" + sysModule.getParentId() + "\",name :\"" + sysModule.getResourceName() + "\",open : false");
-                sb.append("},");
-                for (SysResource sysModule2 : listModule) {
-                    if (sysModule2.getParentId().equals(parentId)&&!sysModule2.getParentId().equals("0")) {
-                        sb.append("{id : \"" + sysModule2.getResourceId() + "\",pId :\"" + sysModule2.getParentId() + "\",name :\"" + sysModule2.getResourceName() + "\",open : false");
-                        sb.append("},");
-                    }
-                }
-            }
+    public List<Map<String,String>> createResourceZtree(SysResource sysResource) {
+        List<SysResource> listResource = sysResourceDao.listResource(sysResource);
+        List<Map<String,String>> list = new ArrayList<>();
+        for (SysResource resource : listResource) {
+            Map<String,String> map = new HashMap<>();
+            map.put("id",resource.getResourceId());
+            map.put("pid",resource.getParentId());
+            map.put("name",resource.getResourceName());
+            list.add(map);
         }
-        return StringUtil.subTract(sb.toString());
+        return list;
     }
 
     /**
@@ -111,5 +107,14 @@ public class SysResourceService {
     public List<SysResource> loadUserResource(Map<String,Object> map){
         List<SysResource> resourceList = sysResourceDao.loadUserResource(map);
         return resourceList;
+    }
+
+    /**
+     * 根据资源类型查询资源
+     * @param resourceType
+     * @return
+     */
+    public List<SysResource> listResourceByType(String resourceType){
+        return sysResourceDao.listResourceByType(resourceType);
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangyupeng on 2017/8/18.
@@ -27,41 +28,38 @@ public class SysRoleService {
     private SysRoleResourceDao sysRoleResourceDao;
 
     /**
+     * 查询所有角色
+     * @return
+     */
+    public List<SysRole> listRole(){
+        List<SysRole> list = sysRoleDao.listRole();
+        return list;
+    }
+
+    /**
      * 新增角色
      * @param sysRole
-     * @param moduleArr
-     * @param functionArr
      * @return
      */
     @Transactional
-    public int addRole(SysRole sysRole, String moduleArr, String functionArr){
+    public int addRole(SysRole sysRole){
         //获取当前登录用户
         SysUser sysUser = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
         sysRole.setCreateUser(sysUser.getUserName());
 
         //增加角色
         sysRoleDao.addRole(sysRole);
-
-        String[] moduleSplit = moduleArr.split("@@");
-        for (int i = 0; i < moduleSplit.length; i++) {
-            if (StringUtil.isNotNullOrEmpty(moduleSplit[i])) {
-                SysRoleResource sysRoleResource = new SysRoleResource();
-                sysRoleResource.setRoleId(sysRole.getRoleCode());
-                sysRoleResource.setResourceId(moduleSplit[i]);
-                sysRoleResourceDao.addRoleResource (sysRoleResource);
-            }
-        }
-
-        String[] functionSplit = functionArr.split("@@");
-        for (int i = 0; i < functionSplit.length; i++) {
-            if (StringUtil.isNotNullOrEmpty(functionSplit[i])) {
-                SysRoleResource sysRoleResource = new SysRoleResource();
-                sysRoleResource.setRoleId(sysRole.getRoleCode());
-                sysRoleResource.setResourceId(functionSplit[i]);
-                sysRoleResourceDao.addRoleResource(sysRoleResource);
-            }
-        }
         return 1;
+    }
+
+    /**
+     * 根据角色ID获取角色信息
+     * @param roleCode
+     * @return
+     */
+    public SysRole getRoleByCode(String roleCode){
+        SysRole sysRole = sysRoleDao.getRoleByCode(roleCode);
+        return sysRole;
     }
 
     /**
@@ -70,57 +68,13 @@ public class SysRoleService {
      * @return
      */
     @Transactional
-    public int updateRole(SysRole sysRole,String moduleArr, String functionArr){
+    public int updateRole(SysRole sysRole){
         //获取当前登录用户
         SysUser sysUser = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
         sysRole.setLastModifiedUser(sysUser.getUserName());
         sysRole.setLastModifiedDate(new Date());
 
-        //更新角色信息
-        int n1 = sysRoleDao.updateRole(sysRole);
-        int n2 = 0,n3 = 0;
-        if(n1>0){
-            //更新角色成功，删除角色资源对应关系
-            n2 = sysRoleResourceDao.deleteRoleResourceByRoleId(sysRole.getRoleCode());
-
-            //删除角色资源对应关系成功，增加新的角色资源对应关系
-            String[] moduleSplit = moduleArr.split("@@");
-            for (int i = 0; i < moduleSplit.length; i++) {
-                if (StringUtil.isNotNullOrEmpty(moduleSplit[i])) {
-                    SysRoleResource sysRoleResource = new SysRoleResource();
-                    sysRoleResource.setRoleId(sysRole.getRoleCode());
-                    sysRoleResource.setResourceId(moduleSplit[i]);
-                    sysRoleResourceDao.addRoleResource (sysRoleResource);
-                }
-            }
-
-            String[] functionSplit = functionArr.split("@@");
-            for (int i = 0; i < functionSplit.length; i++) {
-                if (StringUtil.isNotNullOrEmpty(functionSplit[i])) {
-                    SysRoleResource sysRoleResource = new SysRoleResource();
-                    sysRoleResource.setRoleId(sysRole.getRoleCode());
-                    sysRoleResource.setResourceId(functionSplit[i]);
-                    sysRoleResourceDao.addRoleResource(sysRoleResource);
-                }
-            }
-        }
-        return n2;
-    }
-
-    /**
-     * 通过js来设置选中的模块和按钮
-     * @param roleId
-     * @return
-     */
-    public String checkedResource(String roleId) {
-        List<SysResource> listResource = sysRoleResourceDao.listResourceByRoleId(roleId);
-
-        StringBuilder sb = new StringBuilder();
-        for (SysResource SysResource : listResource) {
-            sb.append("$('#mod_" + SysResource.getResourceId() + "').prop('checked',true);\r\n");
-        }
-
-        return sb.toString();
+        return sysRoleDao.updateRole(sysRole);
     }
 
     /**
@@ -135,27 +89,32 @@ public class SysRoleService {
         int n2 = 0;
         if(n1>0){
             //删除角色成功，删除角色资源对应关系
-            n2 = sysRoleResourceDao.deleteRoleResourceByRoleId(roleCode);
+            n2 = sysRoleResourceDao.deleteRoleResourceByRoleCode(roleCode);
         }
         return n2;
     }
 
     /**
-     * 查询所有角色
+     * 授权
+     * @param map
      * @return
      */
-    public List<SysRole> listRole(){
-        List<SysRole> list = sysRoleDao.listRole();
-        return list;
+    @Transactional
+    public int addRoleResource(Map<String, Object> map){
+        int delNum = sysRoleResourceDao.deleteRoleResourceByRoleCode((String)map.get("roleCode"));
+        int addNum = 0;
+        if(delNum>=0&&map.get("resourceIds")!=null){
+            addNum = sysRoleResourceDao.addRoleResource (map);
+        }
+        return addNum;
     }
 
     /**
-     * 根据角色ID获取角色信息
+     * 根据角色ID获取资源
      * @param roleCode
      * @return
      */
-    public SysRole getRoleByCode(String roleCode){
-        SysRole sysRole = sysRoleDao.getRoleByCode(roleCode);
-        return sysRole;
+    public List<SysResource> listResourceByRoleCode(String roleCode){
+        return sysRoleResourceDao.listResourceByRoleCode(roleCode);
     }
 }

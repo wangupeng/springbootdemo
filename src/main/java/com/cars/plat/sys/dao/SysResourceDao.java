@@ -13,6 +13,12 @@ import java.util.Map;
 public interface SysResourceDao {
 
     /**
+     * 查询资源
+     * @return
+     */
+    List<SysResource> listResource(SysResource sysResource);
+
+    /**
      * 新增资源
      * @param sysResource
      * @return
@@ -33,11 +39,7 @@ public interface SysResourceDao {
      */
     int deleteResource(String resourceId);
 
-    /**
-     * 查询资源
-     * @return
-     */
-    List<SysResource> listResource();
+
 
     /**
      * 根据资源类型查询资源

@@ -3,14 +3,19 @@
 <mapper namespace="com.cars.plat.sys.dao.SysResourceDao">
 
     <!-- 查询所有资源 -->
-    <select id="listResource" parameterType="String" resultType="SysResource">
-        select * from DEMO_SYS_RESOURCE order by DISPLAY_ORDER
+    <select id="listResource" parameterType="SysResource" resultType="SysResource">
+        select * from DEMO_SYS_RESOURCE
+        where 1=1
+        <if test="parentId!=null">
+            AND PARENT_ID = #{parentId}
+        </if>
+        order by DISPLAY_ORDER
     </select>
 
     <!-- 新增资源 -->
     <insert id="addResource" parameterType="SysResource">
         insert into DEMO_SYS_RESOURCE (RESOURCE_ID,RESOURCE_NAME,RESOURCE_URL,RESOURCE_TYPE,PARENT_ID,TARGET,ICON,DESCRIPTION,DISPLAY_ORDER)
-        VALUES (#{resourceId},#{resourceName},#{resourceUrl},#{resourceType},#{parentId},#{target},#{icon},#{description},#{displayOrder})
+        VALUES (#{resourceId},#{resourceName},#{resourceUrl},#{resourceType},#{parentId},#{target,jdbcType=VARCHAR},#{icon,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},#{displayOrder})
     </insert>
 
     <!-- 修改资源 -->
@@ -18,13 +23,13 @@
         update DEMO_SYS_RESOURCE
         set RESOURCE_NAME=#{resourceName},RESOURCE_URL=#{resourceUrl},
         RESOURCE_TYPE=#{resourceType},PARENT_ID=#{parentId},
-        TARGET=#{target},ICON=#{icon},DESCRIPTION=#{description},DISPLAY_ORDER=#{displayOrder}
+        TARGET=#{target,jdbcType=VARCHAR},ICON=#{icon,jdbcType=VARCHAR},DESCRIPTION=#{description,jdbcType=VARCHAR},DISPLAY_ORDER=#{displayOrder}
         where RESOURCE_ID=#{resourceId}
     </update>
 
     <!-- 删除资源 -->
     <delete id="deleteResource" parameterType="String">
-        delete from DEMO_SYS_RESOURCE where RESOURCE_ID=#{resourceId}
+        delete from DEMO_SYS_RESOURCE where RESOURCE_ID=#{resourceId} OR PARENT_ID=#{resourceId}
     </delete>
 
     <!-- 查询用户拥有的资源 -->

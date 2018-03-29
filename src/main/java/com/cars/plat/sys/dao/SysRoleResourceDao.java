@@ -5,6 +5,7 @@ import com.cars.plat.sys.model.SysRoleResource;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangyupeng on 2017/8/18.
@@ -14,24 +15,30 @@ public interface SysRoleResourceDao {
 
     /**
      * 增加角色资源对应关系
-     * @param sysRoleResource
+     * @param map
      * @return
      */
-    int addRoleResource(SysRoleResource sysRoleResource);
+    int addRoleResource(Map<String, Object> map);
 
     /**
-     * 删除角色资源对应关系
-     * @param roleId
+     * 根据角色id删除角色资源对应关系
+     * @param roleCode
      * @return
      */
-    int deleteRoleResourceByRoleId(String roleId);
+    int deleteRoleResourceByRoleCode(String roleCode);
+
+    /**
+     * 根据资源id删除角色资源对应关系
+     * @param resourceId
+     * @return
+     */
     int deleteRoleResourceResourceId(String resourceId);
 
 
     /**
      * 根据角色ID获取资源
-     * @param roleId
+     * @param roleCode
      * @return
      */
-    List<SysResource> listResourceByRoleId(String roleId);
+    List<SysResource> listResourceByRoleCode(String roleCode);
 }

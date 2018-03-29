@@ -37,115 +37,6 @@
 				</div>
 
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3">角色权限：</label>
-					<div class="formControls col-xs-4 col-sm-5">
-						<div class="panel panel-default">
-							<div class="panel-header">面板标题</div>
-							<div class="panel-body">面板内容</div>
-						</div>
-
-						<ul id="Huifold1" class="Huifold">
-							<li class="item">
-								<h4>标题<b>+</b></h4>
-								<div class="info"> 内容<br>很多内容 </div>
-							</li>
-							<li class="item">
-								<h4>标题<b>+</b></h4>
-								<div class="info"></div>
-							</li>
-							<li class="item">
-								<h4>标题<b>+</b></h4>
-								<div class="info"></div>
-							</li>
-						</ul>
-
-						<div class="widget-box">
-							<div class="widget-header">
-								<h4 class="widget-title">
-									<label>
-										<input name="module" class="ace father" type="checkbox" id="mod_${sysResource.resourceId }" value="${sysResource.resourceId }" />
-										<span class="lbl"><i class="ace-icon fa fa-pencil-square-o"></i> ${sysResource.resourceName }</span>
-									</label>
-								</h4>
-								<div class="widget-toolbar">
-									<a href="#" data-action="collapse"> <i class="ace-icon fa fa-chevron-up"></i>
-									</a>
-								</div>
-							</div>
-
-							<div class="widget-body">
-								<div class="widget-main">
-									<!--<c:forEach items="${listResource }" var="secModule" varStatus="st">
-										<c:if test="${sysResource.resourceId eq secModule.parentId }">
-											<label>
-												<input name="module" id="mod_${secModule.resourceId }" type="checkbox" value="${secModule.resourceId }" class="ace children" />
-												<span class="lbl"> <i class="ace-icon fa fa-pencil-square-o"></i> ${secModule.resourceName}</span>
-											</label>
-											<c:forEach items="${listResource }" var="sysFunction" varStatus="st">
-												<c:if test="${sysFunction.parentId eq secModule.resourceId }">
-													<label class="checkbox inline" style="color: blue">
-														<input name="function" id="function_${sysFunction.resourceId }" type="checkbox" value="${sysFunction.resourceId }" class="ace children" />
-														<span class="lbl"> <i class="ace-icon fa fa-align-justify"></i> ${sysFunction.resourceName }</span> </label>
-												</c:if>
-											</c:forEach>
-											<br />
-										</c:if>
-									</c:forEach>-->
-								</div>
-							</div>
-						</div>
-
-
-					</div>
-				</div>
-
-				<!--<div class="form-group">
-					<label class="col-sm-1 control-label">角色权限：</label>
-					<div class="col-sm-11">
-						<c:forEach items="${listResource }" var="sysResource" varStatus="st">
-							<c:if test="${sysResource.parentId eq 0 }">
-								<div class="widget-box">
-									<div class="widget-header">
-										<h4 class="widget-title">
-											<label>
-												<input name="module" class="ace father" type="checkbox" id="mod_${sysResource.resourceId }" value="${sysResource.resourceId }" />
-												<span class="lbl"><i class="ace-icon fa fa-pencil-square-o"></i> ${sysResource.resourceName }</span>
-											</label>
-										</h4>
-										<div class="widget-toolbar">
-											<a href="#" data-action="collapse"> <i class="ace-icon fa fa-chevron-up"></i>
-											</a>
-										</div>
-									</div>
-
-									<div class="widget-body">
-										<div class="widget-main">
-											<c:forEach items="${listResource }" var="secModule" varStatus="st">
-												<c:if test="${sysResource.resourceId eq secModule.parentId }">
-													<label>
-														<input name="module" id="mod_${secModule.resourceId }" type="checkbox" value="${secModule.resourceId }" class="ace children" />
-														<span class="lbl"> <i class="ace-icon fa fa-pencil-square-o"></i> ${secModule.resourceName}</span>
-													</label>
-													<c:forEach items="${listResource }" var="sysFunction" varStatus="st">
-														<c:if test="${sysFunction.parentId eq secModule.resourceId }">
-															<label class="checkbox inline" style="color: blue">
-																<input name="function" id="function_${sysFunction.resourceId }" type="checkbox" value="${sysFunction.resourceId }" class="ace children" />
-																<span class="lbl"> <i class="ace-icon fa fa-align-justify"></i> ${sysFunction.resourceName }</span> </label>
-														</c:if>
-													</c:forEach>
-													<br />
-												</c:if>
-											</c:forEach>
-										</div>
-									</div>
-								</div>
-							</c:if>
-						</c:forEach>
-
-					</div>
-				</div>-->
-
-				<div class="row cl">
 					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 						<input class="btn btn-primary radius" type="submit" value="保存">
 						<input class="btn btn-primary radius" type="button" onclick="history.back(-1)" value="返回">
@@ -156,16 +47,6 @@
 	</div>
 <script type="text/javascript">
 $(function(){
-
-    $("#Huifold-demo3").Huifold({
-        titCell:'.item h4',
-        mainCell:'.item .info',
-        type:3,
-        trigger:'click',
-        className:"selected",
-        speed:"first",
-    });
-
 	$("#addRoleForm").validate({
 		rules:{
             roleCode:{
@@ -202,9 +83,6 @@ $(function(){
 	});
 });
 </script>
-
-
-
 </div>
 </body>
 </html>

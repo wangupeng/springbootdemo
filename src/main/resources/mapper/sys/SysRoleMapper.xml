@@ -3,7 +3,7 @@
 <mapper namespace="com.cars.plat.sys.dao.SysRoleDao">
     <!-- 查询所有角色 -->
     <select id="listRole" resultType="SysRole">
-        select * from DEMO_SYS_ROLE order by role_code
+        select * from DEMO_SYS_ROLE order by LAST_MODIFIED_DATE DESC ,CREATE_DATE DESC
     </select>
 
     <!-- 增加角色 -->

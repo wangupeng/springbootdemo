@@ -58,6 +58,7 @@
 						<td th:text="${#dates.format(role.createDate,'yyyy-MM-dd HH:mm:ss')}"></td><!--th:text="${#dates.format(user.date)}"-->
 						<td class="td-manage">
 							<a title="修改" th:href="@{'sysRole/toUpdateRole?roleCode='+${role.roleCode}}" shiro:hasPermission="/sysRole/update"  class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6df;</i></a>
+							<a title="授权" th:onclick="'javascript:authorize(\''+${role.roleCode}+'\',\''+${role.roleName}+'\')'" href="javascript:;" shiro:hasPermission="/sysRole/update"  class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe62c;</i></a>
 							<a title="删除" th:onclick="'javascript:deleteRole(\''+${role.roleCode}+'\')'" href="javascript:;" shiro:hasPermission="/sysRole/delete" class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6e2;</i></a>
 						</td>
 					</tr>
@@ -66,21 +67,70 @@
             <div th:replace="fragments/page :: pageNav(${pageInfo})"></div>
 		</article>
 	</div>
+	<script type="text/javascript" src="lib/zTree/v3/js/jquery.ztree.all-3.5.min.js" th:src="@{/h-ui/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js}"></script>
 <script type="text/javascript" th:inline="none">
-/*管理员-删除*/
-function deleteRole(userName){
-    layer.confirm("确认要删除吗？", {icon: 3, title:'提示'}, function(index){
-        $.post("sysRole/deleteRole",{userName: userName}, function(result) {
-            if(result==1){
-                layer.msg('删除成功!', { icon: 1, time: 1000 },function () {
+/*删除角色*/
+function deleteRole(roleCode){
+    layer.confirm("确认要删除角色吗？", {icon: 3, title:'提示'}, function(index){
+        $.post("sysRole/deleteRole",{roleCode: roleCode}, function(result) {
+            if(result>=0){
+                layer.msg('删除角色成功!', { icon: 1, time: 1000 },function () {
                 	location.reload();
                 });
 			}else{
-                layer.msg('删除失败!', { icon: 2, time: 1000 },function () {
+                layer.msg('删除角色失败!', { icon: 2, time: 1000 },function () {
                     location.reload();
                 });
 			}
         });
+    });
+}
+/*授权*/
+function authorize(roleCode,roleName){
+    data = {roleCode:roleCode}
+    layer.open({
+        type: 2
+        ,title: '授权'+' -- '+roleName
+        ,area: ['400px','500px']
+        ,shade: 0.4
+        ,maxmin: false
+        ,content: 'toAuthorize'
+        ,btn: ['保存', '关闭']
+        ,btnAlign: 'l'
+        ,yes: function(index){
+            var resources = window["layui-layer-iframe" + index].getSelectCheck();
+            var resourceIds = new Array()
+			for(var i=0;i<resources.length;i++){
+                resourceIds[i] = resources[i].id
+			}
+            $.ajax({
+                type:'post',
+                url:'sysRole/addRoleResource',
+                traditional: true,
+                data:{
+                    roleCode: roleCode,
+                    resourceIds:resourceIds
+                },
+                success:function(result){
+                    if(result>0){
+                        layer.msg('权限设置成功!', { icon: 1, time: 1000 },function () {
+                            location.reload();
+                        });
+                    }else if(result==0){
+                        layer.msg('已取消全部权限!', { icon: 1, time: 1000 },function () {
+                            location.reload();
+                        });
+                    }else{
+                        layer.msg('权限设置失败!', { icon: 2, time: 1000 },function () {
+                            location.reload();
+                        });
+                    }
+                }
+            });
+        }
+        ,btn2: function(){
+            layer.close();
+        }
     });
 }
 </script>

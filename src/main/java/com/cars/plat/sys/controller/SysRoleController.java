@@ -10,12 +10,15 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangyupeng on 2017/8/18.
@@ -48,21 +51,13 @@ public class SysRoleController {
      * @return
      */
     @RequestMapping("/toAddRole")
-    public ModelAndView toAddRole(){
-        ModelAndView mv = new ModelAndView();
-        List<SysResource> listResource = sysResourceService.listResource();
-        mv.addObject("listResource",listResource);
-        mv.setViewName("plat/sys/role/addRole");
-        return mv;
+    public String toAddRole(){
+        return "plat/sys/role/addRole";
     }
+
     @RequestMapping("/addRole")
-    public String addRole(HttpServletRequest request, HttpServletResponse response, SysRole sysRole){
-
-        /*String moduleArr = WebUtil.getSafeStr(request.getParameter("moduleArr"));
-        String functionArr = WebUtil.getSafeStr(request.getParameter("functionArr"));
-
-        int n = sysRoleService.addRole(sysRole, moduleArr, functionArr);
-*/
+    public String addRole(SysRole sysRole){
+        int n = sysRoleService.addRole(sysRole);
         return "redirect:/sysRole";
     }
 
@@ -77,26 +72,13 @@ public class SysRoleController {
         //查询角色信息
         SysRole sysRole = sysRoleService.getRoleByCode(roleCode);
         mv.addObject("sysRole",sysRole);
-
-        //查询所有资源
-        List<SysResource> listResource = sysResourceService.listResource();
-        mv.addObject("listResource",listResource);
-
-        //查询已选择的资源
-        String checkButton = sysRoleService.checkedResource(sysRole.getRoleCode());
-        mv.addObject("checkButton", checkButton);
-
         mv.setViewName("plat/sys/role/updateRole");
         return mv;
     }
+
     @RequestMapping("/updateRole")
-    @ResponseBody
-    public String updateRole(HttpServletRequest request, HttpServletResponse response, SysRole sysRole){
-
-        /*String moduleArr = WebUtil.getSafeStr(request.getParameter("moduleArr"));
-        String functionArr = WebUtil.getSafeStr(request.getParameter("functionArr"));
-
-        int n = sysRoleService.updateRole(sysRole, moduleArr, functionArr);*/
+    public String updateRole(SysRole sysRole){
+        int n = sysRoleService.updateRole(sysRole);
         return "redirect:/sysRole";
     }
 
@@ -111,6 +93,37 @@ public class SysRoleController {
         return sysRoleService.deleteRole(roleCode);
     }
 
+    /**
+     * 授权
+     * @param roleCode
+     * @return
+     */
+    @RequestMapping("/addRoleResource")
+    @ResponseBody
+    public int addRoleResource(String roleCode,@RequestParam(value = "resourceIds",required = false)String[] resourceIds){
+        Map<String, Object> map = new HashMap<>();
+        map.put("roleCode", roleCode);
+        map.put("resourceIds", resourceIds);
+        return sysRoleService.addRoleResource(map);
+    }
+
+    /**
+     * 根据角色ID获取资源
+     * @param roleCode
+     * @return
+     */
+    @RequestMapping("/listResourceByRoleCode")
+    @ResponseBody
+    public List<SysResource> listResourceByRoleCode(String roleCode){
+        List<SysResource> list = sysRoleService.listResourceByRoleCode(roleCode);
+        return list;
+    }
+
+    /**
+     * 判断roleCode是否已存在
+     * @param roleCode
+     * @return
+     */
     @RequestMapping("/checkExist")
     @ResponseBody
     public String checkExist(String roleCode){

@@ -14,76 +14,51 @@
 	</nav>
 	<div class="Hui-article">
 		<article class="cl pd-25">
-			<form action="updateUser" method="post" class="form form-horizontal" id="updateUserForm" th:object="${sysUser}">
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>用户名：</label>
-						<div class="formControls col-xs-4 col-sm-5">
-							<input type="text" name="userName" th:value="*{userName}" readonly class="input-text" autocomplete="off" placeholder="4~16个字符，字母/中文/数字/下划线"/>
-						</div>
+			<form action="updateRole" method="post" class="form form-horizontal" id="updateRoleForm" th:object="${sysRole}">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色代码：</label>
+					<div class="formControls col-xs-4 col-sm-5">
+						<input type="text" name="roleCode" id="roleCode" class="input-text" autocomplete="off" readonly th:value="*{roleCode}"/>
 					</div>
+				</div>
 
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>姓名：</label>
-						<div class="formControls col-xs-4 col-sm-5">
-							<input type="text" name="realName" th:value="*{realName}" class="input-text" autocomplete="off" placeholder="2~10个中文"/>
-						</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色名称：</label>
+					<div class="formControls col-xs-4 col-sm-5">
+						<input type="text" name="roleName" class="input-text" autocomplete="off" th:value="*{roleName}" placeholder="2~10个中文"/>
 					</div>
+				</div>
 
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3">手机号：</label>
-						<div class="formControls col-xs-4 col-sm-5">
-							<input type="text" name="mobile" th:value="*{mobile}" class="input-text" autocomplete="off" placeholder="手机号"/>
-						</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">角色说明：</label>
+					<div class="formControls col-xs-4 col-sm-5">
+						<textarea name="description" cols="" rows="" class="textarea" th:value="*{description}" placeholder="0～50个中文"></textarea>
 					</div>
+				</div>
 
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色：</label>
-						<div class="formControls col-xs-4 col-sm-5">
-							<span class="select-box">
-								<select th:field="*{roleCode}" name="roleCode" class="select">
-									<option value="" selected="">请选择角色</option>
-									<option th:each="role:${listRole}" th:value="${role.roleCode}" th:text="${role.roleName}"></option>
-								</select>
-							</span>
-						</div>
+				<div class="row cl">
+					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+						<input class="btn btn-primary radius" type="submit" value="修改">
+						<input class="btn btn-primary radius" type="button" onclick="history.back(-1)" value="返回">
 					</div>
-
-					<div class="row cl">
-						<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-4">
-							<input class="btn btn-primary radius" type="submit" value="修改">
-							<input class="btn btn-primary radius" type="button" onclick="history.back(-1)" value="返回">
-						</div>
-					</div>
+				</div>
 			</form>
 		</article>
 	</div>
-
-<script type="text/javascript" src="" th:src="@{/h-ui/lib/jquery.validation/1.14.0/jquery.validate.js}"></script>
-<script type="text/javascript" src="" th:src="@{/h-ui/lib/jquery.validation/1.14.0/validate-methods.js}"></script>
-<script type="text/javascript" src="" th:src="@{/h-ui/lib/jquery.validation/1.14.0/messages_zh.js}"></script>
 <script type="text/javascript">
 $(function(){
-	$("#updateUserForm").validate({
-		rules:{
-            realName:{
+    $("#updateRoleForm").validate({
+        rules:{
+            roleName:{
                 required:true,
                 minlength:2,
                 maxlength:10
-            },/*mobile:{
-                required:true,
-                isPhone:true,
-            },*/
-			roleCode:{
-				required:true,
-			},
-		},
-		onkeyup:false,
-		focusCleanup:true,
-		success:"valid",
-		submitHandler:function(form){
-			form.submit();
-		}
-	});
+            }
+        },
+        onkeyup:false,
+        focusCleanup:true,
+        success:"valid"
+    });
 });
 </script>
 </div>

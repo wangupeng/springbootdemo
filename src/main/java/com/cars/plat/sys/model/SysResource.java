@@ -1,9 +1,11 @@
 package com.cars.plat.sys.model;
 
+import com.cars.plat.util.page.Page;
+
 /**
  * Created by wangyupeng on 2017/8/18.
  */
-public class SysResource {
+public class SysResource extends Page{
     private String resourceId;//主键:四位，首位字母A表示1级，B表示2级..(A001、B001、C001)
     private String resourceName;//资源名称
     private String resourceUrl;//资源URL
