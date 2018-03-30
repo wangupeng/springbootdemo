@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cars.plat.sys.dao.SysRoleDao">
     <!-- 查询所有角色 -->
-    <select id="listRole" resultType="SysRole">
+    <select id="listRole" resultType="SysRole" parameterType="SysRole">
         select * from DEMO_SYS_ROLE order by LAST_MODIFIED_DATE DESC ,CREATE_DATE DESC
     </select>
 

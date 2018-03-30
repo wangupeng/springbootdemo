@@ -114,7 +114,7 @@ public class SysResourceService {
      * @param resourceType
      * @return
      */
-    public List<SysResource> listResourceByType(String resourceType){
+    /*public List<SysResource> listResourceByType(String resourceType){
         return sysResourceDao.listResourceByType(resourceType);
-    }
+    }*/
 }

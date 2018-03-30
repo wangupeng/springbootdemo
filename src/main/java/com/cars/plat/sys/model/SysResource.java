@@ -10,7 +10,7 @@ public class SysResource extends Page{
     private String resourceName;//资源名称
     private String resourceUrl;//资源URL
     private String resourceType;//资源类型，1：菜单，2按钮
-    private String parentId="0";//父节点ID
+    private String parentId;//父节点ID
     private String parentName;//上级节点名称
     private String target;//链接目标
     private String icon;//图标

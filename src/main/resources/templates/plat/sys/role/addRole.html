@@ -1,50 +1,40 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout2}">
 <head>
 	<title>新增角色</title>
 </head>
 <body>
 <div layout:fragment="content">
-	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> <a href="index" class="maincolor">首页</a>
-		<span class="c-gray en">&gt;</span> 用户管理
-		<span class="c-gray en">&gt;</span> 新增角色
-		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
-			<i class="Hui-iconfont">&#xe68f;</i>
-		</a>
-	</nav>
-	<div class="Hui-article">
-		<article class="cl pd-25">
-			<form action="addRole" method="post" class="form form-horizontal" id="addRoleForm">
-				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色代码：</label>
-					<div class="formControls col-xs-4 col-sm-5">
-						<input type="text" name="roleCode" id="roleCode" class="input-text" autocomplete="off" placeholder="3~20个字符，字母/中文/数字/下划线"/>
-					</div>
+	<article class="cl pd-10">
+		<form action="addRole" method="post" class="form form-horizontal" id="addRoleForm">
+			<div class="row cl">
+				<label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>角色代码：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<input type="text" name="roleCode" id="roleCode" class="input-text" autocomplete="off" placeholder="3~20个字符，字母/中文/数字/下划线"/>
 				</div>
+			</div>
 
-				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色名称：</label>
-					<div class="formControls col-xs-4 col-sm-5">
-						<input type="text" name="roleName" class="input-text" autocomplete="off" placeholder="2~10个中文"/>
-					</div>
+			<div class="row cl">
+				<label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>角色名称：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<input type="text" name="roleName" class="input-text" autocomplete="off" placeholder="2~10个中文"/>
 				</div>
+			</div>
 
-				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3">角色说明：</label>
-					<div class="formControls col-xs-4 col-sm-5">
-						<textarea name="description" cols="" rows="" class="textarea" placeholder="0～50个中文"></textarea>
-					</div>
+			<div class="row cl">
+				<label class="form-label col-xs-3 col-sm-3">角色说明：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<textarea name="description" cols="" rows="" class="textarea" placeholder="0～50个中文"></textarea>
 				</div>
+			</div>
 
-				<div class="row cl">
-					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-						<input class="btn btn-primary radius" type="submit" value="保存">
-						<input class="btn btn-primary radius" type="button" onclick="history.back(-1)" value="返回">
-					</div>
+			<div class="row cl">
+				<div class="col-xs-12 col-sm-12 text-c">
+					<input class="btn btn-primary radius" type="submit" value="保存">
 				</div>
-			</form>
-		</article>
-	</div>
+			</div>
+		</form>
+	</article>
 <script type="text/javascript">
 $(function(){
 	$("#addRoleForm").validate({
@@ -56,8 +46,7 @@ $(function(){
                 remote: {
                     url: "checkExist", //后台处理程序
                     type: "post", //数据发送方式
-                    //dataType: "json", //接受数据格式
-                    data: { //要传递的数据
+                    data: {
                         roleCode: function () {
                             return $("#roleCode").val();
                         }
@@ -78,7 +67,20 @@ $(function(){
 		focusCleanup:true,
 		success:"valid",
 		submitHandler:function(form){
-			form.submit();
+            $(form).ajaxSubmit({
+                dataType:"json",
+                success:function(result){
+                    if(result==1){
+                        layer.msg('新增角色成功!', { icon: 1, time: 1000 },function () {
+                            window.parent.location.reload();
+                        });
+                    }else{
+                        layer.msg('新增角色失败!', { icon: 2, time: 1000 },function () {
+                            window.parent.location.reload();
+                        });
+                    }
+                }
+            });
 		}
 	});
 });

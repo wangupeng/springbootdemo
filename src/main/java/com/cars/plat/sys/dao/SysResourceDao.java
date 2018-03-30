@@ -39,15 +39,6 @@ public interface SysResourceDao {
      */
     int deleteResource(String resourceId);
 
-
-
-    /**
-     * 根据资源类型查询资源
-     * @param resourceType
-     * @return
-     */
-    List<SysResource> listResourceByType(String resourceType);
-
     /**
      * 根据ID类型查询资源
      * @param resourceId

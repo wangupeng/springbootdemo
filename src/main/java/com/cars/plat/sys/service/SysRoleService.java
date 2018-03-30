@@ -31,8 +31,8 @@ public class SysRoleService {
      * 查询所有角色
      * @return
      */
-    public List<SysRole> listRole(){
-        List<SysRole> list = sysRoleDao.listRole();
+    public List<SysRole> listRole(SysRole sysRole){
+        List<SysRole> list = sysRoleDao.listRole(sysRole);
         return list;
     }
 
@@ -50,16 +50,6 @@ public class SysRoleService {
         //增加角色
         sysRoleDao.addRole(sysRole);
         return 1;
-    }
-
-    /**
-     * 根据角色ID获取角色信息
-     * @param roleCode
-     * @return
-     */
-    public SysRole getRoleByCode(String roleCode){
-        SysRole sysRole = sysRoleDao.getRoleByCode(roleCode);
-        return sysRole;
     }
 
     /**
@@ -109,6 +99,14 @@ public class SysRoleService {
         return addNum;
     }
 
+    /**
+     * 根据roleCode获取角色信息
+     * @param roleCode
+     * @return
+     */
+    public SysRole getRoleByCode(String roleCode){
+        return sysRoleDao.getRoleByCode(roleCode);
+    }
     /**
      * 根据角色ID获取资源
      * @param roleCode

@@ -28,8 +28,6 @@ import java.util.Map;
 public class SysRoleController {
     @Autowired
     private SysRoleService sysRoleService;
-    @Autowired
-    private SysResourceService sysResourceService;
 
     /**
      * 角色列表
@@ -39,7 +37,7 @@ public class SysRoleController {
     public ModelAndView listRole(SysRole sysRole){
         ModelAndView mv = new ModelAndView();
         PageHelper.startPage(sysRole.getPageIndex(), sysRole.getPageSize());
-        List<SysRole> listRole = sysRoleService.listRole();
+        List<SysRole> listRole = sysRoleService.listRole(sysRole);
         PageInfo<SysRole> pageInfo = new PageInfo<SysRole>(listRole);
         mv.addObject("pageInfo",pageInfo);
         mv.setViewName("plat/sys/role/listRole");
@@ -50,36 +48,21 @@ public class SysRoleController {
      * 添加角色
      * @return
      */
-    @RequestMapping("/toAddRole")
-    public String toAddRole(){
-        return "plat/sys/role/addRole";
-    }
-
+    @ResponseBody
     @RequestMapping("/addRole")
-    public String addRole(SysRole sysRole){
-        int n = sysRoleService.addRole(sysRole);
-        return "redirect:/sysRole";
+    public int addRole(SysRole sysRole){
+        return sysRoleService.addRole(sysRole);
     }
 
     /**
      * 修改角色
-     * @param roleCode
+     * @param sysRole
      * @return
      */
-    @RequestMapping("/toUpdateRole")
-    public ModelAndView toUpdateRole(String roleCode){
-        ModelAndView mv = new ModelAndView();
-        //查询角色信息
-        SysRole sysRole = sysRoleService.getRoleByCode(roleCode);
-        mv.addObject("sysRole",sysRole);
-        mv.setViewName("plat/sys/role/updateRole");
-        return mv;
-    }
-
+    @ResponseBody
     @RequestMapping("/updateRole")
-    public String updateRole(SysRole sysRole){
-        int n = sysRoleService.updateRole(sysRole);
-        return "redirect:/sysRole";
+    public int updateRole(SysRole sysRole){
+        return sysRoleService.updateRole(sysRole);
     }
 
     /**
@@ -87,8 +70,8 @@ public class SysRoleController {
      * @param roleCode
      * @return
      */
-    @RequestMapping("/deleteRole")
     @ResponseBody
+    @RequestMapping("/deleteRole")
     public int deleteRole(String roleCode){
         return sysRoleService.deleteRole(roleCode);
     }
@@ -98,8 +81,8 @@ public class SysRoleController {
      * @param roleCode
      * @return
      */
-    @RequestMapping("/addRoleResource")
     @ResponseBody
+    @RequestMapping("/addRoleResource")
     public int addRoleResource(String roleCode,@RequestParam(value = "resourceIds",required = false)String[] resourceIds){
         Map<String, Object> map = new HashMap<>();
         map.put("roleCode", roleCode);
@@ -112,22 +95,34 @@ public class SysRoleController {
      * @param roleCode
      * @return
      */
-    @RequestMapping("/listResourceByRoleCode")
     @ResponseBody
+    @RequestMapping("/listResourceByRoleCode")
     public List<SysResource> listResourceByRoleCode(String roleCode){
         List<SysResource> list = sysRoleService.listResourceByRoleCode(roleCode);
         return list;
     }
 
     /**
-     * ajax获取角色
+     * 根据roleCode获取角色信息
+     * @param roleCode
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getRoleByRoleCode")
+    public SysRole toUpdateRole(String roleCode){
+        SysRole sysRole = sysRoleService.getRoleByCode(roleCode);
+        return sysRole;
+    }
+
+    /**
+     * ajax获取所有角色
      * @param sysRole
      * @return
      */
     @ResponseBody
     @RequestMapping("/getRole")
     public List<SysRole> getRole(SysRole sysRole){
-        return sysRoleService.listRole();
+        return sysRoleService.listRole(sysRole);
     }
 
     /**

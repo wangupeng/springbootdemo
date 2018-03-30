@@ -92,19 +92,20 @@ public class SysResourceController {
      */
     @ResponseBody
     @RequestMapping("/listModuleResource")
-    public List<Map<String,String>> listModuleResource(){
-        List<SysResource> listResource = sysResourceService.listResourceByType("1");
+    public List<Map<String,String>> listModuleResource(SysResource sysResource){
+        sysResource.setResourceType("1");
+        List<SysResource> listResource = sysResourceService.listResource(sysResource);
         SysResource s = new SysResource();
         s.setResourceId("0");
         s.setResourceName("资源管理");
         listResource.add(s);
 
         List<Map<String,String>> list = new ArrayList<>();
-        for (SysResource sysResource : listResource) {
+        for (SysResource resource : listResource) {
             Map<String,String> map = new HashMap<>();
-            map.put("id",sysResource.getResourceId());
-            map.put("pid",sysResource.getParentId());
-            map.put("name",sysResource.getResourceName());
+            map.put("id",resource.getResourceId());
+            map.put("pid",resource.getParentId());
+            map.put("name",resource.getResourceName());
             list.add(map);
         }
         return list;

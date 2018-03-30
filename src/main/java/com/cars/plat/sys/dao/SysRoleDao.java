@@ -14,7 +14,7 @@ public interface SysRoleDao {
      * 查询角色
      * @return
      */
-    List<SysRole> listRole();
+    List<SysRole> listRole(SysRole sysRole);
 
     /**
      * 新增角色
