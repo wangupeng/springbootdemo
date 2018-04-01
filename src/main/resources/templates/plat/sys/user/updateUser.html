@@ -61,20 +61,19 @@ $(function(){
             $("#realName").val(data.realName);
             $("#mobile").val(data.mobile);
             roleCode=data.roleCode;
-        }
-    });
-
-    $.ajax({
-        type:'post',
-        url:'../sysRole/getRole',
-        traditional: true,
-        data:{},
-        success:function(data){
-            $.each(data,function(i,item){
-                if(item.roleCode==roleCode){
-                    $("#roleCode").append("<option value='"+item.roleCode+"' selected>"+item.roleName+"</option>");
-                }else{
-                    $("#roleCode").append("<option value='"+item.roleCode+"'>"+item.roleName+"</option>");
+            $.ajax({
+                type:'post',
+                url:'../sysRole/getRole',
+                traditional: true,
+                data:{},
+                success:function(data){
+                    $.each(data,function(i,item){
+                        if(item.roleCode==roleCode){
+                            $("#roleCode").append("<option value='"+item.roleCode+"' selected>"+item.roleName+"</option>");
+                        }else{
+                            $("#roleCode").append("<option value='"+item.roleCode+"'>"+item.roleName+"</option>");
+                        }
+                    });
                 }
             });
         }

@@ -7,12 +7,11 @@
 	</div>
 
 	<script  th:inline="javascript">
-        var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
         /*加载菜单*/
         $.ajax({
             cache: true,
             type: "POST",
-            url:basePath+'/sysResource/loadMenu',
+            url:[[#{staticServer}]]+'/sysResource/loadMenu',
             dataType:"json",
             async:false,
             success: function(data) {
@@ -27,7 +26,7 @@
                             var resourceUrl = data[j].resourceUrl;
                             resourceUrl = resourceUrl.substr(1,resourceUrl.length);
                             if(data[j].parentId==parentId){
-                                html+="<li id='"+resourceUrl+"'><a href='"+basePath+"/"+resourceUrl+"' title='"+data[j].resourceName+"'>"+data[j].resourceName+"</a></li>";
+                                html+="<li id='"+resourceUrl+"'><a href='"+[[#{staticServer}]]+"/"+resourceUrl+"' title='"+data[j].resourceName+"'>"+data[j].resourceName+"</a></li>";
                             }
                         }
                     }

@@ -12,7 +12,7 @@
 <body>
 
 <div layout:fragment="content">
-	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> <a href="index" class="maincolor">首页</a>
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> <a th:href="@{#{staticServer}+'/index'}" class="maincolor">首页</a>
 		<span class="c-gray en">&gt;</span> 资源管理
 		<span class="c-gray en">&gt;</span> 资源列表
 		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" >

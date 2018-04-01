@@ -6,7 +6,7 @@
 <body>
 
 <div layout:fragment="content">
-	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> <a href="index" class="maincolor">首页</a>
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> <a th:href="@{#{staticServer}+'/index'}" class="maincolor">首页</a>
 		<span class="c-gray en">&gt;</span> 用户管理
 		<span class="c-gray en">&gt;</span> 用户列表
 		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" >
@@ -48,7 +48,7 @@
 				</thead>
 				<tbody>
 					<tr class="text-c" th:if="${pageInfo.list.empty}">
-						<td colspan="4">无数据</td>
+						<td colspan="10">无数据</td>
 					</tr>
 					<tr class="text-c" th:each="user,status : ${pageInfo.list}">
 						<td><input type="checkbox" value="2" name=""></td>
