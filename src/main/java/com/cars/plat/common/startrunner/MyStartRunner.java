@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * 自定义realm
  */
 @Component
-@Order(value = 1)//order注解定义执行顺序
+@Order(value = 1)//order注解定义执行顺序，执行优先级是按value值从小到大顺序
 public class MyStartRunner implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
