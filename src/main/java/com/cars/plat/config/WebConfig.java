@@ -1,23 +1,10 @@
 package com.cars.plat.config;
 
-import nz.net.ultraq.thymeleaf.LayoutDialect;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.spring4.SpringTemplateEngine;
-import org.thymeleaf.spring4.view.ThymeleafViewResolver;
-import org.thymeleaf.templateresolver.UrlTemplateResolver;
-
-import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by wangyupeng on 2017/8/19.
@@ -37,6 +24,8 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
         registry.addViewController("/toChangePassword").setViewName("plat/sys/user/updatePassWord.html");
         //授权
         registry.addViewController("/toAuthorize").setViewName("plat/sys/role/authorize.html");
+        //未授权
+        registry.addViewController("/403").setViewName("plat/common/403.html");
         //添加用户
         registry.addViewController("/sysUser/toAddUser").setViewName("plat/sys/user/addUser.html");
         //修改用户

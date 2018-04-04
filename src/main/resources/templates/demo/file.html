@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout}">
+<head>
+	<title>用户列表</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <article class="cl pd-10">
+        <form enctype="multipart/form-data" action="upload" method="post" class="form form-horizontal">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">附件：</label>
+                <div class="formControls col-xs-8 col-sm-9"> <span class="btn-upload form-group">
+				<input class="input-text upload-url" type="text" readonly nullmsg="请添加附件！" style="width:200px">
+				<a href="javascript:void();" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont">&#xe642;</i> 浏览文件</a>
+				<input type="file" multiple name="file" class="input-file">
+				</span> </div>
+            </div>
+
+            <div class="row cl">
+                <div class="col-xs-12 col-sm-12 text-c">
+                    <input class="btn btn-primary radius" type="submit" value="保存">
+                </div>
+            </div>
+        </form>
+        <form enctype="multipart/form-data" action="batch/upload" method="post" class="form form-horizontal">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">附件1：</label>
+                <div class="formControls col-xs-8 col-sm-9"> <span class="btn-upload form-group">
+				<input class="input-text upload-url" type="text" readonly nullmsg="请添加附件！" style="width:200px">
+				<a href="javascript:void();" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont">&#xe642;</i> 浏览文件</a>
+				<input type="file" multiple name="file" class="input-file">
+				</span> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">附件2：</label>
+                <div class="formControls col-xs-8 col-sm-9"> <span class="btn-upload form-group">
+				<input class="input-text upload-url" type="text" readonly nullmsg="请添加附件！" style="width:200px">
+				<a href="javascript:void();" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont">&#xe642;</i> 浏览文件</a>
+				<input type="file" multiple name="file" class="input-file">
+				</span> </div>
+            </div>
+
+            <div class="row cl">
+                <div class="col-xs-12 col-sm-12 text-c">
+                    <input class="btn btn-primary radius" type="submit" value="保存">
+                </div>
+            </div>
+        </form>
+    </article>
+</div>
+</body>
+</html>

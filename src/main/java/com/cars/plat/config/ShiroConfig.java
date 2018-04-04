@@ -13,6 +13,7 @@ import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSource
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,7 +25,9 @@ import java.util.Map;
  * Created by wangyupeng on 2017/8/18.
  */
 @Configuration
+@AutoConfigureAfter(ShiroLifecycleBeanPostProcessorConfig.class)
 public class ShiroConfig {
+
     @Autowired
     private SysResourceService sysResourceService;
 
@@ -37,7 +40,7 @@ public class ShiroConfig {
 
         shiroFilterFactoryBean.setLoginUrl("/login");
         shiroFilterFactoryBean.setSuccessUrl("/index");
-        //shiroFilterFactoryBean.setUnauthorizedUrl("/403");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/403");
 
         //过滤链定义，从上向下顺序执行，一般将 /**放在最为下边
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
@@ -55,13 +58,13 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/js/**","anon");
 
         //权限资源关系（将resourceUrl作为权限）
-        /*List<SysResource> resourcList = sysResourceService.listResource();
+        List<SysResource> resourcList = sysResourceService.listResource(null);
         for(SysResource resource:resourcList){
             if (StringUtil.isNotNullOrEmpty(resource.getResourceUrl())) {
                 String permission = "perms[" + resource.getResourceUrl()+ "]";
                 filterChainDefinitionMap.put(resource.getResourceUrl(),permission);
             }
-        }*/
+        }
         //authc:所有url都必须认证通过才可以访问
         filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
@@ -130,10 +133,10 @@ public class ShiroConfig {
         return new ShiroDialect();
     }
 
-    @Bean
+    /*@Bean
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
-    }
+    }*/
 
     /**
      * 凭证匹配器
