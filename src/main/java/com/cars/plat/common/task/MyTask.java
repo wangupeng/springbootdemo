@@ -37,7 +37,7 @@ import java.util.Date;
 public class MyTask implements SchedulingConfigurer {
     public static String cron;
 
-    public void TaskCronChange() {
+    public MyTask(){
         //默认情况是：每5秒执行一次.
         cron = "0/5 * * * * *";
         new Thread(new Runnable() {

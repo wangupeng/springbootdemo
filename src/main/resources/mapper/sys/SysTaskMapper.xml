@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cars.plat.sys.dao.SysTaskDao">
+    <!-- 任务列表 -->
+    <select id="listTask" parameterType="SysTask" resultType="SysTask">
+        select * from DEMO_SYS_TASK order by JOB_ID
+    </select>
+
+    <!-- 新增任务 -->
+    <insert id="addTask" parameterType="SysTask">
+        insert into DEMO_SYS_TASK
+        (JOB_ID,JOB_NAME,JOB_GROUP,JOB_DESCRIBE,CRON_EXPRESSION,JOB_CLASS,STATUS,CREATE_USER,UPDATE_USER)
+        VALUES
+        (#{jobId},#{jobName},#{jobGroup},#{jobDescribe},#{cronExpression},#{jobClass},#{status},#{createUser},#{updateUser})
+    </insert>
+
+    <!-- 开始任务 -->
+    <update id="startTask" parameterType="String">
+        update DEMO_SYS_TASK set STATUS='1' where JOB_ID=#{jobId}
+    </update>
+    <!-- 暂停任务 -->
+    <update id="pauseTask" parameterType="String">
+        update DEMO_SYS_TASK set STATUS='0' where JOB_ID=#{jobId}
+    </update>
+
+    <!-- 更新任务 -->
+    <update id="updateTask" parameterType="SysTask">
+        update DEMO_SYS_TASK
+        set JOB_NAME=#{jobName},JOB_GROUP=#{jobGroup},JOB_DESCRIBE=#{jobDescribe},CRON_EXPRESSION=#{cronExpression},
+        UPDATE_DATE=#{updateDate},UPDATE_USER=#{updateUser}
+        where JOB_ID=#{jobId}
+    </update>
+
+    <!-- 删除任务 -->
+    <delete id="deleteTask" parameterType="String">
+        delete from DEMO_SYS_TASK where JOB_ID=#{jobId}
+    </delete>
+
+    <!-- 根据任务名查询任务信息 -->
+    <select id="getTaskByJobId" parameterType="SysTask" resultType="SysTask">
+        select * from DEMO_SYS_Task where JOB_ID=#{jobId}
+    </select>
+</mapper>

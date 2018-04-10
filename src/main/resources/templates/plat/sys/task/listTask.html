@@ -1,0 +1,148 @@
+﻿<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout}">
+	<head>
+		<title>任务列表</title>
+	</head>
+<body>
+
+<div layout:fragment="content">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> <a th:href="@{#{staticServer}+'/index'}" class="maincolor">首页</a>
+		<span class="c-gray en">&gt;</span> 任务管理
+		<span class="c-gray en">&gt;</span> 任务列表
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" >
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<!--form action="sysTask" method="post" class="form form-horizontal">
+				<div class="text-l" th:object="${sysTask}">
+					任务名：<input type="text" class="input-text" style="width:100px" id="TaskName" name="TaskName" th:value="*{taskName}">
+					姓名：<input type="text" class="input-text" style="width:100px" id="realName" name="realName" th:value="*{realName}">
+					<button type="submit" class="btn btn-success"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+				</div>
+			</form>-->
+
+			<div class="cl pd-5 bg-1 bk-gray mt-10">
+				<span class="l">
+					<a href="javascript:;" onclick="toAddTask('新增任务','sysTask/toAddTask','10001','800','350')" class="btn btn-primary radius"  shiro:hasPermission="/sysTask/add"><i class="Hui-iconfont">&#xe600;</i> 新增任务</a>
+				</span>
+			</div>
+
+			<table class="table table-border table-bordered table-hover table-bg table-sort dataTables_wrapper" id="dataTables-smsSendOrder">
+				<thead>
+					<tr class="text-c">
+						<th width="25"><input type="checkbox" name="" value=""></th>
+						<th width="30">序号</th>
+						<th width="50">任务名称</th>
+						<th width="50">任务分组</th>
+                        <th width="100">任务实现类</th>
+						<th width="100">任务描述</th>
+						<th width="80">任务表达式</th>
+						<th width="50">任务状态</th>
+						<th width="100">创建时间</th>
+						<th width="50">创建用户</th>
+						<th width="100">修改时间</th>
+						<th width="50">修改用户</th>
+						<th width="60">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="text-c" th:if="${pageInfo.list.empty}">
+						<td colspan="10">无数据</td>
+					</tr>
+					<tr class="text-c" th:each="task,status : ${pageInfo.list}">
+						<td><input type="checkbox" value="2" name=""></td>
+						<td th:text="${status.index+1}"></td>
+						<td th:text="${task.jobName}"></td>
+						<td th:text="${task.jobGroup}"></td>
+						<td th:text="${task.jobClass}"></td>
+						<td th:text="${task.jobDescribe}"></td>
+						<td th:text="${task.cronExpression}"></td>
+						<td class="td-status">
+							<span th:class="${task.status == '1'}?'label label-success radius':'label label-default radius'" th:text="${task.status == '1'}?'正常':'已暂停'"></span>
+						</td>
+						<td th:text="${#dates.format(task.createDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+						<td th:text="${task.createUser}"></td>
+						<td th:text="${#dates.format(task.updateDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+						<td th:text="${task.updateUser}"></td>
+						<td class="td-manage">
+                            <a th:title="${task.status == '0'}?'启动':'暂停'" th:onclick="${task.status == '0'}?'javascript:startTask(\''+${task.jobId}+'\')':'javascript:pauseTask(\''+${task.jobId}+'\')'" shiro:hasPermission="/sysTask/query" href="javascript:;" data-toggle="tooltip" data-placement="top" style="text-decoration:none">
+                                <i class="Hui-iconfont f-16" th:text="${task.status == '1'}?'&#xe60e;':'&#xe605;'"></i>
+                            </a>
+							<a title="修改" th:onclick="'javascript:toUpdateTask(\'修改任务\',\'sysTask/toUpdateTask\',\'10001\',\'800\',\'350\',\''+${task.jobId}+'\')'" shiro:hasPermission="/sysTask/update"  class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6df;</i></a>
+							<a title="删除" th:onclick="'javascript:deleteTask(\''+${task.jobId}+'\')'" href="javascript:;" shiro:hasPermission="/sysTask/delete" class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6e2;</i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+            <div th:replace="fragments/page :: pageNav(${pageInfo})"></div>
+		</article>
+	</div>
+<script type="text/javascript">
+    /*启动任务*/
+    function startTask(jobId){
+        layer.confirm('确认要启动吗？',{icon: 3, title:'提示'},function(index){
+            $.post("sysTask/startTask",{jobId: jobId}, function(result) {
+                if(result==1){
+                    layer.msg('任务已启动!', { icon: 1, time: 1000 },function () {
+                        location.reload();
+                    });
+                }else{
+                    layer.msg('任务启动失败!', { icon: 2, time: 1000 },function () {
+                        location.reload();
+                    });
+                }
+            });
+        });
+    }
+
+    /*暂停任务*/
+    function pauseTask(jobId){
+        layer.confirm('确认要解锁吗？',function(index){
+            $.post("sysTask/pauseTask",{jobId: jobId}, function(result) {
+                if(result==1){
+                    layer.msg('任务已暂停!', { icon: 1, time: 1000 },function () {
+                        location.reload();
+                    });
+                }else{
+                    layer.msg('任务暂停失败!', { icon: 2, time: 1000 },function () {
+                        location.reload();
+                    });
+                }
+            });
+        });
+    }
+
+    /*添加任务*/
+    function toAddTask(title,url,id,w,h){
+		layer_show(title,url,w,h);
+    }
+
+    /*修改任务*/
+    function toUpdateTask(title,url,id,w,h,jobId){
+        data = {jobId:jobId};
+        layer_show(title,url,w,h);
+    }
+
+	/*删除*/
+	function deleteTask(jobId){
+		layer.confirm("确认要删除吗？", {icon: 3, title:'提示'}, function(index){
+			$.post("sysTask/deleteTask",{jobId: jobId}, function(result) {
+				if(result==1){
+					layer.msg('删除成功!', { icon: 1, time: 1000 },function () {
+						location.reload();
+					});
+				}else{
+					layer.msg('删除失败!', { icon: 2, time: 1000 },function () {
+						location.reload();
+					});
+				}
+			});
+		});
+	}
+</script>
+</div>
+</body>
+</html>

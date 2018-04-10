@@ -1,10 +1,8 @@
 package com.cars.plat.sys.controller;
 
-import com.cars.plat.sys.model.SysRole;
+import com.cars.plat.common.task.MyScheduler;
 import com.cars.plat.sys.model.SysUser;
-import com.cars.plat.sys.service.SysRoleService;
 import com.cars.plat.sys.service.SysUserService;
-import com.cars.plat.util.result.ResultEnum;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -25,8 +22,9 @@ import java.util.List;
 public class SysUserController {
     @Autowired
     private SysUserService userService;
+
     @Autowired
-    private SysRoleService sysRoleService;
+    private MyScheduler myScheduler ;
 
     /**
      * 用户列表
