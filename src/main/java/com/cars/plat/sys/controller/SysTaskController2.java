@@ -7,7 +7,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,8 +18,8 @@ import java.util.List;
  * Created by wangyupeng on 2017/8/18.
  */
 @Controller
-@RequestMapping("/sysTask")
-public class SysTaskController {
+@RequestMapping("/sysTask2")
+public class SysTaskController2 {
     @Autowired
     private SysTaskService sysTaskService;
     @Autowired
@@ -73,7 +72,7 @@ public class SysTaskController {
         int n = 0;
         try {
             SysTask sysTask = sysTaskService.getTaskByJobId(jobId);
-            myScheduler.deleteJob(sysTask.getJobName(),sysTask.getJobGroup());
+            myScheduler.pauseJob(sysTask.getJobName(),sysTask.getJobGroup());
             n = sysTaskService.pauseTask(jobId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,8 +91,8 @@ public class SysTaskController {
         int n = 0;
         try {
             SysTask sysTask = sysTaskService.getTaskByJobId(jobId);
-            boolean isStarted = myScheduler.startJob(sysTask.getCronExpression(),sysTask.getJobGroup(),sysTask.getJobName(),sysTask.getJobClass());
-            if(isStarted){
+            myScheduler.resumeJob(sysTask.getJobName(),sysTask.getJobGroup());
+            if(true){
                 n = sysTaskService.startTask(jobId);
             }
         } catch (Exception e) {
@@ -112,9 +111,10 @@ public class SysTaskController {
     public int updateTask(SysTask sysTask){
         int n = 0;
         try {
-            myScheduler.deleteJob(sysTask.getJobName(),sysTask.getJobGroup());
-            boolean isStarted = myScheduler.startJob(sysTask.getCronExpression(),sysTask.getJobGroup(),sysTask.getJobName(),sysTask.getJobClass());
+            Date date = myScheduler.modifyJobTime(sysTask.getJobName(),sysTask.getJobGroup(),sysTask.getCronExpression());
+            if(date != null){
                 n = sysTaskService.updateTask(sysTask);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
