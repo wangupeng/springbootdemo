@@ -44,125 +44,25 @@ public class MyScheduler {
         }
         return isStarted;
     }
-    /***
-     * 修改定时任务时间
-     * @param triggerName
-     * @param triggerGroupName
-     * @param time
-     */
-    public  Date  modifyJobTime(String triggerName,String triggerGroupName, String time) {
-        Date reDate = null;
-        try {
-            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-            TriggerKey triggerKey = new TriggerKey(triggerName, triggerGroupName);
-            CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
-            if (trigger == null) {
-                return null;
-            }
-            String oldTime = trigger.getCronExpression();
-            /*if (!oldTime.equalsIgnoreCase(time)) {  // Trigger已存在，那么更新相应的定时设置
-            }*/
-                CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(time);//设置一个新的定时时间
 
-                // 按新的cronExpression表达式重新构建trigger
-                CronTrigger cronTrigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
-
-                // 按新的trigger重新设置job执行
-                reDate = scheduler.rescheduleJob(triggerKey, cronTrigger);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return reDate;
-    }
-
-    /****
-     * 暂停一个任务
-     * @param triggerName
-     * @param triggerGroupName
-     */
-    public boolean pauseJob(String triggerName,String triggerGroupName){
-        boolean isPaused = false;
-        try {
-            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-            JobKey jobKey = new JobKey(triggerName, triggerGroupName);
-            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-            if (jobDetail==null){
-                return isPaused;
-            }
-            scheduler.pauseJob(jobKey);
-            isPaused = scheduler.isStarted();
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-        return isPaused;
-    }
     /****
      * 删除一个任务
      * @param triggerName
      * @param triggerGroupName
      */
-    public void deleteJob(String triggerName,String triggerGroupName){
+    public boolean deleteJob(String triggerName,String triggerGroupName){
+        boolean isDeleted = false;
         try {
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             JobKey jobKey = new JobKey(triggerName, triggerGroupName);
             JobDetail jobDetail = scheduler.getJobDetail(jobKey);
             if (jobDetail==null){
-                return;
+                return isDeleted;
             }
-            scheduler.deleteJob(jobKey);
+            isDeleted = scheduler.deleteJob(jobKey);
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
-    }
-    /****
-     * 恢复一个任务
-     * @param triggerName
-     * @param triggerGroupName
-     */
-    public void resumeJob(String triggerName,String triggerGroupName){
-        try {
-            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-            JobKey jobKey = new JobKey(triggerName, triggerGroupName);
-            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-            if (jobDetail==null){
-                return;
-            }
-            scheduler.resumeJob(jobKey);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /***
-     * 开始定时任务
-     */
-    public void startAllJob(String triggerName,String triggerGroupName){
-        try {
-            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-            JobKey jobKey = JobKey.jobKey(triggerName, triggerGroupName);
-            scheduler.start();
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-    }
-    /***
-     * 立即执行定时任务
-     */
-    public void doJob(String triggerName,String triggerGroupName){
-        try {
-            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-            JobKey jobKey = JobKey.jobKey(triggerName, triggerGroupName);
-            scheduler.triggerJob(jobKey);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-    }
-    public void shutdown(){
-        try {
-            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-            scheduler.shutdown();
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
+        return isDeleted;
     }
 }

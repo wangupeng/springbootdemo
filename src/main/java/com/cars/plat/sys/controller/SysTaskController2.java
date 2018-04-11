@@ -1,6 +1,7 @@
 package com.cars.plat.sys.controller;
 
 import com.cars.plat.common.task.MyScheduler;
+import com.cars.plat.common.task.MyScheduler2;
 import com.cars.plat.sys.model.SysTask;
 import com.cars.plat.sys.service.SysTaskService;
 import com.github.pagehelper.PageHelper;
@@ -23,7 +24,7 @@ public class SysTaskController2 {
     @Autowired
     private SysTaskService sysTaskService;
     @Autowired
-    private MyScheduler myScheduler ;
+    private MyScheduler2 myScheduler ;
 
     /**
      * 任务列表

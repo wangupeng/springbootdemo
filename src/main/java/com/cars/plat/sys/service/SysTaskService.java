@@ -45,7 +45,6 @@ public class SysTaskService {
      */
     public void startTaskOnRun(){
         List<SysTask> list = taskDao.listTask(null);
-        //todo 加载是全部加载，只是为启动状态
         for(SysTask sysTask:list){
             if("1".equals(sysTask.getStatus())){
                 boolean isStarted = myScheduler.startJob(sysTask.getCronExpression(),sysTask.getJobGroup(),sysTask.getJobName(),sysTask.getJobClass());
