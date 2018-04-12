@@ -36,14 +36,14 @@
 					<thead>
 					<tr class="text-c">
 						<th width="25"><input type="checkbox" name="" value=""></th>
-						<th width="40">序号</th>
-						<th width="200">模块名称</th>
-						<th width="200">模块链接</th>
-						<th width="90">类型</th>
-						<th width="90">链接目标</th>
-						<th width="90">图标</th>
-						<th width="90">排序</th>
-						<th width="120">操作</th>
+						<th width="30">序号</th>
+						<th width="90">模块名称</th>
+						<th width="90">模块链接</th>
+						<th width="50">类型</th>
+						<th width="150">描述</th>
+						<th width="70">图标</th>
+						<th width="30">排序</th>
+						<th width="50">操作</th>
 					</tr>
 					</thead>
                     <tbody id="resourceList">
@@ -90,12 +90,12 @@
             success:function(data){
                 $.each(data,function(i,item){
                     str+="<tr class='text-c'>"+
-                        "<td><input type='checkbox' value='2' name=''></td>"+
+                        "<td><input type='checkbox' name=''></td>"+
                         "<td>"+(i+1)+"</td>"+
                         "<td>"+item.resourceName+"</td>"+
                         "<td>"+item.resourceUrl+"</td>"+
                         "<td>"+(item.resourceType==1?'模块':'按钮')+"</td>"+
-                        "<td>"+item.target+"</td>"+
+                        "<td>"+item.description+"</td>"+
                         "<td>"+item.icon+"</td>"+
                         "<td>"+item.displayOrder+"</td>"+
                         "<td class='td-manage'>"+
@@ -152,7 +152,6 @@
         ztreeNodes = treeObj.getSelectedNodes();
         treeObj.selectNode(treeObj.getNodeByParam("id",ztreeNodes[0].id,null));//选中指定节点
         treeObj.setting.callback.onClick(null, treeObj.setting.treeId, treeObj.getNodeByParam("id",ztreeNodes[0].id,null));//触发函数
-
         $.fn.zTree.init($("#tree"), setting);//重新加载树
     }
 
@@ -163,7 +162,6 @@
         for (var i = 0; i < nodes.length; i++) {
             treeObj.expandNode(nodes[i], true, false, true);
         }
-
         if(typeof(ztreeNodes) != "undefined"){
             treeObj.selectNode(ztreeNodes[0]);
         }

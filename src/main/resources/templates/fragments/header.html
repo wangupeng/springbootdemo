@@ -20,9 +20,10 @@
 			</nav>
 			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
 				<ul class="cl">
-					<li><i class="Hui-iconfont">&#xe60a;</i> </li>
+					<li><i class="Hui-iconfont">&#xe60d;</i></li>
 					<li th:text="${session.userSession.roleName}"></li>
-					<li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A">[[${session.userSession.realName}]] <i class="Hui-iconfont">&#xe6d5;</i></a>
+					<li class="dropDown dropDown_hover">
+						<a href="#" class="dropDown_A">[[${session.userSession.realName}]] <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
 							<li><a href="javascript:;" th:onclick="'javascript:change_password(\'修改密码\',\''+#{staticServer}+'/toChangePassword\',\'10001\',\'800\',\'370\')'">修改密码</a></li>
 							<li><a href="" th:href="@{#{staticServer}+'/logout'}">退出</a></li>

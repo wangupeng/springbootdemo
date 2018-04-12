@@ -73,8 +73,11 @@ public class SysTaskController {
         int n = 0;
         try {
             SysTask sysTask = sysTaskService.getTaskByJobId(jobId);
-            myScheduler.deleteJob(sysTask.getJobName(),sysTask.getJobGroup());
-            n = sysTaskService.pauseTask(jobId);
+            boolean isDeleted = myScheduler.deleteJob(sysTask.getJobName(),sysTask.getJobGroup());
+            if(isDeleted){
+                n = sysTaskService.pauseTask(jobId);
+                if(n<=0) myScheduler.startJob(sysTask.getCronExpression(),sysTask.getJobGroup(),sysTask.getJobName(),sysTask.getJobClass());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -95,6 +98,7 @@ public class SysTaskController {
             boolean isStarted = myScheduler.startJob(sysTask.getCronExpression(),sysTask.getJobGroup(),sysTask.getJobName(),sysTask.getJobClass());
             if(isStarted){
                 n = sysTaskService.startTask(jobId);
+                if(n<=0) myScheduler.deleteJob(sysTask.getJobName(),sysTask.getJobGroup());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,10 +115,21 @@ public class SysTaskController {
     @RequestMapping("/updateTask")
     public int updateTask(SysTask sysTask){
         int n = 0;
+        SysTask sysTask2 = sysTaskService.getTaskByJobId(sysTask.getJobId());
         try {
-            myScheduler.deleteJob(sysTask.getJobName(),sysTask.getJobGroup());
-            boolean isStarted = myScheduler.startJob(sysTask.getCronExpression(),sysTask.getJobGroup(),sysTask.getJobName(),sysTask.getJobClass());
-                n = sysTaskService.updateTask(sysTask);
+            boolean isDeleted = myScheduler.deleteJob(sysTask.getJobName(),sysTask.getJobGroup());
+            if(isDeleted){
+                boolean isStarted = myScheduler.startJob(sysTask.getCronExpression(),sysTask.getJobGroup(),sysTask.getJobName(),sysTask.getJobClass());
+                if(isStarted){
+                    n = sysTaskService.updateTask(sysTask);
+                    if(n<=0){
+                        myScheduler.deleteJob(sysTask.getJobName(),sysTask.getJobGroup());
+                        myScheduler.startJob(sysTask2.getCronExpression(),sysTask2.getJobGroup(),sysTask2.getJobName(),sysTask2.getJobClass());
+                    }
+                }else{
+                    myScheduler.startJob(sysTask2.getCronExpression(),sysTask2.getJobGroup(),sysTask2.getJobName(),sysTask2.getJobClass());
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -129,9 +144,14 @@ public class SysTaskController {
     @ResponseBody
     @RequestMapping("/deleteTask")
     public int deleteTask(String jobId){
+        int n = 0;
         SysTask sysTask = sysTaskService.getTaskByJobId(jobId);
-        myScheduler.deleteJob(sysTask.getJobName(),sysTask.getJobGroup());
-        return sysTaskService.deleteTask(jobId);
+        boolean isDeleted = myScheduler.deleteJob(sysTask.getJobName(),sysTask.getJobGroup());
+        if(isDeleted){
+            n = sysTaskService.deleteTask(jobId);
+            if(n<=0) myScheduler.startJob(sysTask.getCronExpression(),sysTask.getJobGroup(),sysTask.getJobName(),sysTask.getJobClass());
+        }
+        return n;
     }
 
     /**

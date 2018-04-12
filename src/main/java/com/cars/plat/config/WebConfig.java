@@ -42,6 +42,8 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
         registry.addViewController("/sysTask/toAddTask").setViewName("plat/sys/task/addTask.html");
         //修改任务
         registry.addViewController("/sysTask/toUpdateTask").setViewName("plat/sys/task/updateTask.html");
+        //图标页面
+        registry.addViewController("/iconfont").setViewName("plat/common/iconfont.html");
 
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
     }

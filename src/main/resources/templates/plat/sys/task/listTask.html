@@ -68,8 +68,8 @@
 						<td th:text="${#dates.format(task.updateDate,'yyyy-MM-dd HH:mm:ss')}"></td>
 						<td th:text="${task.updateUser}"></td>
 						<td class="td-manage">
-                            <a th:title="${task.status == '0'}?'启动':'暂停'" th:onclick="${task.status == '0'}?'javascript:startTask(\''+${task.jobId}+'\')':'javascript:pauseTask(\''+${task.jobId}+'\')'" shiro:hasPermission="/sysTask/query" href="javascript:;" data-toggle="tooltip" data-placement="top" style="text-decoration:none">
-                                <i class="Hui-iconfont f-16" th:text="${task.status == '1'}?'&#xe60e;':'&#xe605;'"></i>
+                            <a th:title="${task.status == '0'}?'启动':'暂停'" th:onclick="${task.status == '0'}?'javascript:startTask(\''+${task.jobId}+'\')':'javascript:pauseTask(\''+${task.jobId}+'\')'" shiro:hasPermission="/sysTask/start" href="javascript:;" data-toggle="tooltip" data-placement="top" style="text-decoration:none">
+                                <i class="Hui-iconfont f-16" th:text="${task.status == '1'}?'&#xe631;':'&#xe6e1;'"></i>
                             </a>
 							<a title="修改" th:onclick="'javascript:toUpdateTask(\'修改任务\',\'sysTask/toUpdateTask\',\'10001\',\'800\',\'350\',\''+${task.jobId}+'\')'" shiro:hasPermission="/sysTask/update"  class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6df;</i></a>
 							<a title="删除" th:onclick="'javascript:deleteTask(\''+${task.jobId}+'\')'" href="javascript:;" shiro:hasPermission="/sysTask/delete" class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6e2;</i></a>
