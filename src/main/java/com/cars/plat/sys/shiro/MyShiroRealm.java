@@ -37,6 +37,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         String username = (String)token.getPrincipal();
         //根据用户名查询用户信息
         SysUser user = sysUserService.getUserByUserName(username);
+        Session session = SecurityUtils.getSubject().getSession();
 
         if(user==null) {
             throw new UnknownAccountException();
@@ -53,7 +54,6 @@ public class MyShiroRealm extends AuthorizingRealm {
                 getName()  //realm name
         );
         // 当验证都通过后，把用户信息放在session里
-        Session session = SecurityUtils.getSubject().getSession();
         session.setAttribute("userSession", user);
         return authenticationInfo;
     }

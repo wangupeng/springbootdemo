@@ -1,5 +1,6 @@
 package com.cars.plat.sys.controller;
 
+import com.cars.plat.common.aop.UserAccessAnnotation;
 import com.cars.plat.sys.model.SysUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;

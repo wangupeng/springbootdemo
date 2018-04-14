@@ -1,15 +1,23 @@
 package com.cars.plat.sys.model;
 
+import com.cars.plat.util.date.DateUtil;
+import com.cars.plat.util.page.Page;
+
+import java.util.Date;
+
 /**
  * Created by wangyupeng on 2017/12/20.
  */
-public class SysLog {
+public class SysLog extends Page {
     private String logId;
     private String userName;
     private String operaIp;
-    private String operaDate;
+    private Date operaDate;
+    private String startDate = DateUtil.getSystemDate();
+    private String endDate = DateUtil.getSystemDate();
     private String operaUrl;
     private String methodName;
+    private Long dealTime;
 
     public String getLogId() {
         return logId;
@@ -35,12 +43,28 @@ public class SysLog {
         this.operaIp = operaIp;
     }
 
-    public String getOperaDate() {
+    public Date getOperaDate() {
         return operaDate;
     }
 
-    public void setOperaDate(String operaDate) {
+    public void setOperaDate(Date operaDate) {
         this.operaDate = operaDate;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     public String getOperaUrl() {
@@ -59,4 +83,26 @@ public class SysLog {
         this.methodName = methodName;
     }
 
+    public Long getDealTime() {
+        return dealTime;
+    }
+
+    public void setDealTime(Long dealTime) {
+        this.dealTime = dealTime;
+    }
+
+    @Override
+    public String toString() {
+        return "SysLog{" +
+                "logId='" + logId + '\'' +
+                ", userName='" + userName + '\'' +
+                ", operaIp='" + operaIp + '\'' +
+                ", operaDate=" + operaDate +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", operaUrl='" + operaUrl + '\'' +
+                ", methodName='" + methodName + '\'' +
+                ", dealTime=" + dealTime +
+                '}';
+    }
 }

@@ -3,6 +3,8 @@ package com.cars.plat.sys.dao;
 import com.cars.plat.sys.model.SysLog;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * Created by wangyupeng on 2017/8/18.
  */
@@ -14,6 +16,13 @@ public interface SysLogDao {
      * @return
      */
     int addLog(SysLog sysLog);
+
+    /**
+     * 日志列表
+     * @param sysLog
+     * @return
+     */
+    List<SysLog> listLog(SysLog sysLog);
 
 
 }

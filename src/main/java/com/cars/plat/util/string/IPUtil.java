@@ -1,7 +1,5 @@
 package com.cars.plat.util.string;
 
-import com.cars.plat.util.log.LogUtil;
-
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -68,7 +66,6 @@ public final class IPUtil {
         try {
             hostName = InetAddress.getLocalHost().getHostName();
         } catch (Exception e) {
-            LogUtil.error(e);
         }
         return hostName;
     }

@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * Created by wangyupeng on 2017/8/18.
  */
 @Component
-public class LogService {
+public class SysLogService {
 
     @Autowired
     private SysLogDao sysLogDao;
@@ -25,13 +28,11 @@ public class LogService {
      */
     @Transactional
     public int addLog(SysLog sysLog){
-        sysLog.setLogId(StringUtil.uuid());
-        sysLog.setOperaDate(DateUtil.getSystemTime());
-        //获取当前登录用户
-        SysUser sysUser = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
-        sysLog.setUserName(sysUser.getUserName());
-
         return sysLogDao.addLog(sysLog);
+    }
+
+    public List<SysLog> listLog(SysLog sysLog){
+        return sysLogDao.listLog(sysLog);
     }
 
 }

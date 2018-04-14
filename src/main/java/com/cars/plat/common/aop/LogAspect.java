@@ -1,25 +1,34 @@
 package com.cars.plat.common.aop;
 
+import com.cars.plat.sys.model.SysLog;
+import com.cars.plat.sys.model.SysUser;
+import com.cars.plat.util.string.IPUtil;
+import com.cars.plat.util.string.StringUtil;
+import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Enumeration;
+import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
  * Created by wangyupeng on 2018/4/3 18:08
  */
-//@Aspect
-//@Component
+@Aspect
+@Component
 public class LogAspect {
     ThreadLocal<Long> startTime = new ThreadLocal<Long>();
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     /**
      * 定义一个切入点.
@@ -34,7 +43,82 @@ public class LogAspect {
     @Pointcut("execution(public * com..controller..*.*(..))")
     public void webLog(){}
 
-    @Before("webLog()")
+    /**
+     * 管理员登录方法的切入点
+     */
+    @Pointcut("execution(* com.cars.plat.sys.controller.*.login(..))")
+    public void login(){
+    }
+
+    /**
+     * 添加业务逻辑方法切入点
+     *//*
+    @Pointcut("execution(* com.yangjf.service.*.save(..))")
+    public void insertCell() {
+    }
+
+    *//**
+     * 修改业务逻辑方法切入点
+     *//*
+    @Pointcut("execution(* com.yangjf.service.*.update(..))")
+    public void updateCell() {
+    }
+
+    *//**
+     * 删除业务逻辑方法切入点
+     *//*
+    @Pointcut("execution(* com.yangjf.service.*.delete(..))")
+    public void deleteCell() {
+    }*/
+
+
+
+    @Before(value = "login()")
+    public void doBefore(JoinPoint joinPoint){
+        startTime.set(System.currentTimeMillis());
+    }
+
+    /**
+     * 登录操作(后置通知)
+     * @param joinPoint
+     * @throws Throwable
+     */
+    @AfterReturning(value = "login()")
+    public void loginLog(JoinPoint joinPoint) throws Throwable {
+        sendToMq(joinPoint);
+    }
+
+
+    /**
+     * 将信息防撞发送到mq
+     * @param joinPoint
+     */
+    private void sendToMq(JoinPoint joinPoint){
+        SysUser sysUser = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
+        if(sysUser!=null){
+            // 接收到请求，记录请求内容
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            HttpServletRequest request = attributes.getRequest();
+            SysLog sysLog = new SysLog();
+            sysLog.setLogId(StringUtil.uuid());
+            sysLog.setUserName(sysUser.getUserName());
+            sysLog.setOperaIp(IPUtil.getIp());
+            sysLog.setOperaUrl(request.getRequestURL().toString());
+            sysLog.setOperaDate(new Date());
+            sysLog.setMethodName(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+            sysLog.setDealTime(System.currentTimeMillis() - startTime.get());
+            rabbitTemplate.convertAndSend("sysLogQueue",sysLog);
+        }
+    }
+
+
+
+
+
+
+
+    //    @Before("@annotation(UserAccessAnnotation)")
+    /*@Before("login()")
     public void doBefore(JoinPoint joinPoint){
         startTime.set(System.currentTimeMillis());
         // 接收到请求，记录请求内容
@@ -58,12 +142,62 @@ public class LogAspect {
             String paraName=(String)enu.nextElement();
             System.out.println(paraName+": "+request.getParameter(paraName));
         }
-    }
-    @AfterReturning("webLog()")
+    }*/
+    /*@AfterReturning("login()")
     public void  doAfterReturning(JoinPoint joinPoint){
         // 处理完请求，返回内容
 //        logger.info("WebLogAspect.doAfterReturning()");
         System.out.println("WebLogAspect.doAfterReturning()");
         System.out.println(System.currentTimeMillis() - startTime.get());
+    }*/
+
+
+
+
+
+    /**
+     * 使用Java反射来获取被拦截方法(insert、update)的参数值， 将参数值拼接为操作内容
+     * String methodName = joinPoint.getSignature().getName();
+     * @param args
+     * @param mName
+     * @return
+     */
+    public String optionContent(Object[] args, String mName) {
+        if (args == null) {
+            return null;
+        }
+        StringBuffer rs = new StringBuffer();
+        rs.append(mName);
+        String className = null;
+        int index = 1;
+        // 遍历参数对象
+        for (Object info : args) {
+            // 获取对象类型
+            className = info.getClass().getName();
+            className = className.substring(className.lastIndexOf(".") + 1);
+            rs.append("[参数" + index + "，类型:" + className + "，值:");
+            // 获取对象的所有方法
+            Method[] methods = info.getClass().getDeclaredMethods();
+            // 遍历方法，判断get方法
+            for (Method method : methods) {
+                String methodName = method.getName();
+                // 判断是不是get方法
+                if (methodName.indexOf("get") == -1) {// 不是get方法
+                    continue;// 不处理
+                }
+                Object rsValue = null;
+                try {
+                    // 调用get方法，获取返回值
+                    rsValue = method.invoke(info);
+                } catch (Exception e) {
+                    continue;
+                }
+                // 将值加入内容中
+                rs.append("(" + methodName + ":" + rsValue + ")");
+            }
+            rs.append("]");
+            index++;
+        }
+        return rs.toString();
     }
 }
