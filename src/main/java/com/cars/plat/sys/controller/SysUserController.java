@@ -1,7 +1,5 @@
 package com.cars.plat.sys.controller;
 
-import com.cars.plat.common.aop.UserAccessAnnotation;
-import com.cars.plat.common.task.MyScheduler;
 import com.cars.plat.sys.model.SysUser;
 import com.cars.plat.sys.service.SysUserService;
 import com.github.pagehelper.PageHelper;

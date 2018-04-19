@@ -20,6 +20,9 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
+        //index
+        registry.addViewController("/").setViewName("plat/sys/index.html");
+        registry.addViewController("/index").setViewName("plat/sys/index.html");
         //修改密码
         registry.addViewController("/toChangePassword").setViewName("plat/sys/user/updatePassWord.html");
         //授权

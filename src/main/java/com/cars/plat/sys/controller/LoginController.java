@@ -1,6 +1,5 @@
 package com.cars.plat.sys.controller;
 
-import com.cars.plat.common.aop.UserAccessAnnotation;
 import com.cars.plat.sys.model.SysUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -47,10 +46,5 @@ public class LoginController {
             request.setAttribute("msg", "用户或密码不正确！");
             return "plat/sys/login";
         }
-    }
-
-    @RequestMapping("/index")
-    public String index(){
-        return "plat/sys/index";
     }
 }
