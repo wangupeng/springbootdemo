@@ -115,7 +115,7 @@ import org.springframework.stereotype.Component;
  * 结果说明，绑定到fanout交换机上面的队列都收到了消息
  * Created by wangyupeng on 2018/4/12 17:37
  */
-@Component
+//@Component
 public class TestRabbitmq {
     @Autowired
     private RabbitTemplate rabbitTemplate;

@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout2}">
+<head>
+	<title>新增weblogic应用</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <article class="cl pd-10">
+        <form action="addWeblogicApp" method="post" class="form form-horizontal" id="addWeblogicAppForm">
+            <input th:type="hidden" id="weblogicId" name="weblogicId" value=""/>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>应用代码：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="appCode" id="appCode" class="input-text" autocomplete="off" placeholder="1~30个字符"/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>应用名称：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="appName" class="input-text" autocomplete="off" placeholder="1~25个中文"/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>应用状态：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <span class="select-box">
+                        <select class="select" size="1" name="appStatus">
+                            <option value="">请选择应用状态</option>
+                            <option value="1">生产应用</option>
+                            <option value="2">测试应用</option>
+                            <option value="3">废弃待删除</option>
+                        </select>
+                    </span>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>负责人：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="fzr" class="input-text" autocomplete="off" placeholder=""/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3">描述：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <textarea name="description" cols="" rows="3" class="textarea" placeholder=""></textarea>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>排序：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="px" class="input-text" autocomplete="off" placeholder=""/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <div class="col-xs-12 col-sm-12 text-c">
+                    <input class="btn btn-primary radius" type="submit" value="保存">
+                </div>
+            </div>
+        </form>
+    </article>
+<script type="text/javascript">
+$(function(){
+    $('#weblogicId').val(parent.data.weblogicId);
+	$("#addWeblogicAppForm").validate({
+		rules:{
+            appCode:{
+				required:true,
+				minlength:1,
+				maxlength:30,
+                remote: {
+                    url: "checkExist", //后台处理程序
+                    type: "post", //数据发送方式
+                    //dataType: "json", //接受数据格式
+                    data: { //要传递的数据
+                        weblogicId:parent.data.weblogicId,
+                        appCode: function () {
+                            return $("#appCode").val();
+                        }
+                    }
+                }
+			},appName:{
+                required:true,
+                minlength:1,
+                maxlength:25
+            },appStatus:{
+                required:true
+            },fzr:{
+                required:true,
+                minlength:1,
+                maxlength:50
+            },px:{
+                required:true,
+                digits:true,
+                minlength:1,
+                maxlength:3
+            },description:{
+                required:false,
+                maxlength:250
+            }
+		},
+        messages: {
+            appCode: {
+                remote: "应用已存在！"
+            }
+        },
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+            $(form).ajaxSubmit({
+                dataType:"json",
+                success:function(result){
+                    if(result==1){
+                        layer.msg('新增应用成功!', { icon: 1, time: 1000 },function () {
+                            window.parent.location.reload();
+                        });
+                    }else{
+                        layer.msg('新增应用失败!', { icon: 2, time: 1000 },function () {
+                            window.parent.location.reload();
+                        });
+                    }
+                }
+            });
+		}
+	});
+});
+</script>
+</div>
+</body>
+</html>

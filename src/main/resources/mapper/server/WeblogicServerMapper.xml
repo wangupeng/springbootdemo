@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cars.server.dao.WeblogicDao">
+    <!-- 查询所有weblogic服务器信息 -->
+    <select id="listWeblogicServer" resultType="Weblogic" parameterType="Weblogic">
+        select * from PMIS_WEBLOGIC order by PX
+    </select>
+
+    <!-- 增加weblogic服务器信息 -->
+    <insert id="addWeblogicServer" parameterType="Weblogic">
+      insert into PMIS_WEBLOGIC (ID, WEBLOGIC_NAME, WEBLOGIC_URL, WEBLOGIC_USERNAME, WEBLOGIC_PASSWORD, FZR, DESCRIPTION, PX, CREATE_USER,CREATE_DATE)
+        VALUES (#{id},#{weblogicName},#{weblogicUrl},#{weblogicUsername},#{weblogicPassword},#{fzr},#{description},#{px},#{createUser},#{createDate})
+    </insert>
+
+    <!-- 更新weblogic服务器信息 -->
+    <update id="updateWeblogicServer" parameterType="Weblogic">
+      update PMIS_WEBLOGIC set
+        WEBLOGIC_NAME=#{weblogicName},WEBLOGIC_URL=#{weblogicUrl},
+        WEBLOGIC_USERNAME=#{weblogicUsername},WEBLOGIC_PASSWORD=#{weblogicPassword},
+        DESCRIPTION=#{description},
+        FZR=#{fzr},PX=#{px}
+      where ID=#{id}
+    </update>
+
+    <!-- 删除weblogic服务器信息 -->
+    <delete id="deleteWeblogicServer" parameterType="String">
+      delete from PMIS_WEBLOGIC where ID=#{id}
+    </delete>
+
+    <!-- 按照ID查询weblogic服务器信息 -->
+    <select id="getWeblogicById" resultType="Weblogic" parameterType="String">
+        select * from PMIS_WEBLOGIC where ID = #{id}
+    </select>
+    <!-- ********************************************************************************************** -->
+
+    <!-- 查询weblogic应用 -->
+    <select id="listWeblogicApp" resultType="WeblogicApp" parameterType="WeblogicApp">
+        select * from PMIS_WEBLOGIC_APP where WEBLOGIC_ID = #{weblogicId} order by PX
+    </select>
+
+    <!-- 增加weblogic应用-->
+    <insert id="addWeblogicApp" parameterType="WeblogicApp">
+      insert into PMIS_WEBLOGIC_APP (WEBLOGIC_ID, APP_CODE, APP_NAME, APP_STATUS, FZR, PX, DESCRIPTION, CREATE_USER, CREATE_DATE)
+        VALUES (#{weblogicId},#{appCode},#{appName},#{appStatus},#{fzr},#{px},#{description},#{createUser},#{createDate})
+    </insert>
+
+    <!-- 更新weblogic应用 -->
+    <update id="updateWeblogicApp" parameterType="WeblogicApp">
+      update PMIS_WEBLOGIC_APP set
+        APP_NAME=#{appName},APP_STATUS=#{appStatus},
+        DESCRIPTION=#{description},FZR=#{fzr},PX=#{px}
+      where WEBLOGIC_ID=#{weblogicId} and APP_CODE=#{appCode}
+    </update>
+
+    <!-- 删除weblogic应用 -->
+    <delete id="deleteWeblogicApp" parameterType="WeblogicApp">
+      delete from PMIS_WEBLOGIC_APP where WEBLOGIC_ID=#{weblogicId} and APP_CODE=#{appCode}
+    </delete>
+
+    <!-- 按weblogic服务器ID和应用代码获取weblogic应用 -->
+    <select id="getWeblogicAppByAppCode" resultType="WeblogicApp" parameterType="WeblogicApp">
+        select * from PMIS_WEBLOGIC_APP where WEBLOGIC_ID=#{weblogicId} and APP_CODE = #{appCode}
+    </select>
+</mapper>

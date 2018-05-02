@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout2}">
+<head>
+	<title>修改weblogic应用</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <article class="cl pd-10">
+        <form action="updateWeblogicApp" method="post" class="form form-horizontal" id="updateWeblogicAppForm">
+            <input th:type="hidden" id="weblogicId" name="weblogicId"/>
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>应用代码：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="appCode" id="appCode" readonly class="input-text" autocomplete="off" placeholder="1~30个字符"/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>应用名称：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="appName" id="appName" class="input-text" autocomplete="off" placeholder="1~25个中文"/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>应用状态：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <span class="select-box">
+                        <select class="select" size="1" name="appStatus" id="appStatus">
+                            <option value="">请选择应用状态</option>
+                            <option value="1">生产应用</option>
+                            <option value="2">测试应用</option>
+                            <option value="3">废弃待删除</option>
+                        </select>
+                    </span>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>负责人：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="fzr" id="fzr" class="input-text" autocomplete="off" placeholder="weblogic负责人"/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3">描述：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <textarea name="description" id="description" cols="" rows="3" class="textarea" placeholder=""></textarea>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>排序：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="px" id="px" class="input-text" autocomplete="off" placeholder=""/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <div class="col-xs-12 col-sm-12 text-c">
+                    <input class="btn btn-primary radius" type="submit" value="修改">
+                </div>
+            </div>
+        </form>
+    </article>
+<script type="text/javascript">
+$(function(){
+    $('#weblogicId').val(parent.data.weblogicId);
+    $.ajax({
+        type:'post',
+        url:'getWeblogicAppById',
+        data:{
+            appCode: parent.data.appCode,
+            weblogicId: parent.data.weblogicId
+        },
+        success:function(data){
+            $("#id").val(data.id);
+            $("#appCode").val(data.appCode);
+            $("#appName").val(data.appName);
+            $("#appStatus").val(data.appStatus);
+            $("#fzr").val(data.fzr);
+            $("#description").val(data.description);
+            $("#px").val(data.px);
+        }
+    });
+
+	$("#updateWeblogicAppForm").validate({
+		rules:{
+            appCode:{
+                required:true,
+                minlength:1,
+                maxlength:30
+            },appName:{
+                required:true,
+                minlength:1,
+                maxlength:25
+            },appStatus:{
+                required:true
+            },fzr:{
+                required:true,
+                minlength:1,
+                maxlength:50
+            },px:{
+                required:true,
+                digits:true,
+                minlength:1,
+                maxlength:3
+            },description:{
+                required:false,
+                maxlength:250
+            }
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+            $(form).ajaxSubmit({
+                dataType:"json",
+                success:function(result){
+                    if(result==1){
+                        layer.msg('修改成功!', { icon: 1, time: 1000 },function () {
+                            window.parent.location.reload();
+                        });
+                    }else{
+                        layer.msg('修改失败!', { icon: 2, time: 1000 },function () {
+                            window.parent.location.reload();
+                        });
+                    }
+                }
+            });
+		}
+	});
+});
+</script>
+</div>
+</body>
+</html>

@@ -20,6 +20,7 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
+        /**************************系统功能*************************/
         //index
         registry.addViewController("/").setViewName("plat/sys/index.html");
         registry.addViewController("/index").setViewName("plat/sys/index.html");
@@ -47,6 +48,16 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
         registry.addViewController("/sysTask/toUpdateTask").setViewName("plat/sys/task/updateTask.html");
         //图标页面
         registry.addViewController("/iconfont").setViewName("plat/common/iconfont.html");
+        /******************************系统功能结束*********************/
+
+        //新增weblogic
+        registry.addViewController("/weblogic/toAddWeblogic").setViewName("server/weblogic/addWeblogic.html");
+        //修改weblogic
+        registry.addViewController("/weblogic/toUpdateWeblogic").setViewName("server/weblogic/updateWeblogic.html");
+        //新增weblogic
+        registry.addViewController("/weblogic/toAddWeblogicApp").setViewName("server/weblogic/addWeblogicApp.html");
+        //修改weblogic
+        registry.addViewController("/weblogic/toUpdateWeblogicApp").setViewName("server/weblogic/updateWeblogicApp.html");
 
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
     }
