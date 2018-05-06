@@ -1,0 +1,89 @@
+﻿<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout}">
+	<head>
+		<title>公司列表</title>
+	</head>
+<body>
+
+<div layout:fragment="content">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> <a th:href="@{#{staticServer}+'/index'}" class="maincolor">首页</a>
+		<span class="c-gray en">&gt;</span> 人员信息
+		<span class="c-gray en">&gt;</span> 公司管理
+		<span class="c-gray en">&gt;</span> 公司列表
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" >
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+
+	<div class="Hui-article">
+		<article class="cl pd-20">
+            <div class="cl pd-5 bg-1 bk-gray">
+				<span class="l">
+					<a href="javascript:;" onclick="toAddCompany('新增公司','company/toAddCompany','10001','800','450')" class="btn btn-primary radius"
+                       shiro:hasPermission="/company/add"><i class="Hui-iconfont">&#xe600;</i> 新增</a>
+				</span>
+            </div>
+			<table class="table table-border table-bordered table-hover table-bg table-sort dataTables_wrapper" id="dataTables-smsSendOrder">
+				<thead>
+					<tr class="text-c">
+						<th width="20"><input type="checkbox" name="" value=""></th>
+						<th width="20">序号</th>
+						<th width="100">公司名称</th>
+						<th width="100">公司性质</th>
+						<th width="140">公司地址</th>
+						<th width="80">成立日期</th>
+                        <th width="40">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="text-c" th:if="${pageInfo.list.empty}">
+						<td colspan="18">无数据</td>
+					</tr>
+					<tr class="text-c" th:each="company,status : ${pageInfo.list}">
+						<td><input type="checkbox" value="2" name=""></td>
+						<td th:text="${status.index+1}"></td>
+						<td th:text="${company.companyName }"></td>
+						<td th:text="${company.companyNature }"></td>
+                        <td th:text="${company.companyAddress }"></td>
+                        <td th:text="${company.establishedDate }"></td>
+                        <td class="td-manage">
+                            <a title="修改" th:onclick="'javascript:toUpdateCompany(\'修改\',\'company/toUpdateCompany\',\'10001\',\'800\',\'450\',\''+${company.id}+'\')'" shiro:hasPermission="/company/update"  class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6df;</i></a>
+                            <a title="删除" th:onclick="'javascript:deleteCompany(\''+${company.id}+'\')'" href="javascript:;" shiro:hasPermission="/company/delete" class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6e2;</i></a>
+                        </td>
+					</tr>
+				</tbody>
+			</table>
+            <div th:replace="fragments/page :: pageNav(${pageInfo})"></div>
+		</article>
+	</div>
+<script type="text/javascript">
+    /*添加*/
+    function toAddCompany(title,url,id,w,h){
+        layer_show(title,url,w,h);
+    }
+    /*修改*/
+    function toUpdateCompany(title,url,id,w,h,id){
+        data = {id:id};
+        layer_show(title,url,w,h);
+    }
+
+    /*删除*/
+    function deleteCompany(id){
+        layer.confirm("确认要删除吗？", {icon: 3, title:'提示'}, function(index){
+            $.post("company/deleteCompany",{id: id}, function(result) {
+                if(result==1){
+                    layer.msg('删除成功!', { icon: 1, time: 1000 },function () {
+                        location.reload();
+                    });
+                }else{
+                    layer.msg('删除失败!', { icon: 2, time: 1000 },function () {
+                        location.reload();
+                    });
+                }
+            });
+        });
+    }
+</script>
+</div>
+</body>
+</html>
