@@ -2,12 +2,16 @@ package com.cars.server.model;
 
 import com.cars.plat.util.page.Page;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * Created by wangyupeng on 2018/4/28 21:55
  */
+@Table(name = "pmis_weblogic")
 public class Weblogic extends Page {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "select uuid()")
     private String id;
     private String weblogicName;
     private String weblogicUrl;
@@ -15,7 +19,9 @@ public class Weblogic extends Page {
     private String weblogicPassword;
     private String fzr;//负责人
     private String description;//描述
+    @Transient     //非数据库表中字段
     private List<WeblogicApp> list;
+    @OrderBy
     private Integer px;
     private String createUser;
     private String createDate;

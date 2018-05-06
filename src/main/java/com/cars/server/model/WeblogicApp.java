@@ -2,16 +2,26 @@ package com.cars.server.model;
 
 import com.cars.plat.util.page.Page;
 
+import javax.persistence.Id;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 /**
  * Created by wangyupeng on 2018/4/28 22:07
  */
+@Table(name = "pmis_weblogic_app")
 public class WeblogicApp extends Page {
+    @Id
     private String weblogicId;
-    private String weblogicName;
+    @Id
     private String appCode;
+    @Transient
+    private String weblogicName;
     private String appName;
     private String appStatus;//1:生产应用，2：测试应用，3：废弃待删除
     private String fzr;//负责人
+    @OrderBy
     private Integer px;
     private String description;//描述
     private String createUser;

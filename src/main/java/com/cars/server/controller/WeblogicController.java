@@ -1,17 +1,25 @@
 package com.cars.server.controller;
 
+import com.cars.plat.common.base.BaseController;
 import com.cars.plat.sys.model.SysUser;
+import com.cars.plat.util.date.DateUtil;
+import com.cars.plat.util.string.StringUtil;
 import com.cars.server.model.Weblogic;
 import com.cars.server.model.WeblogicApp;
+import com.cars.server.service.WeblogicAppService;
 import com.cars.server.service.WeblogicService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.shiro.authc.Account;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,10 +27,13 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/weblogic")
-public class WeblogicController {
+public class WeblogicController extends BaseController {
 
     @Autowired
     private WeblogicService weblogicService;
+
+    @Autowired
+    private WeblogicAppService weblogicAppService;
 
     /**
      * 查询所有weblogic服务器信息
@@ -34,7 +45,7 @@ public class WeblogicController {
         ModelAndView mv = new ModelAndView();
         PageHelper.startPage(weblogic.getPageIndex(), weblogic.getPageSize());
         //查询用户列表
-        List<Weblogic> listWeblogic = weblogicService.listWeblogicServer(weblogic);
+        List<Weblogic> listWeblogic = weblogicService.select(weblogic);
         PageInfo<Weblogic> pageInfo = new PageInfo<Weblogic>(listWeblogic);
         mv.addObject("pageInfo",pageInfo);
 
@@ -49,8 +60,11 @@ public class WeblogicController {
      */
     @ResponseBody
     @RequestMapping("/addWeblogic")
-    public int addWeblogicServer(Weblogic weblogic){
-        return weblogicService.addWeblogicServer(weblogic);
+    public int addWeblogicServer(Weblogic weblogic,@SessionAttribute SysUser userSession){
+        weblogic.setCreateUser(userSession.getUserName());
+        weblogic.setCreateDate(DateUtil.getSystemTime());
+        weblogic.setId(StringUtil.uuid());
+        return weblogicService.insert(weblogic);
     }
 
     /**
@@ -61,7 +75,7 @@ public class WeblogicController {
     @ResponseBody
     @RequestMapping("/updateWeblogic")
     public int updateWeblogicServer(Weblogic weblogic){
-        return weblogicService.updateWeblogicServer(weblogic);
+        return weblogicService.update(weblogic);
     }
 
     /**
@@ -72,7 +86,7 @@ public class WeblogicController {
     @ResponseBody
     @RequestMapping("/deleteWeblogic")
     public int deleteWeblogicServer(String id){
-        return weblogicService.deleteWeblogicServer(id);
+        return weblogicService.deleteByPrimaryKey(id);
     }
 
     /**
@@ -83,7 +97,7 @@ public class WeblogicController {
     @ResponseBody
     @RequestMapping("/getWeblogicById")
     public Weblogic getWeblogicById(String id){
-        return weblogicService.getWeblogicById(id);
+        return weblogicService.selectById(id);
     }
 
 
@@ -93,11 +107,11 @@ public class WeblogicController {
      * @return
      */
     @RequestMapping("/listWeblogicApp")
-    public ModelAndView listWeblogic(WeblogicApp weblogicApp){
+    public ModelAndView listWeblogicApp(WeblogicApp weblogicApp){
         ModelAndView mv = new ModelAndView();
         PageHelper.startPage(weblogicApp.getPageIndex(), weblogicApp.getPageSize());
         //查询用户列表
-        List<WeblogicApp> listWeblogic = weblogicService.listWeblogicApp(weblogicApp.getWeblogicId());
+        List<WeblogicApp> listWeblogic = weblogicAppService.select(weblogicApp);
         PageInfo<WeblogicApp> pageInfo = new PageInfo<WeblogicApp>(listWeblogic);
         mv.addObject("pageInfo",pageInfo);
         mv.addObject("weblogicApp",weblogicApp);
@@ -113,7 +127,7 @@ public class WeblogicController {
     @ResponseBody
     @RequestMapping("/addWeblogicApp")
     public int addWeblogicApp(WeblogicApp weblogicApp){
-        return weblogicService.addWeblogicApp(weblogicApp);
+        return weblogicAppService.insert(weblogicApp);
     }
 
     /**
@@ -124,7 +138,7 @@ public class WeblogicController {
     @ResponseBody
     @RequestMapping("/updateWeblogicApp")
     public int updateWeblogicApp(WeblogicApp weblogicApp){
-        return weblogicService.updateWeblogicApp(weblogicApp);
+        return weblogicAppService.update(weblogicApp);
     }
 
     /**
@@ -135,7 +149,7 @@ public class WeblogicController {
     @ResponseBody
     @RequestMapping("/deleteWeblogicApp")
     public int deleteWeblogicApp(WeblogicApp weblogicApp){
-        return weblogicService.deleteWeblogicApp(weblogicApp);
+        return weblogicAppService.delete(weblogicApp);
     }
 
     /**
@@ -146,13 +160,13 @@ public class WeblogicController {
     @ResponseBody
     @RequestMapping("/getWeblogicAppById")
     public WeblogicApp getWeblogicAppByAppCode(WeblogicApp weblogicApp){
-        return weblogicService.getWeblogicAppByAppCode(weblogicApp);
+        return weblogicAppService.selectById(weblogicApp);
     }
 
     @RequestMapping("/checkExist")
     @ResponseBody
     public String checkExist(WeblogicApp weblogicApp){
-        WeblogicApp weblogicApp2 = weblogicService.getWeblogicAppByAppCode(weblogicApp);
+        WeblogicApp weblogicApp2 = weblogicAppService.selectById(weblogicApp);
         String existFlag = "false";
         if(weblogicApp2==null){
             existFlag ="true";

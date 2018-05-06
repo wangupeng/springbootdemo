@@ -29,7 +29,7 @@
 			<div class="pd-20">
 				<div class="cl pd-5 bg-1 bk-gray">
 				<span class="l">
-					<a href="javascript:;" onclick="toAddResource('新增资源','sysResource/toAddResource','10001','800','500')" class="btn btn-primary radius"  shiro:hasPermission="/sysResource/add"><i class="Hui-iconfont">&#xe600;</i> 新增资源</a>
+					<a href="javascript:;" onclick="toAddResource('新增资源','sysResource/toAddResource','10001','800','550')" class="btn btn-primary radius"  shiro:hasPermission="/sysResource/add"><i class="Hui-iconfont">&#xe600;</i> 新增资源</a>
 				</span>
 				</div>
 
@@ -96,11 +96,11 @@
                         "<td>"+item.resourceName+"</td>"+
                         "<td>"+item.resourceUrl+"</td>"+
                         "<td>"+(item.resourceType==1?'模块':'按钮')+"</td>"+
-                        "<td>"+item.description+"</td>"+
-                        "<td>"+item.icon+"</td>"+
+                        "<td>"+(item.description==null?'':item.description)+"</td>"+
+                        "<td><i class='Hui-iconfont'>"+(item.icon==null?'':item.icon)+"</i></td>"+
                         "<td>"+item.displayOrder+"</td>"+
                         "<td class='td-manage'>"+
-                        "<a title='修改' onclick='toUpdateResource(\"修改资源\",\"sysResource/toUpdateResource\",\"10001\",\"800\",\"500\",\""+item.resourceId+"\")' href='javascript:;' class='ml-5' data-toggle='tooltip' data-placement='top' style='text-decoration:none'><i class='Hui-iconfont f-16'>&#xe6df;</i></a>"+
+                        "<a title='修改' onclick='toUpdateResource(\"修改资源\",\"sysResource/toUpdateResource\",\"10001\",\"800\",\"550\",\""+item.resourceId+"\")' href='javascript:;' class='ml-5' data-toggle='tooltip' data-placement='top' style='text-decoration:none'><i class='Hui-iconfont f-16'>&#xe6df;</i></a>"+
                         "<a title='删除' onclick='deleteResource("+item.resourceId+")' href='javascript:;' class='ml-5' data-toggle='tooltip' data-placement='top' style='text-decoration:none'><i class='Hui-iconfont f-16'>&#xe6e2;</i></a>"+
                     "</td>"+
                     "</tr>";

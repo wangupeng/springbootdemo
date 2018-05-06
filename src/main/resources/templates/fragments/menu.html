@@ -21,7 +21,7 @@
                         parentId = data[i].resourceId;
 
                         html+="<dl id='menu-system'>"+
-                            "<dt><i class='Hui-iconfont'>&#xe62e;</i>"+data[i].resourceName+"<i class='Hui-iconfont menu_dropdown-arrow'>&#xe6d5;</i></dt><dd><ul class='submenu'>";
+                            "<dt><i class='Hui-iconfont'>"+data[i].icon+"</i> "+data[i].resourceName+"<i class='Hui-iconfont menu_dropdown-arrow'>&#xe6d5;</i></dt><dd><ul class='submenu'>";
                         for(var j=0;j<data.length;j++){
                             var resourceUrl = data[j].resourceUrl;
                             resourceUrl = resourceUrl.substr(1,resourceUrl.length);
