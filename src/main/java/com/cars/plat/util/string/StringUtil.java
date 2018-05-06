@@ -89,7 +89,18 @@ public class StringUtil {
             return false;
     }
 
-
+    /**
+     * 字符串是null返回""
+     *
+     * @param str
+     * @return
+     */
+    public static String dealNull(String str) {
+        if (str == null)
+            return "";
+        else
+            return str;
+    }
     /**
      * 判断是否是ajax请求，用于进行权限控制或异常处理时，得判断是否是ajax请求
      *

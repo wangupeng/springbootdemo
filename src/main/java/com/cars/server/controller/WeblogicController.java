@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -45,10 +46,13 @@ public class WeblogicController extends BaseController {
         ModelAndView mv = new ModelAndView();
         PageHelper.startPage(weblogic.getPageIndex(), weblogic.getPageSize());
         //查询用户列表
-        List<Weblogic> listWeblogic = weblogicService.select(weblogic);
+//        List<Weblogic> listWeblogic = weblogicService.select(weblogic);
+        Example example = new Example(Weblogic.class);
+        example.createCriteria().andLike("weblogicName","%"+StringUtil.dealNull(weblogic.getWeblogicName())+""+"%");
+        List<Weblogic> listWeblogic = weblogicService.selectByExample(example);
         PageInfo<Weblogic> pageInfo = new PageInfo<Weblogic>(listWeblogic);
         mv.addObject("pageInfo",pageInfo);
-
+        mv.addObject("weblogic",weblogic);
         mv.setViewName("server/weblogic/listWeblogic");
         return mv;
     }

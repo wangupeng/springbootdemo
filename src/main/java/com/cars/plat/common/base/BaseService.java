@@ -1,8 +1,13 @@
 package com.cars.plat.common.base;
 
 import com.cars.plat.sys.model.SysUser;
+import org.apache.ibatis.annotations.DeleteProvider;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import tk.mybatis.mapper.provider.ExampleProvider;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -104,6 +109,112 @@ public abstract class BaseService<T> {
      */
     public boolean existsWithPrimaryKey(Object key){
         return baseDao.existsWithPrimaryKey(key);
+    }
+
+    /**
+     * ******************通用Mapper接口,Example查询----Example 用法*******************
+     * 1、查询
+     * Example example = new Example(Country.class);
+     * example.createCriteria().andGreaterThan("id", 100).andLessThan("id",151);
+     * example.or().andLessThan("id", 41);
+     * List<Country> countries = mapper.selectByExample(example);
+     * -----SELECT id,countryname,countrycode FROM country WHERE ( id > ? and id < ? ) or ( id < ? ) ORDER BY id desc
+     *
+     * 2、 动态 SQL
+     * Example example = new Example(Country.class);
+     * Example.Criteria criteria = example.createCriteria();
+     * if(query.getCountryname() != null){
+     *     criteria.andLike("countryname", query.getCountryname() + "%");
+     * }
+     * if(query.getId() != null){
+     *     criteria.andGreaterThan("id", query.getId());
+     * }
+     * List<Country> countries = mapper.selectByExample(example);
+     * -----SELECT id,countryname,countrycode FROM country WHERE ( countryname like ? ) ORDER BY id desc
+     *  3、排序
+     *  Example example = new Example(Country.class);
+     *  example.orderBy("id").desc().orderBy("countryname").orderBy("countrycode").asc();
+     *  List<Country> countries = mapper.selectByExample(example);
+     *  ------SELECT id,countryname,countrycode FROM country order by id DESC,countryname,countrycode ASC
+     *
+     *  4、去重
+     *  CountryExample example = new CountryExample();
+     * //设置 distinct
+     * example.setDistinct(true);
+     * example.createCriteria().andCountrynameLike("A%");
+     * example.or().andIdGreaterThan(100);
+     * List<Country> countries = mapper.selectByExample(example);
+     * ------SELECT distinct id,countryname,countrycode FROM country WHERE ( countryname like ? ) or ( Id > ? ) ORDER BY id desc
+     *
+     * 5、设置查询列
+     * Example example = new Example(Country.class);
+     * example.selectProperties("id", "countryname");
+     * List<Country> countries = mapper.selectByExample(example);
+     * ------SELECT id , countryname FROM country ORDER BY id desc
+     *
+     * 除了这里提到的方法外，还有很多其他的方法，可以查看 Example 源码进行了解。
+     */
+
+    /**
+     * 根据Example条件进行查询
+     *
+     * @param example
+     * @return
+     */
+    public List<T> selectByExample(Object example){
+        return baseDao.selectByExample(example);
+    }
+
+    /**
+     * 根据Example条件进行查询
+     *
+     * @param example
+     * @return
+     */
+    public T selectOneByExample(Object example){
+        return baseDao.selectOneByExample(example);
+    }
+
+    /**
+     * 根据Example条件进行查询总数
+     *
+     * @param example
+     * @return
+     */
+    public int selectCountByExample(Object example){
+        return baseDao.selectCountByExample(example);
+    }
+
+    /**
+     * 根据Example条件删除数据
+     *
+     * @param example
+     * @return
+     */
+    public int deleteByExample(Object example){
+        return baseDao.deleteByExample(example);
+    }
+
+    /**
+     * 根据Example条件更新实体`record`包含的全部属性，null值会被更新
+     *
+     * @param record
+     * @param example
+     * @return
+     */
+    public int updateByExample(@Param("record") T record, @Param("example") Object example){
+        return baseDao.updateByExample(record,example);
+    }
+
+    /**
+     * 根据Example条件更新实体`record`包含的不是null的属性值
+     *
+     * @param record
+     * @param example
+     * @return
+     */
+    public int updateByExampleSelective(@Param("record") T record, @Param("example") Object example){
+        return baseDao.updateByExampleSelective(record,example);
     }
 
 }
