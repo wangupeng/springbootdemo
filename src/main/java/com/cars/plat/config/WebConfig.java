@@ -59,9 +59,13 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
         //修改weblogicApp
         registry.addViewController("/weblogic/toUpdateWeblogicApp").setViewName("server/weblogic/updateWeblogicApp.html");
         //新增公司
-        registry.addViewController("/company/toAddCompany").setViewName("person/company/addCompany.html");
+        registry.addViewController("/company/toAddCompany").setViewName("outSource/company/addCompany.html");
         //修改公司
-        registry.addViewController("/company/toUpdateCompany").setViewName("person/company/updateCompany.html");
+        registry.addViewController("/company/toUpdateCompany").setViewName("outSource/company/updateCompany.html");
+        //新增人员
+        registry.addViewController("/person/toAddPerson").setViewName("outSource/person/addPerson.html");
+        //修改人员
+        registry.addViewController("/person/toUpdatePerson").setViewName("outSource/person/updatePerson.html");
 
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
     }

@@ -37,7 +37,7 @@ public class CompanyController extends BaseController {
         List<Company> listCompany = companyService.select(company);
         PageInfo<Company> pageInfo = new PageInfo<Company>(listCompany);
         mv.addObject("pageInfo",pageInfo);
-        mv.setViewName("person/company/listCompany");
+        mv.setViewName("outSource/company/listCompany");
         return mv;
     }
 
@@ -84,6 +84,15 @@ public class CompanyController extends BaseController {
     @RequestMapping("/getCompanyById")
     public Company getCompanyById(String id){
         return companyService.selectById(id);
+    }
+
+    /**
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getCompany")
+    public List<Company> getCompany(){
+        return companyService.selectAll();
     }
 
 }
