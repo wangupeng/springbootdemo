@@ -18,7 +18,7 @@ import java.util.List;
  * Created by wangyupeng on 2018/4/28 22:15
  */
 @Controller
-@RequestMapping("/company")
+@RequestMapping("/outsource/company")
 public class CompanyController extends BaseController {
 
     @Autowired
@@ -30,14 +30,14 @@ public class CompanyController extends BaseController {
      * @return
      */
     @RequestMapping
-    public ModelAndView listCompany(Company company){
+    public ModelAndView list(Company company){
         ModelAndView mv = new ModelAndView();
-        PageHelper.startPage(company.getPageIndex(), company.getPageSize());
+        PageHelper.startPage(company.getPageNum(), company.getPageSize());
         //查询用户列表
         List<Company> listCompany = companyService.select(company);
         PageInfo<Company> pageInfo = new PageInfo<Company>(listCompany);
         mv.addObject("pageInfo",pageInfo);
-        mv.setViewName("outSource/company/listCompany");
+        mv.setViewName("outsource/company/listCompany");
         return mv;
     }
 
@@ -47,8 +47,8 @@ public class CompanyController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/addCompany")
-    public int addCompanyServer(Company company){
+    @RequestMapping("/add")
+    public int add(Company company){
         company.setId(StringUtil.uuid());
         return companyService.insert(company);
     }
@@ -59,8 +59,8 @@ public class CompanyController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/updateCompany")
-    public int updateCompanyServer(Company company){
+    @RequestMapping("/update")
+    public int update(Company company){
         return companyService.update(company);
     }
 
@@ -70,8 +70,8 @@ public class CompanyController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/deleteCompany")
-    public int deleteCompanyServer(String id){
+    @RequestMapping("/delete")
+    public int delete(String id){
         return companyService.deleteByPrimaryKey(id);
     }
 
@@ -81,8 +81,8 @@ public class CompanyController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/getCompanyById")
-    public Company getCompanyById(String id){
+    @RequestMapping("/getById")
+    public Company getById(String id){
         return companyService.selectById(id);
     }
 
@@ -90,8 +90,8 @@ public class CompanyController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/getCompany")
-    public List<Company> getCompany(){
+    @RequestMapping("/selectAll")
+    public List<Company> selectAll(){
         return companyService.selectAll();
     }
 

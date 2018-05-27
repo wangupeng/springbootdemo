@@ -94,7 +94,7 @@ public class SysResourceService {
         int n2 = 0;
         if(n1>0){
             //删除角色成功，删除角色资源对应关系
-            n2 = sysRoleResourceDao.deleteRoleResourceResourceId(resourceId);
+            n2 = sysRoleResourceDao.deleteByResourceId(resourceId);
         }
         return n2;
     }

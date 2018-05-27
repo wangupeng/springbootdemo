@@ -29,7 +29,7 @@ public class SysLogController {
     @RequestMapping
     public ModelAndView listLog(SysLog sysLog){
         ModelAndView mv = new ModelAndView();
-        PageHelper.startPage(sysLog.getPageIndex(), sysLog.getPageSize());
+        PageHelper.startPage(sysLog.getPageNum(), sysLog.getPageSize());
         //查询用户列表
         List<SysLog> listLog = sysLogService.listLog(sysLog);
         PageInfo<SysLog> pageInfo = new PageInfo<SysLog>(listLog);

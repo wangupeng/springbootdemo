@@ -1,5 +1,6 @@
 package com.cars.plat.sys.dao;
 
+import com.cars.plat.common.base.BaseDao;
 import com.cars.plat.sys.model.SysResource;
 import com.cars.plat.sys.model.SysRoleResource;
 import org.apache.ibatis.annotations.Mapper;
@@ -11,28 +12,21 @@ import java.util.Map;
  * Created by wangyupeng on 2017/8/18.
  */
 @Mapper
-public interface SysRoleResourceDao {
+public interface SysRoleResourceDao extends BaseDao<SysRoleResource> {
 
     /**
      * 增加角色资源对应关系
      * @param map
      * @return
      */
-    int addRoleResource(Map<String, Object> map);
-
-    /**
-     * 根据角色id删除角色资源对应关系
-     * @param roleCode
-     * @return
-     */
-    int deleteRoleResourceByRoleCode(String roleCode);
+    int add(Map<String, Object> map);
 
     /**
      * 根据资源id删除角色资源对应关系
      * @param resourceId
      * @return
      */
-    int deleteRoleResourceResourceId(String resourceId);
+    int deleteByResourceId(String resourceId);
 
 
     /**
@@ -40,5 +34,5 @@ public interface SysRoleResourceDao {
      * @param roleCode
      * @return
      */
-    List<SysResource> listResourceByRoleCode(String roleCode);
+    List<SysResource> listByRoleCode(String roleCode);
 }

@@ -5,6 +5,7 @@ import com.cars.plat.sys.model.SysRole;
 import com.cars.plat.sys.model.SysUser;
 import com.cars.plat.sys.service.SysResourceService;
 import com.cars.plat.sys.service.SysRoleService;
+import com.cars.plat.util.date.DateUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,20 +26,20 @@ import java.util.Map;
  * Created by wangyupeng on 2017/8/18.
  */
 @Controller
-@RequestMapping("/sysRole")
+@RequestMapping("/sys/sysRole")
 public class SysRoleController {
     @Autowired
     private SysRoleService sysRoleService;
 
     /**
-     * 角色列表
+     * 列表
      * @return
      */
     @RequestMapping
     public ModelAndView listRole(SysRole sysRole){
         ModelAndView mv = new ModelAndView();
-        PageHelper.startPage(sysRole.getPageIndex(), sysRole.getPageSize());
-        List<SysRole> listRole = sysRoleService.listRole(sysRole);
+        PageHelper.startPage(sysRole.getPageNum(), sysRole.getPageSize());
+        List<SysRole> listRole = sysRoleService.select(sysRole);
         PageInfo<SysRole> pageInfo = new PageInfo<SysRole>(listRole);
         mv.addObject("pageInfo",pageInfo);
         mv.setViewName("plat/sys/role/listRole");
@@ -45,13 +47,15 @@ public class SysRoleController {
     }
 
     /**
-     * 添加角色
+     * 添加
      * @return
      */
     @ResponseBody
-    @RequestMapping("/addRole")
-    public int addRole(SysRole sysRole){
-        return sysRoleService.addRole(sysRole);
+    @RequestMapping("/add")
+    public int addRole(SysRole sysRole,@SessionAttribute SysUser userSession){
+        sysRole.setCreateUser(userSession.getUserName());
+        sysRole.setCreateDate(DateUtil.getSystemDate());
+        return sysRoleService.insert(sysRole);
     }
 
     /**
@@ -60,9 +64,11 @@ public class SysRoleController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/updateRole")
-    public int updateRole(SysRole sysRole){
-        return sysRoleService.updateRole(sysRole);
+    @RequestMapping("/update")
+    public int updateRole(SysRole sysRole,@SessionAttribute SysUser userSession){
+        sysRole.setLastModifiedUser(userSession.getUserName());
+        sysRole.setLastModifiedDate(DateUtil.getSystemDate());
+        return sysRoleService.update(sysRole);
     }
 
     /**
@@ -71,10 +77,11 @@ public class SysRoleController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/deleteRole")
+    @RequestMapping("/delete")
     public int deleteRole(String roleCode){
-        return sysRoleService.deleteRole(roleCode);
+        return sysRoleService.delete(roleCode);
     }
+
 
     /**
      * 授权
@@ -109,8 +116,8 @@ public class SysRoleController {
      */
     @ResponseBody
     @RequestMapping("/getRoleByRoleCode")
-    public SysRole toUpdateRole(String roleCode){
-        SysRole sysRole = sysRoleService.getRoleByCode(roleCode);
+    public SysRole getRoleByRoleCode(String roleCode){
+        SysRole sysRole = sysRoleService.selectById(roleCode);
         return sysRole;
     }
 
@@ -122,7 +129,7 @@ public class SysRoleController {
     @ResponseBody
     @RequestMapping("/getRole")
     public List<SysRole> getRole(SysRole sysRole){
-        return sysRoleService.listRole(sysRole);
+        return sysRoleService.select(sysRole);
     }
 
     /**
@@ -133,7 +140,7 @@ public class SysRoleController {
     @RequestMapping("/checkExist")
     @ResponseBody
     public String checkExist(String roleCode){
-        SysRole sysRole = sysRoleService.getRoleByCode(roleCode);
+        SysRole sysRole = sysRoleService.selectById(roleCode);
         String existFlag = "false";
         if(sysRole==null){
             existFlag ="true";

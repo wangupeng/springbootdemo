@@ -34,7 +34,7 @@ public class SysTaskController2 {
     @RequestMapping
     public ModelAndView listTask(SysTask sysTask){
         ModelAndView mv = new ModelAndView();
-        PageHelper.startPage(sysTask.getPageIndex(), sysTask.getPageSize());
+        PageHelper.startPage(sysTask.getPageNum(), sysTask.getPageSize());
         //查询任务列表
         List<SysTask> listTask = sysTaskService.listTask(sysTask);
         PageInfo<SysTask> pageInfo = new PageInfo<SysTask>(listTask);

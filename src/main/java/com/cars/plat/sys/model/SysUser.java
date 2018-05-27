@@ -5,29 +5,33 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
  * Created by wangyupeng on 2017/8/18.
  */
+@Table(name = "demo_sys_user")
 public class SysUser extends Page {
+    @Id
     private String userName;//主键,登陆账号，唯一
     private String passWord;//密码
+    @Transient
     private String oldPassWord;//旧密码
     private String roleCode;//角色ID
+    @Transient
     private String roleName;
     private String salt;//加密用的盐
     private String mobile;//手机号
     private String status;//状态,1:正常，2：锁定
     private String realName;//真实姓名
     private String createUser;//创建人
-    private Date createDate;//创建时间
+    private String createDate;//创建时间
     private String lastModifiedUser;//上次修改人
-    private Date lastModifiedDate;//上次修改时间
-    private String innerFlag;//人员标识，1：本部门；2：外协
-    private String companyCode;//公司代码
-    private String companyName;//公司名称
+    private String lastModifiedDate;//上次修改时间
 
     public String getUserName() {
         return userName;
@@ -109,11 +113,11 @@ public class SysUser extends Page {
         this.createUser = createUser;
     }
 
-    public Date getCreateDate() {
+    public String getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(String createDate) {
         this.createDate = createDate;
     }
 
@@ -125,36 +129,12 @@ public class SysUser extends Page {
         this.lastModifiedUser = lastModifiedUser;
     }
 
-    public Date getLastModifiedDate() {
+    public String getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(Date lastModifiedDate) {
+    public void setLastModifiedDate(String lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public String getInnerFlag() {
-        return innerFlag;
-    }
-
-    public void setInnerFlag(String innerFlag) {
-        this.innerFlag = innerFlag;
-    }
-
-    public String getCompanyCode() {
-        return companyCode;
-    }
-
-    public void setCompanyCode(String companyCode) {
-        this.companyCode = companyCode;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
     }
 
     @Override
@@ -173,9 +153,6 @@ public class SysUser extends Page {
                 ", createDate=" + createDate +
                 ", lastModifiedUser='" + lastModifiedUser + '\'' +
                 ", lastModifiedDate=" + lastModifiedDate +
-                ", innerFlag='" + innerFlag + '\'' +
-                ", companyCode='" + companyCode + '\'' +
-                ", companyName='" + companyName + '\'' +
                 '}';
     }
 }

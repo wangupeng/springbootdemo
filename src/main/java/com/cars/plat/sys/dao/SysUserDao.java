@@ -1,38 +1,19 @@
 package com.cars.plat.sys.dao;
 
+import com.cars.plat.common.base.BaseDao;
 import com.cars.plat.sys.model.SysUser;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
-public interface SysUserDao {
+public interface SysUserDao extends BaseDao<SysUser> {
 
     /**
      * 用户列表
      * @return
      */
-    List<SysUser> listUser(SysUser sysUser);
-    /**
-     * 新增用户
-     * @param sysUser
-     * @return
-     */
-    int addUser(SysUser sysUser);
-
-    /**
-     * 删除用户
-     * @param userName
-     * @return
-     */
-    int deleteUser(String userName);
-
-    /**
-     * 修改用户
-     * @param sysUser
-     * @return
-     */
-    int updateUser(SysUser sysUser);
+    List<SysUser> list(SysUser sysUser);
 
     /**
      * 根据用户名获取用户信息

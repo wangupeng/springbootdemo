@@ -1,9 +1,10 @@
 package com.cars.outsource.controller;
 
-import com.cars.outsource.model.Company;
-import com.cars.outsource.model.Person;
-import com.cars.outsource.service.PersonService;
+import com.cars.outsource.model.Report;
+import com.cars.outsource.service.ReportService;
 import com.cars.plat.common.base.BaseController;
+import com.cars.plat.sys.model.SysUser;
+import com.cars.plat.util.date.DateUtil;
 import com.cars.plat.util.string.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -19,50 +21,51 @@ import java.util.List;
  * Created by wangyupeng on 2018/4/28 22:15
  */
 @Controller
-@RequestMapping("/outsource/person")
-public class PersonController extends BaseController {
+@RequestMapping("/outsource/report")
+public class ReportController extends BaseController {
 
     @Autowired
-    private PersonService personService;
+    private ReportService reportService;
 
     /**
      * 查询所有
-     * @param person
+     * @param report
      * @return
      */
     @RequestMapping
-    public ModelAndView list(Person person){
+    public ModelAndView list(Report report){
         ModelAndView mv = new ModelAndView();
-        PageHelper.startPage(person.getPageNum(), person.getPageSize());
-        //查询用户列表
-        List<Person> listPerson = personService.select(person);
-        PageInfo<Person> pageInfo = new PageInfo<Person>(listPerson);
+        PageHelper.startPage(report.getPageNum(), report.getPageSize());
+        List<Report> listReport = reportService.select(report);
+        PageInfo<Report> pageInfo = new PageInfo<Report>(listReport);
         mv.addObject("pageInfo",pageInfo);
-        mv.setViewName("outSource/person/listPerson");
+        mv.setViewName("outSource/report/listReport");
         return mv;
     }
 
     /**
      * 添加
-     * @param person
+     * @param report
      * @return
      */
     @ResponseBody
     @RequestMapping("/add")
-    public int add(Person person){
-        person.setId(StringUtil.uuid());
-        return personService.insert(person);
+    public int add(Report report,@SessionAttribute SysUser userSession){
+        report.setId(StringUtil.uuid());
+        report.setCreateUser(userSession.getUserName());
+        report.setCreateDate(DateUtil.getSystemDate());
+        return reportService.insert(report);
     }
 
     /**
      * 修改
-     * @param person
+     * @param report
      * @return
      */
     @ResponseBody
     @RequestMapping("/update")
-    public int update(Person person){
-        return personService.update(person);
+    public int update(Report report){
+        return reportService.update(report);
     }
 
     /**
@@ -73,7 +76,7 @@ public class PersonController extends BaseController {
     @ResponseBody
     @RequestMapping("/delete")
     public int delete(String id){
-        return personService.deleteByPrimaryKey(id);
+        return reportService.deleteByPrimaryKey(id);
     }
 
     /**
@@ -83,8 +86,8 @@ public class PersonController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getById")
-    public Person getById(String id){
-        return personService.selectById(id);
+    public Report getById(String id){
+        return reportService.selectById(id);
     }
 
 }

@@ -27,7 +27,7 @@ import java.util.List;
  * Created by wangyupeng on 2018/4/28 22:15
  */
 @Controller
-@RequestMapping("/weblogic")
+@RequestMapping("/server/weblogic")
 public class WeblogicController extends BaseController {
 
     @Autowired
@@ -44,7 +44,7 @@ public class WeblogicController extends BaseController {
     @RequestMapping
     public ModelAndView listWeblogic(Weblogic weblogic){
         ModelAndView mv = new ModelAndView();
-        PageHelper.startPage(weblogic.getPageIndex(), weblogic.getPageSize());
+        PageHelper.startPage(weblogic.getPageNum(), weblogic.getPageSize());
         //查询用户列表
 //        List<Weblogic> listWeblogic = weblogicService.select(weblogic);
         Example example = new Example(Weblogic.class);
@@ -113,7 +113,7 @@ public class WeblogicController extends BaseController {
     @RequestMapping("/listWeblogicApp")
     public ModelAndView listWeblogicApp(WeblogicApp weblogicApp){
         ModelAndView mv = new ModelAndView();
-        PageHelper.startPage(weblogicApp.getPageIndex(), weblogicApp.getPageSize());
+        PageHelper.startPage(weblogicApp.getPageNum(), weblogicApp.getPageSize());
         //查询用户列表
         List<WeblogicApp> listWeblogic = weblogicAppService.select(weblogicApp);
         PageInfo<WeblogicApp> pageInfo = new PageInfo<WeblogicApp>(listWeblogic);

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
  * Created by wangyupeng on 2017/8/18.
  */
 @Controller
-@RequestMapping("/sysUser")
+@RequestMapping("/sys/sysUser")
 public class SysUserController {
     @Autowired
     private SysUserService userService;
@@ -30,15 +31,25 @@ public class SysUserController {
     @RequestMapping
     public ModelAndView listUser(SysUser sysUser){
         ModelAndView mv = new ModelAndView();
-        PageHelper.startPage(sysUser.getPageIndex(), sysUser.getPageSize());
+        PageHelper.startPage(sysUser.getPageNum(), sysUser.getPageSize());
         //查询用户列表
         List<SysUser> listUser = userService.listUser(sysUser);
         PageInfo<SysUser> pageInfo = new PageInfo<SysUser>(listUser);
         mv.addObject("pageInfo",pageInfo);
-
         mv.addObject("sysUser",sysUser);
         mv.setViewName("plat/sys/user/listUser");
         return mv;
+    }
+
+    /**
+     * 查询所有
+     * @param sysUser
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/selectAll")
+    public List<SysUser> selectAll(SysUser sysUser){
+        return userService.selectAll();
     }
 
     /**
@@ -47,9 +58,9 @@ public class SysUserController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/addUser")
+    @RequestMapping("/add")
     public int addUser(SysUser sysUser){
-        return userService.addUser(sysUser);
+        return userService.insert(sysUser);
     }
 
     /**
@@ -58,9 +69,9 @@ public class SysUserController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/updateUser")
+    @RequestMapping("/update")
     public int updateUser(SysUser sysUser){
-        return userService.updateUser(sysUser);
+        return userService.update(sysUser);
     }
 
     /**
@@ -69,9 +80,9 @@ public class SysUserController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/deleteUser")
+    @RequestMapping("/delete")
     public int deleteUser(String userName){
-        return userService.deleteUser(userName);
+        return userService.deleteByPrimaryKey(userName);
     }
 
     /**
@@ -114,10 +125,9 @@ public class SysUserController {
      */
     @ResponseBody
     @RequestMapping("/updatePassWord")
-    public int updatePassWord(SysUser sysUser){
-        SysUser user = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
+    public int updatePassWord(SysUser sysUser,@SessionAttribute SysUser userSession){
         int n = 0;
-        if(userService.checkOldPassWord(user.getUserName(),sysUser.getOldPassWord())){
+        if(userService.checkOldPassWord(userSession.getUserName(),sysUser.getOldPassWord())){
             n = userService.updatePassWord(sysUser);
         }else{
             //原密码不正确

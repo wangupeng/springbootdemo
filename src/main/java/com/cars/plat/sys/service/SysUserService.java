@@ -1,24 +1,24 @@
 package com.cars.plat.sys.service;
 
+import com.cars.plat.common.base.BaseService;
 import com.cars.plat.common.password.PasswordHelper;
 import com.cars.plat.sys.dao.SysUserDao;
 import com.cars.plat.sys.model.SysUser;
 import com.cars.plat.util.date.DateUtil;
+import com.cars.plat.util.global.GlobalConst;
 import com.cars.plat.util.string.StringUtil;
-import com.github.pagehelper.PageHelper;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by wangyupeng on 2017/8/18.
  */
 @Component
-public class SysUserService {
+public class SysUserService extends BaseService<SysUser> {
     @Autowired
     private SysUserDao userDao;
 
@@ -28,8 +28,7 @@ public class SysUserService {
      * @return
      */
     public List<SysUser> listUser(SysUser sysUser){
-        List<SysUser> list = userDao.listUser(sysUser);
-        return list;
+        return userDao.list(sysUser);
     }
 
     /**
@@ -38,28 +37,21 @@ public class SysUserService {
      * @return
      */
     @Transactional
-    public int addUser(SysUser sysUser){
+    public int insert(SysUser sysUser){
         //密码加密，及存储盐值
-        sysUser.setPassWord("123456");//设置默认密码
+        sysUser.setPassWord(GlobalConst.PASS_WORD);//设置默认密码
         PasswordHelper passwordHelper = new PasswordHelper();
         passwordHelper.encryptPassword(sysUser);
 
         //获取当前登录用户
         SysUser user = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
-        sysUser.setCreateUser(user.getUserName());
         sysUser.setLastModifiedUser(user.getUserName());
+        sysUser.setLastModifiedDate(DateUtil.getSystemTime());
+        sysUser.setCreateUser(user.getUserName());
+        sysUser.setCreateDate(DateUtil.getSystemTime());
+        sysUser.setStatus("1");
 
-        return userDao.addUser(sysUser);
-    }
-
-    /**
-     * 删除用户
-     * @param userName
-     * @return
-     */
-    @Transactional
-    public int deleteUser(String userName){
-        return userDao.deleteUser(userName);
+        return userDao.insert(sysUser);
     }
 
     /**
@@ -68,12 +60,12 @@ public class SysUserService {
      * @return
      */
     @Transactional
-    public int updateUser(SysUser sysUser){
+    public int update(SysUser sysUser){
         //获取当前登录用户
         SysUser user = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
         sysUser.setLastModifiedUser(user.getUserName());
-        sysUser.setLastModifiedDate(new Date());
-        return userDao.updateUser(sysUser);
+        sysUser.setLastModifiedDate(DateUtil.getSystemTime());
+        return userDao.updateByPrimaryKeySelective(sysUser);
     }
 
     /**
@@ -106,7 +98,7 @@ public class SysUserService {
         SysUser sysUser = new SysUser();
         sysUser.setUserName(userName);
         //密码加密，及存储盐值
-        sysUser.setPassWord("123456");//设置默认密码
+        sysUser.setPassWord(GlobalConst.PASS_WORD);//设置默认密码
         PasswordHelper passwordHelper = new PasswordHelper();
         passwordHelper.encryptPassword(sysUser);
         return userDao.resetPassWord(sysUser);

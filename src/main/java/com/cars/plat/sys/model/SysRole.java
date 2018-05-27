@@ -2,19 +2,23 @@ package com.cars.plat.sys.model;
 
 import com.cars.plat.util.page.Page;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
  * Created by wangyupeng on 2017/8/18.
  */
+@Table(name = "demo_sys_role")
 public class SysRole extends Page {
+    @Id
     private String roleCode;//角色代码
     private String roleName;//角色名称
     private String description;//描述
     private String createUser;//创建人
-    private Date createDate;//创建时间
+    private String createDate;//创建时间
     private String lastModifiedUser;//上次修改人
-    private Date lastModifiedDate;//上次修改时间
+    private String lastModifiedDate;//上次修改时间
 
     @Override
     public String toString() {
@@ -61,11 +65,11 @@ public class SysRole extends Page {
         this.createUser = createUser;
     }
 
-    public Date getCreateDate() {
+    public String getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(String createDate) {
         this.createDate = createDate;
     }
 
@@ -77,11 +81,11 @@ public class SysRole extends Page {
         this.lastModifiedUser = lastModifiedUser;
     }
 
-    public Date getLastModifiedDate() {
+    public String getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(Date lastModifiedDate) {
+    public void setLastModifiedDate(String lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 }

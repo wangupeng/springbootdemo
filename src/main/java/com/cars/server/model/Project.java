@@ -2,7 +2,8 @@ package com.cars.server.model;
 
 import com.cars.plat.util.page.Page;
 
-import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 /**
@@ -10,42 +11,33 @@ import javax.persistence.Table;
  */
 @Table(name = "pmis_project")
 public class Project extends Page {
-    @Column(name = "project_code")
+    @Id
+    private String projectId;
+    @OrderBy
     private String projectCode;//项目代码
-    @Column(name = "project_name")
-    private String projectName;//项目名称
-    @Column(name = "short_name")
+    private String projectName;//项目全称
     private String shortName;//项目简称
-    @Column(name = "start_date")
     private String startDate;//项目开始日期
-    @Column(name = "end_date")
     private String endDate;//项目结束日期
-    @Column(name = "description")
     private String description;//项目简介
-    @Column(name = "version")
     private String version;//当前版本
-    @Column(name = "version_date")
-    private String versionDate;//版本上线时间
-    @Column(name = "status")
-    private String status;//应用状态
-    @Column(name = "svn")
-    private String svn;//svn地址
-    @Column(name = "fzr")
+    private String status;//项目状态
     private String fzr;//项目负责人
-    @Column(name = "phone")
     private String phone;//项目负责人联系电话
-    @Column(name = "create_user")
+    private String svn;//svn地址
     private String createUser;//创建用户
-    @Column(name = "create_date")
     private String createDate;//创建时间
-    @Column(name = "update_user")
     private String updateUser;//更新用户
-    @Column(name = "update_date")
     private String updateDate;//更新时间
-    @Column(name = "remark")
     private String remark;//备注
-    @Column(name = "px")
-    private Integer px;//排序
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
 
     public String getProjectCode() {
         return projectCode;
@@ -103,28 +95,12 @@ public class Project extends Page {
         this.version = version;
     }
 
-    public String getVersionDate() {
-        return versionDate;
-    }
-
-    public void setVersionDate(String versionDate) {
-        this.versionDate = versionDate;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getSvn() {
-        return svn;
-    }
-
-    public void setSvn(String svn) {
-        this.svn = svn;
     }
 
     public String getFzr() {
@@ -141,6 +117,14 @@ public class Project extends Page {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getSvn() {
+        return svn;
+    }
+
+    public void setSvn(String svn) {
+        this.svn = svn;
     }
 
     public String getCreateUser() {
@@ -183,29 +167,21 @@ public class Project extends Page {
         this.remark = remark;
     }
 
-    public Integer getPx() {
-        return px;
-    }
-
-    public void setPx(Integer px) {
-        this.px = px;
-    }
-
     @Override
     public String toString() {
         return "Project{" +
-                "projectCode='" + projectCode + '\'' +
+                "projectId='" + projectId + '\'' +
+                ", projectCode='" + projectCode + '\'' +
                 ", projectName='" + projectName + '\'' +
                 ", shortName='" + shortName + '\'' +
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
                 ", description='" + description + '\'' +
                 ", version='" + version + '\'' +
-                ", versionDate='" + versionDate + '\'' +
                 ", status='" + status + '\'' +
-                ", svn='" + svn + '\'' +
                 ", fzr='" + fzr + '\'' +
                 ", phone='" + phone + '\'' +
+                ", svn='" + svn + '\'' +
                 ", createUser='" + createUser + '\'' +
                 ", createDate='" + createDate + '\'' +
                 ", updateUser='" + updateUser + '\'' +

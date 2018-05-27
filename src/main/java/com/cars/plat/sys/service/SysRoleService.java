@@ -1,5 +1,6 @@
 package com.cars.plat.sys.service;
 
+import com.cars.plat.common.base.BaseService;
 import com.cars.plat.sys.dao.SysRoleDao;
 import com.cars.plat.sys.dao.SysRoleResourceDao;
 import com.cars.plat.sys.model.SysResource;
@@ -11,6 +12,7 @@ import com.cars.plat.util.string.StringUtil;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -20,52 +22,12 @@ import java.util.Map;
 /**
  * Created by wangyupeng on 2017/8/18.
  */
-@Component
-public class SysRoleService {
+@Service
+public class SysRoleService extends BaseService<SysRole> {
     @Autowired
     private SysRoleDao sysRoleDao;
     @Autowired
     private SysRoleResourceDao sysRoleResourceDao;
-
-    /**
-     * 查询所有角色
-     * @return
-     */
-    public List<SysRole> listRole(SysRole sysRole){
-        List<SysRole> list = sysRoleDao.listRole(sysRole);
-        return list;
-    }
-
-    /**
-     * 新增角色
-     * @param sysRole
-     * @return
-     */
-    @Transactional
-    public int addRole(SysRole sysRole){
-        //获取当前登录用户
-        SysUser sysUser = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
-        sysRole.setCreateUser(sysUser.getUserName());
-
-        //增加角色
-        sysRoleDao.addRole(sysRole);
-        return 1;
-    }
-
-    /**
-     * 更新角色信息
-     * @param sysRole
-     * @return
-     */
-    @Transactional
-    public int updateRole(SysRole sysRole){
-        //获取当前登录用户
-        SysUser sysUser = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
-        sysRole.setLastModifiedUser(sysUser.getUserName());
-        sysRole.setLastModifiedDate(new Date());
-
-        return sysRoleDao.updateRole(sysRole);
-    }
 
     /**
      * 删除角色
@@ -73,13 +35,13 @@ public class SysRoleService {
      * @return
      */
     @Transactional
-    public int deleteRole(String roleCode){
+    public int delete(String roleCode){
         //删除角色
-        int n1 = sysRoleDao.deleteRole(roleCode);
+        int n1 = sysRoleDao.deleteByPrimaryKey(roleCode);
         int n2 = 0;
         if(n1>0){
             //删除角色成功，删除角色资源对应关系
-            n2 = sysRoleResourceDao.deleteRoleResourceByRoleCode(roleCode);
+            n2 = sysRoleResourceDao.deleteByPrimaryKey(roleCode);
         }
         return n2;
     }
@@ -91,28 +53,20 @@ public class SysRoleService {
      */
     @Transactional
     public int addRoleResource(Map<String, Object> map){
-        int delNum = sysRoleResourceDao.deleteRoleResourceByRoleCode((String)map.get("roleCode"));
+        int delNum = sysRoleResourceDao.deleteByPrimaryKey((String)map.get("roleCode"));
         int addNum = 0;
         if(delNum>=0&&map.get("resourceIds")!=null){
-            addNum = sysRoleResourceDao.addRoleResource (map);
+            addNum = sysRoleResourceDao.add (map);
         }
         return addNum;
     }
 
-    /**
-     * 根据roleCode获取角色信息
-     * @param roleCode
-     * @return
-     */
-    public SysRole getRoleByCode(String roleCode){
-        return sysRoleDao.getRoleByCode(roleCode);
-    }
     /**
      * 根据角色ID获取资源
      * @param roleCode
      * @return
      */
     public List<SysResource> listResourceByRoleCode(String roleCode){
-        return sysRoleResourceDao.listResourceByRoleCode(roleCode);
+        return sysRoleResourceDao.listByRoleCode(roleCode);
     }
 }
