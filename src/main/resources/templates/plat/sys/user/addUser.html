@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout2}">
 <head>
-	<title>用户列表</title>
+	<title>添加用户</title>
 </head>
 <body>
 <div layout:fragment="content">
     <article class="cl pd-10">
-        <form action="addUser" method="post" class="form form-horizontal" id="addUserForm">
+        <form action="add" method="post" class="form form-horizontal" id="addForm">
             <div class="row cl">
                 <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>用户名：</label>
                 <div class="formControls col-xs-8 col-sm-8">
@@ -50,7 +50,7 @@
     </article>
 <script type="text/javascript">
 $(function(){
-	$("#addUserForm").validate({
+	$("#addForm").validate({
 		rules:{
             userName:{
 				required:true,
@@ -107,7 +107,7 @@ $(function(){
 
     $.ajax({
         type:'post',
-        url:'../sysRole/getRole',
+        url:'[[#{staticServer}]]/sys/sysRole/getRole',
         traditional: true,
         data:{},
         success:function(data){

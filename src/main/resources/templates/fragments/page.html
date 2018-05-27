@@ -3,86 +3,52 @@
 <body>
 
 <div th:fragment="pageNav(pageInfo)">
-
-    <!--<div class="fixed-table-pagination" style="display: block;" >
-        <div class="pull-left pagination-detail">
-            <span class="pagination-info">显示第 <span th:text="${pageInfo.startRow}"></span> 到第 <span th:text="${pageInfo.endRow}"></span> 条记录，
-            总共 <span th:text="${pageInfo.total}"></span>条记录</span>
-            <span class="page-list">每页显示
-		<span class="btn-group dropup">
-			<button type="button" class="btn btn-default  dropdown-toggle" data-toggle="dropdown">
-				<span class="page-size"  th:text="${pageInfo.pageSize}" ></span>
-				 <span class="caret"></span>
-			 </button>
-				<ul class="dropdown-menu" role="menu">
-				<li  th:class="${pageInfo.pageSize== 5 }?'active':''"><a th:href="@{?pageSize=5}" >5</a></li>
-				<li  th:class="${pageInfo.pageSize== 8 }?'active':''"><a th:href="@{?pageSize=8}" >8</a></li>
-			 </ul>
-		 </span>
-		 条记录
-	 </span>
-        </div>
-    </div>
-
-
-    <div   class="dataTables_paginate paging_bootstrap pagination" >
-        <ul >
-            <li th:if="${pageInfo.hasPreviousPage}">
-                <a th:href="@{'?currentPage='+${pageInfo.prePage}}" >
-                    ← Previous
-                </a>
-            </li>
-
-            <th:block th:each="nav : ${pageInfo.navigatepageNums}">
-                <li th:class="${nav==pageInfo.pageNum}?'active':''"><a th:href="@{'?currentPage='+${nav}}" th:text="${nav}"></a>
-                </li>
-            </th:block>
-
-            <th:block th:if="${pageInfo.hasNextPage}">
-                <li>
-                    <a th:href="@{'?currentPage='+${pageInfo.nextPage}}" >
-                        Next →
-                    </a>
-                </li>
-            </th:block>
-
-        </ul>
-    </div>-->
-
     <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper no-footer">
-        <!--<div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">
-            显示 <span th:text="${pageInfo.startRow}"></span> 到 <span th:text="${pageInfo.endRow}"></span> 条，共 <span th:text="${pageInfo.total}"></span> 条
-        </div>-->
         <div class="dataTables_length" id="DataTables_Table_0_length">
             <label class="dataTables_info">
-                显示 <span th:text="${pageInfo.startRow}"></span> 到 <span th:text="${pageInfo.endRow}"></span> 条，共 <span th:text="${pageInfo.total}"></span> 条<!--，每页显示
-                <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="select">
-                    <option value="50"  th:selected="${pageInfo.pageSize eq 12}?'selected':''">10</option>
-                    <option value="25" th:selected="${1==1}?'selected':''">25</option>
-                    <option value="50" th:selected="${pageInfo.pageSize eq 13}?'selected':''">50</option>
-                    <option value="100" th:selected="${pageInfo.pageSize eq 14}?'selected':''">100</option>
-                </select> 条-->
+                显示 <span th:text="${pageInfo.startRow}"></span> 到 <span th:text="${pageInfo.endRow}"></span> 条，共 <span th:text="${pageInfo.total}"></span> 条，每页显示
+                <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="select" id="fySelect">
+                    <option value="1"  th:selected="${pageInfo.pageSize == 1}">1</option>
+                    <option value="2" th:selected="${pageInfo.pageSize == 2}">2</option>
+                    <option value="10" th:selected="${pageInfo.pageSize == 10}">10</option>
+                    <option value="20" th:selected="${pageInfo.pageSize == 20}">20</option>
+                </select> 条
             </label>
         </div>
         <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
 
             <th:block th:if="${pageInfo.hasPreviousPage}">
-                <a th:href="@{'?pageIndex='+${pageInfo.prePage}}" class="paginate_button previous disabled" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" id="DataTables_Table_0_previous" >上一页</a>
+                <!--<a th:href="@{'?PageNum='+${pageInfo.prePage}}" class="paginate_button previous disabled" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" id="DataTables_Table_0_previous" >上一页</a>-->
+                <a th:onclick="'javascript:page(\''+${pageInfo.prePage}+'\')'" class="paginate_button previous disabled" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" id="DataTables_Table_0_previous" >上一页</a>
             </th:block>
 
             <span>
                 <th:block th:each="nav : ${pageInfo.navigatepageNums}" >
-                    <a th:href="@{'?pageIndex='+${nav}}" th:text="${nav}" class="paginate_button" th:style="${nav==pageInfo.pageNum}?'background:#5a98de;color:#fff':''" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0">1</a>
+                    <!--<a th:href="@{'?PageNum='+${nav}}" th:text="${nav}" class="paginate_button" th:style="${nav==pageInfo.pageNum}?'background:#5a98de;color:#fff':''" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0">1</a>-->
+                    <a th:onclick="'javascript:page(\''+${nav}+'\')'" th:text="${nav}" class="paginate_button" th:style="${nav==pageInfo.pageNum}?'background:#5a98de;color:#fff':''" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0">1</a>
                 </th:block>
             </span>
 
             <th:block th:if="${pageInfo.hasNextPage}">
-                <a th:href="@{'?pageIndex='+${pageInfo.nextPage}}" class="paginate_button next disabled" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" id="DataTables_Table_0_next">下一页</a>
+                <!--<a th:href="@{'?PageNum='+${pageInfo.nextPage}}" class="paginate_button next disabled" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" id="DataTables_Table_0_next">下一页</a>-->
+                <a th:onclick="'javascript:page(\''+${pageInfo.nextPage}+'\')'" class="paginate_button next disabled" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" id="DataTables_Table_0_next">下一页</a>
             </th:block>
         </div>
     </div>
+    <script type="text/javascript">
 
+        $(function(){
+            $("#fySelect").bind("change",function(){
+                page(1);
+            });
 
+        });
+
+        function page(pageNum) {
+            $("form").append("<input type='hidden' name='pageSize' value='"+$("#fySelect").val()+"'/>");
+            $("form").append("<input type='hidden' name='pageNum' value='"+pageNum+"'/>").submit();
+        }
+    </script>
 </div>
 </body>
 </html>

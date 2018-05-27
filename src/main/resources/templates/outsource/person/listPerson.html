@@ -1,0 +1,99 @@
+﻿<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout}">
+	<head>
+		<title>人员列表</title>
+	</head>
+<body>
+
+<div layout:fragment="content">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> <a th:href="@{#{staticServer}+'/index'}" class="maincolor">首页</a>
+		<span class="c-gray en">&gt;</span> 外协信息
+		<span class="c-gray en">&gt;</span> 人员管理
+		<span class="c-gray en">&gt;</span> 人员列表
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" >
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+
+	<div class="Hui-article">
+		<article class="cl pd-20">
+            <div class="cl pd-5 bg-1 bk-gray">
+				<span class="l">
+					<a href="javascript:;" onclick="toAdd('新增人员','person/toAdd','10001','800','600')" class="btn btn-primary radius"
+                       shiro:hasPermission="/outsource/person/add"><i class="Hui-iconfont">&#xe600;</i> 新增</a>
+				</span>
+            </div>
+			<table class="table table-border table-bordered table-hover table-bg table-sort dataTables_wrapper" id="dataTables-smsSendOrder">
+				<thead>
+					<tr class="text-c">
+						<th width="20"><input type="checkbox" name="" value=""></th>
+						<th width="40">序号</th>
+						<th width="100">姓名</th>
+						<th width="40">性别</th>
+						<th width="40">年龄</th>
+						<th width="120">手机号</th>
+                        <th width="120">职务</th>
+                        <th width="200">备注</th>
+                        <th width="30">排序</th>
+                        <th width="40">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="text-c" th:if="${pageInfo.list.empty}">
+						<td colspan="18">无数据</td>
+					</tr>
+					<tr class="text-c" th:each="person,status : ${pageInfo.list}">
+						<td><input type="checkbox" value="2" name=""></td>
+						<td th:text="${status.index+1}"></td>
+						<td th:text="${person.name }"></td>
+						<td th:text="${person.sex=='1'?'男':'女' }"></td>
+                        <td th:text="${person.age }"></td>
+                        <td th:text="${person.mobile }"></td>
+                        <td th:switch="${person.dutyCode}">
+                            <span th:case="1">项目经理</span>
+                            <span th:case="2">开发人员</span>
+                            <span th:case="3">测试人员</span>
+                        </td>
+                        <td th:text="${person.remark }"></td>
+                        <td th:text="${person.px }"></td>
+                        <td class="td-manage">
+                            <a title="修改" th:onclick="'javascript:toUpdate(\'修改\',\'person/toUpdate\',\'10001\',\'800\',\'600\',\''+${person.id}+'\')'" shiro:hasPermission="/outsource/person/update"  class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6df;</i></a>
+                            <a title="删除" th:onclick="'javascript:del(\''+${person.id}+'\')'" href="javascript:;" shiro:hasPermission="/outsource/person/delete" class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6e2;</i></a>
+                        </td>
+					</tr>
+				</tbody>
+			</table>
+            <div th:replace="fragments/page :: pageNav(${pageInfo})"></div>
+		</article>
+	</div>
+<script type="text/javascript">
+    /*添加*/
+    function toAdd(title,url,id,w,h){
+        layer_show(title,url,w,h);
+    }
+    /*修改*/
+    function toUpdate(title,url,id,w,h,id){
+        data = {id:id};
+        layer_show(title,url,w,h);
+    }
+
+    /*删除*/
+    function del(id){
+        layer.confirm("确认要删除吗？", {icon: 3, title:'提示'}, function(index){
+            $.post("person/delete",{id: id}, function(result) {
+                if(result==1){
+                    layer.msg('删除成功!', { icon: 1, time: 1000 },function () {
+                        location.reload();
+                    });
+                }else{
+                    layer.msg('删除失败!', { icon: 2, time: 1000 },function () {
+                        location.reload();
+                    });
+                }
+            });
+        });
+    }
+</script>
+</div>
+</body>
+</html>

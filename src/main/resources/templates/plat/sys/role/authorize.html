@@ -35,7 +35,7 @@
         },
         async: {
             enable: true,
-            url: "sysResource/createResourceZtree",
+            url: "[[#{staticServer}]]/sysResource/createResourceZtree",
             autoParam: ["id"]
         },
         callback: {
@@ -49,7 +49,7 @@
         var treeObj = $.fn.zTree.getZTreeObj("tree");
         $.ajax({
             type:'post',
-            url:'sysRole/listResourceByRoleCode',
+            url:'[[#{staticServer}]]/sys/sysRole/listResourceByRoleCode',
             traditional: true,
             data:{
                 roleCode: parent.data.roleCode,

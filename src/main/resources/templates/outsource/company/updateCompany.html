@@ -1,12 +1,13 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout2}">
 <head>
-	<title>新增公司</title>
+	<title>修改公司信息</title>
 </head>
 <body>
 <div layout:fragment="content">
     <article class="cl pd-10">
-        <form action="addCompany" method="post" class="form form-horizontal" id="addCompanyForm">
+        <form action="update" method="post" class="form form-horizontal" id="updateForm">
+            <input type="hidden" id="id" name="id"/>
             <div class="row cl">
                 <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>公司名称：</label>
                 <div class="formControls col-xs-8 col-sm-8">
@@ -44,21 +45,36 @@
 
             <div class="row cl">
                 <div class="col-xs-12 col-sm-12 text-c">
-                    <input class="btn btn-primary radius" type="submit" value="保存">
-                    <!--<input class="btn btn-primary radius" type="button" onclick="history.back(-1)" value="返回">-->
+                    <input class="btn btn-primary radius" type="submit" value="修改">
                 </div>
             </div>
         </form>
     </article>
 <script type="text/javascript">
 $(function(){
-	$("#addCompanyForm").validate({
+    $.ajax({
+        type:'post',
+        url:'getById',
+        data:{
+            id: parent.data.id,
+        },
+        success:function(data){
+            $("#id").val(data.id);
+            $("#companyName").val(data.companyName);
+            $("#companyNature").val(data.companyNature);
+            $("#companyAddress").val(data.companyAddress);
+            $("#establishedDate").val(data.establishedDate);
+            $("#companyIntroduce").val(data.companyIntroduce);
+        }
+    });
+
+	$("#updateForm").validate({
 		rules:{
             companyName:{
-				required:true,
-				minlength:1,
-				maxlength:25
-			},companyNature:{
+                required:true,
+                minlength:1,
+                maxlength:25
+            },companyNature:{
                 required:true,
                 minlength:1,
                 maxlength:50
@@ -80,11 +96,11 @@ $(function(){
                 dataType:"json",
                 success:function(result){
                     if(result==1){
-                        layer.msg('新增成功!', { icon: 1, time: 1000 },function () {
+                        layer.msg('修改成功!', { icon: 1, time: 1000 },function () {
                             window.parent.location.reload();
                         });
                     }else{
-                        layer.msg('新增失败!', { icon: 2, time: 1000 },function () {
+                        layer.msg('修改失败!', { icon: 2, time: 1000 },function () {
                             window.parent.location.reload();
                         });
                     }

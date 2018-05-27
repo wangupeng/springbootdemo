@@ -1,59 +1,95 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout2}">
 <head>
-	<title>修改weblogic</title>
+	<title>修改项目</title>
 </head>
 <body>
 <div layout:fragment="content">
     <article class="cl pd-10">
-        <form action="updateWeblogic" method="post" class="form form-horizontal" id="updateWeblogicForm">
-            <input type="hidden" id="id" name="id"/>
+        <form action="update" method="post" class="form form-horizontal" id="updateForm">
+            <input type="hidden" id="projectId" name="projectId"/>
             <div class="row cl">
-                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>weblogic名称：</label>
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>项目代码：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" name="weblogicName" id="weblogicName" class="input-text" autocomplete="off" placeholder="weblogic名称"/>
+                    <input type="text" name="projectCode" id="projectCode" class="input-text" autocomplete="off" placeholder="1-50个英文/数字"/>
                 </div>
             </div>
 
             <div class="row cl">
-                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>weblogic地址：</label>
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>项目名称：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" name="weblogicUrl" id="weblogicUrl" class="input-text" autocomplete="off" placeholder="2~10个中文"/>
+                    <input type="text" name="projectName" id="projectName" class="input-text" autocomplete="off" placeholder="1~25个中文"/>
                 </div>
             </div>
 
             <div class="row cl">
-                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>weblogic用户名：</label>
+                <label class="form-label col-xs-3 col-sm-3">项目简称：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" name="weblogicUsername" id="weblogicUsername" class="input-text" autocomplete="off" placeholder="weblogic登录的用户名"/>
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-3 col-sm-3">weblogic密码：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" name="weblogicPassword" id="weblogicPassword"  class="input-text" autocomplete="off" placeholder="weblogic登录的密码"/>
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>负责人：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" name="fzr" id="fzr" class="input-text" autocomplete="off" placeholder="weblogic负责人"/>
+                    <input type="text" name="shortName" id="shortName" class="input-text" autocomplete="off" placeholder="1~15个中文"/>
                 </div>
             </div>
 
             <div class="row cl">
                 <label class="form-label col-xs-3 col-sm-3">描述：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <textarea name="description" id="description" cols="" rows="3" class="textarea" placeholder=""></textarea>
+                    <textarea name="description" id="description" cols="" rows="3" class="textarea" placeholder="最多500个汉字"></textarea>
                 </div>
             </div>
 
             <div class="row cl">
-                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>排序：</label>
+                <label class="form-label col-xs-3 col-sm-3">项目起止日期：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" name="px" id="px" class="input-text" autocomplete="off" placeholder=""/>
+                    <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endDate\')||\'%y-%M-%d\'}'})" id="startDate" name="startDate" class="input-text Wdate" style="width:140px;">
+                    -
+                    <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'startDate\')}',maxDate:'%y-%M-%d'})" id="endDate" name="endDate" class="input-text Wdate" style="width:140px;">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3">当前版本：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="version" id="version" class="input-text" autocomplete="off" placeholder=""/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>状态：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <span class="select-box">
+                        <select class="select" size="1" name="status" id="status">
+                            <option value="">请选择应用状态</option>
+                            <option value="1">生产应用</option>
+                            <option value="2">测试应用</option>
+                        </select>
+                    </span>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>联系人：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="fzr" id="fzr" class="input-text" autocomplete="off" placeholder=""/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>联系人电话：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="phone" id="phone" class="input-text" autocomplete="off" placeholder="座机或手机号"/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3">svn地址：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="svn" id="svn" class="input-text" autocomplete="off" placeholder=""/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3">备注：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <textarea name="remark" id="remark" class="textarea" placeholder=""></textarea>
                 </div>
             </div>
 
@@ -68,46 +104,61 @@
 $(function(){
     $.ajax({
         type:'post',
-        url:'getWeblogicById',
+        url:'getById',
         data:{
-            id: parent.data.id,
+            id: parent.data.projectId,
         },
-        success:function(data){
-            $("#id").val(data.id);
-            $("#weblogicName").val(data.weblogicName);
-            $("#weblogicUrl").val(data.weblogicUrl);
-            $("#weblogicUsername").val(data.weblogicUsername);
-            $("#weblogicPassword").val(data.weblogicPassword);
-            $("#fzr").val(data.fzr);
-            $("#description").val(data.description);
-            $("#px").val(data.px);
+        success:function(dat){
+            $("#projectId").val(dat.projectId);
+            $("#projectCode").val(dat.projectCode);
+            $("#projectName").val(dat.projectName);
+            $("#shortName").val(dat.shortName);
+            $("#description").val(dat.description);
+            $("#startDate").val(dat.startDate);
+            $("#endDate").val(dat.endDate);
+            $("#version").val(dat.version);
+            $("#status").val(dat.status);
+            $("#fzr").val(dat.fzr);
+            $("#phone").val(dat.phone);
+            $("#svn").val(dat.svn);
+            $("#remark").val(dat.remark);
         }
     });
 
-	$("#updateWeblogicForm").validate({
+	$("#updateForm").validate({
 		rules:{
-            weblogicName:{
+            projectCode:{
                 required:true,
-                minlength:1,
+                isEnglish:true,
+                maxlength:50
+            },projectName:{
+                required:true,
                 maxlength:25
-            },weblogicUrl:{
-                required:true,
-                minlength:1,
-                maxlength:200
-            },weblogicUsername:{
-                required:true,
-                minlength:1,
-                maxlength:30
+            },shortName:{
+                required:false,
+                maxlength:15
+            },description:{
+                required:false,
+                maxlength:500
+            },startDate:{
+                required:false
+            },endDate:{
+                required:false
+            },version:{
+                required:false
+            },status:{
+                required:true
+            },phone:{
+                required:false,
+                isTel:true,
             },fzr:{
                 required:true,
-                minlength:1,
-                maxlength:50
-            },px:{
-                required:true,
-                digits:true,
-                minlength:1,
-                maxlength:3
-            },description:{
+                maxlength:15
+            },svn:{
+                required:false,
+                url:true,
+                maxlength:100
+            },remark:{
                 required:false,
                 maxlength:250
             }

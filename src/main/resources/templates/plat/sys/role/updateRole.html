@@ -6,7 +6,7 @@
 <body>
 <div layout:fragment="content">
 	<article class="cl pd-10">
-		<form action="updateRole" method="post" class="form form-horizontal" id="updateRoleForm">
+		<form action="update" method="post" class="form form-horizontal" id="updateForm">
 			<div class="row cl">
 				<label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>角色代码：</label>
 				<div class="formControls col-xs-8 col-sm-8">
@@ -49,7 +49,7 @@ $(function(){
             $("#description").val(data.description);
         }
     });
-    $("#updateRoleForm").validate({
+    $("#updateForm").validate({
         rules:{
             roleName:{
                 required:true,

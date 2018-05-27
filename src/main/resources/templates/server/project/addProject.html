@@ -1,95 +1,147 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/layout2}">
 <head>
-	<title>新增weblogic</title>
+	<title>新增项目</title>
 </head>
 <body>
 <div layout:fragment="content">
     <article class="cl pd-10">
-        <form action="addWeblogic" method="post" class="form form-horizontal" id="addWeblogicForm">
+        <form action="add" method="post" class="form form-horizontal" id="addForm">
             <div class="row cl">
-                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>weblogic名称：</label>
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>项目代码：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" name="weblogicName" id="weblogicName" class="input-text" autocomplete="off" placeholder="weblogic名称"/>
+                    <input type="text" name="projectCode" id="projectCode" class="input-text" autocomplete="off" placeholder="1-50个英文/数字"/>
                 </div>
             </div>
 
             <div class="row cl">
-                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>weblogic地址：</label>
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>项目名称：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" name="weblogicUrl" class="input-text" autocomplete="off" placeholder="2~10个中文"/>
+                    <input type="text" name="projectName" id="projectName" class="input-text" autocomplete="off" placeholder="1~25个中文"/>
                 </div>
             </div>
 
             <div class="row cl">
-                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>weblogic用户名：</label>
+                <label class="form-label col-xs-3 col-sm-3">项目简称：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" name="weblogicUsername" class="input-text" autocomplete="off" placeholder="weblogic登录的用户名"/>
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-3 col-sm-3">weblogic密码：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" name="weblogicPassword" class="input-text" autocomplete="off" placeholder="weblogic登录的密码"/>
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>负责人：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" name="fzr" class="input-text" autocomplete="off" placeholder="weblogic负责人"/>
+                    <input type="text" name="shortName" id="shortName" class="input-text" autocomplete="off" placeholder="1~15个中文"/>
                 </div>
             </div>
 
             <div class="row cl">
                 <label class="form-label col-xs-3 col-sm-3">描述：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <textarea name="description" cols="" rows="3" class="textarea" placeholder=""></textarea>
+                    <textarea name="description" id="description" cols="" rows="3" class="textarea" placeholder="最多500个汉字"></textarea>
                 </div>
             </div>
 
             <div class="row cl">
-                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>排序：</label>
+                <label class="form-label col-xs-3 col-sm-3">项目起止日期：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" name="px" class="input-text" autocomplete="off" placeholder=""/>
+                    <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endDate\')||\'%y-%M-%d\'}'})" id="startDate" name="startDate" class="input-text Wdate" style="width:140px;">
+                    -
+                    <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'startDate\')}',maxDate:'%y-%M-%d'})" id="endDate" name="endDate" class="input-text Wdate" style="width:140px;">
                 </div>
             </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3">当前版本：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="version" id="version" class="input-text" autocomplete="off" placeholder=""/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>状态：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <span class="select-box">
+                        <select class="select" size="1" name="status" id="status">
+                            <option value="">请选择应用状态</option>
+                            <option value="1">生产应用</option>
+                            <option value="2">测试应用</option>
+                        </select>
+                    </span>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>联系人：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="fzr" id="fzr" class="input-text" autocomplete="off" placeholder=""/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>联系人电话：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="phone" id="phone" class="input-text" autocomplete="off" placeholder="座机或手机号"/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3">svn地址：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="svn" id="svn" class="input-text" autocomplete="off" placeholder=""/>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3">备注：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <textarea name="remark" id="remark" class="textarea" placeholder=""></textarea>
+                </div>
+            </div>
+
+           <!-- <div class="row cl">
+                <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>排序：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <input type="text" name="px" id="px" class="input-text" autocomplete="off" placeholder=""/>
+                </div>
+            </div>-->
 
             <div class="row cl">
                 <div class="col-xs-12 col-sm-12 text-c">
                     <input class="btn btn-primary radius" type="submit" value="保存">
-                    <!--<input class="btn btn-primary radius" type="button" onclick="history.back(-1)" value="返回">-->
                 </div>
             </div>
         </form>
     </article>
 <script type="text/javascript">
 $(function(){
-	$("#addWeblogicForm").validate({
+	$("#addForm").validate({
 		rules:{
-            weblogicName:{
+            projectCode:{
 				required:true,
-				minlength:1,
-				maxlength:25
-			},weblogicUrl:{
+                isEnglish:true,
+				maxlength:50
+			},projectName:{
                 required:true,
-                minlength:1,
-                maxlength:200
-            },weblogicUsername:{
-                required:true,
-                minlength:1,
-                maxlength:30
+                maxlength:25
+            },shortName:{
+                required:false,
+                maxlength:15
+            },description:{
+                required:false,
+                maxlength:500
+            },startDate:{
+                required:false
+            },endDate:{
+                required:false
+            },version:{
+                required:false
+            },status:{
+                required:true
+            },phone:{
+                required:false,
+                isTel:true,
             },fzr:{
                 required:true,
-                minlength:1,
-                maxlength:50
-            },px:{
-                required:true,
-                digits:true,
-                minlength:1,
-                maxlength:3
-            },description:{
+                maxlength:15
+            },svn:{
+                required:false,
+                url:true,
+                maxlength:100
+            },remark:{
                 required:false,
                 maxlength:250
             }
@@ -98,16 +150,15 @@ $(function(){
 		focusCleanup:true,
 		success:"valid",
 		submitHandler:function(form){
-			//form.submit();
             $(form).ajaxSubmit({
                 dataType:"json",
                 success:function(result){
                     if(result==1){
-                        layer.msg('新增用户成功!', { icon: 1, time: 1000 },function () {
+                        layer.msg('新增成功!', { icon: 1, time: 1000 },function () {
                             window.parent.location.reload();
                         });
                     }else{
-                        layer.msg('新增用户失败!', { icon: 2, time: 1000 },function () {
+                        layer.msg('新增失败!', { icon: 2, time: 1000 },function () {
                             window.parent.location.reload();
                         });
                     }

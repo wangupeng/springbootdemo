@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cars.plat.sys.dao.SysUserDao">
     <!-- 用户列表 -->
-    <select id="listUser" parameterType="SysUser" resultType="SysUser">
+    <select id="list" parameterType="SysUser" resultType="SysUser">
         select u.*,r.role_name from DEMO_SYS_USER u,DEMO_SYS_ROLE r
         where 1=1
         AND u.ROLE_CODE=r.ROLE_CODE(+)
         <if test="userName!= null and userName != '' ">
-            AND u.USER_NAME = #{userName}
+            AND u.USER_NAME like '%'||#{userName}||'%'
         </if>
         <if test="realName!= null and realName != '' ">
             AND u.REAL_NAME like '%'||#{realName}||'%'
@@ -20,27 +20,6 @@
         </if>
         order by u.LAST_MODIFIED_DATE DESC
     </select>
-
-    <!-- 新增用户 -->
-    <insert id="addUser" parameterType="SysUser">
-        insert into DEMO_SYS_USER
-        (USER_NAME,PASS_WORD,ROLE_CODE,SALT,MOBILE,REAL_NAME,CREATE_USER,LAST_MODIFIED_USER)
-        VALUES
-        (#{userName},#{passWord},#{roleCode},#{salt},#{mobile},#{realName},#{createUser},#{lastModifiedUser})
-    </insert>
-
-    <!-- 更新用户 -->
-    <update id="updateUser" parameterType="SysUser">
-        update DEMO_SYS_USER
-        set ROLE_CODE=#{roleCode},REAL_NAME=#{realName},MOBILE=#{mobile},
-        LAST_MODIFIED_USER=#{lastModifiedUser},LAST_MODIFIED_DATE=#{lastModifiedDate}
-        where USER_NAME=#{userName}
-    </update>
-
-    <!-- 删除用户 -->
-    <delete id="deleteUser" parameterType="String">
-        delete from DEMO_SYS_USER where USER_NAME=#{userName}
-    </delete>
 
     <!-- 根据用户名查询用户信息 -->
     <select id="getUserByUserName" parameterType="String" resultType="SysUser">

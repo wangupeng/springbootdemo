@@ -6,7 +6,7 @@
 <body>
 <div layout:fragment="content">
     <article class="cl pd-10">
-        <form action="addPerson" method="post" class="form form-horizontal" id="addPersonForm">
+        <form action="add" method="post" class="form form-horizontal" id="addForm">
             <div class="row cl">
                 <label class="form-label col-xs-3 col-sm-3"><span class="c-red">*</span>姓名：</label>
                 <div class="formControls col-xs-8 col-sm-8">
@@ -89,7 +89,7 @@
     </article>
 <script type="text/javascript">
 $(function(){
-	$("#addPersonForm").validate({
+	$("#addForm").validate({
 		rules:{
             name:{
 				required:true,
@@ -141,7 +141,7 @@ $(function(){
 
     $.ajax({
         type:'post',
-        url:'[[#{staticServer}]]/company/getCompany',
+        url:'[[#{staticServer}]]/outsource/company/selectAll',
         traditional: true,
         data:{},
         success:function(data){

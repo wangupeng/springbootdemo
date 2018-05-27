@@ -27,7 +27,7 @@
 
 			<div class="cl pd-5 bg-1 bk-gray mt-10">
 				<span class="l">
-					<a href="javascript:;" onclick="toAddUser('新增用户','sysUser/toAddUser','10001','800','350')" class="btn btn-primary radius"  shiro:hasPermission="/sysUser/delete"><i class="Hui-iconfont">&#xe600;</i> 新增用户</a>
+					<a href="javascript:;" onclick="toAddUser('新增用户','sysUser/toAdd','10001','800','350')" class="btn btn-primary radius"  shiro:hasPermission="/sys/sysUser/delete"><i class="Hui-iconfont">&#xe600;</i> 新增用户</a>
 					<!--<a href="javascript:;" onclick="datadel()" class="btn btn-danger radius" shiro:hasPermission="/sysUser/add"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>-->
 				</span>
 			</div>
@@ -59,19 +59,19 @@
 						<td th:text="${user.roleName}"></td>
 						<td th:text="${user.mobile}"></td>
 						<td th:text="${user.createUser}"></td>
-						<td th:text="${#dates.format(user.createDate,'yyyy-MM-dd HH:mm:ss')}"></td><!--th:text="${#dates.format(user.date)}"-->
+						<td th:text="${user.createDate}"></td><!--th:text="${#dates.format(user.date)}"-->
 						<td class="td-status">
 							<span th:class="${user.status == '1'}?'label label-success radius':'label label-default radius'" th:text="${user.status == '1'}?'正常':'已锁定'"></span>
 						</td>
 						<td class="td-manage">
-							<a title="修改" th:onclick="'javascript:toUpdateUser(\'修改用户\',\'sysUser/toUpdateUser\',\'10001\',\'800\',\'350\',\''+${user.userName}+'\')'" shiro:hasPermission="/sysUser/update"  class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6df;</i></a>
-							<a th:title="${user.status == '1'}?'锁定':'解锁'" th:onclick="${user.status == '1'}?'javascript:lockUser(\''+${user.userName}+'\')':'javascript:unlockUser(\''+${user.userName}+'\')'" shiro:hasPermission="/sysUser/lock" href="javascript:;" data-toggle="tooltip" data-placement="top" style="text-decoration:none">
+							<a title="修改" th:onclick="'javascript:toUpdate(\'修改用户\',\'sysUser/toUpdate\',\'10001\',\'800\',\'350\',\''+${user.userName}+'\')'" shiro:hasPermission="/sys/sysUser/update"  class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6df;</i></a>
+							<a th:title="${user.status == '1'}?'锁定':'解锁'" th:onclick="${user.status == '1'}?'javascript:lockUser(\''+${user.userName}+'\')':'javascript:unlockUser(\''+${user.userName}+'\')'" shiro:hasPermission="/sys/sysUser/lock" href="javascript:;" data-toggle="tooltip" data-placement="top" style="text-decoration:none">
 								<i class="Hui-iconfont f-16" th:text="${user.status == '1'}?'&#xe60e;':'&#xe63f;'"></i>
 							</a>
 							<a title="重置密码" th:onclick="'javascript:resetPassWord(\''+${user.userName}+'\')'" class="ml-5" href="javascript:;" shiro:hasPermission="/sysUser/reset" data-toggle="tooltip" data-placement="top" style="text-decoration:none" >
 								<i class="Hui-iconfont f-16">&#xe6f7;</i>
 							</a>
-							<a title="删除" th:onclick="'javascript:deleteUser(\''+${user.userName}+'\')'" href="javascript:;" shiro:hasPermission="/sysUser/delete" class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6e2;</i></a>
+							<a title="删除" th:onclick="'javascript:del(\''+${user.userName}+'\')'" href="javascript:;" shiro:hasPermission="/sys/sysUser/delete" class="ml-5" data-toggle="tooltip" data-placement="top" style="text-decoration:none"><i class="Hui-iconfont f-16">&#xe6e2;</i></a>
 						</td>
 					</tr>
 				</tbody>
@@ -86,15 +86,15 @@
     }
 
     /*修改用户*/
-    function toUpdateUser(title,url,id,w,h,userName){
+    function toUpdate(title,url,id,w,h,userName){
         data = {userName:userName};
         layer_show(title,url,w,h);
     }
 
 	/*管理员-删除*/
-	function deleteUser(userName){
+	function del(userName){
 		layer.confirm("确认要删除吗？", {icon: 3, title:'提示'}, function(index){
-			$.post("sysUser/deleteUser",{userName: userName}, function(result) {
+			$.post("[[#{staticServer}]]/sys/sysUser/delete",{userName: userName}, function(result) {
 				if(result==1){
 					layer.msg('删除成功!', { icon: 1, time: 1000 },function () {
 						location.reload();
