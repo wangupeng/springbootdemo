@@ -2,20 +2,28 @@ package com.cars.plat.sys.model;
 
 import com.cars.plat.util.page.Page;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 /**
  * Created by wangyupeng on 2017/8/18.
  */
+@Table(name = "demo_sys_resource")
 public class SysResource extends Page{
+    @Id
     private String resourceId;//主键:四位，首位字母A表示1级，B表示2级..(A001、B001、C001)
     private String resourceName;//资源名称
     private String resourceUrl;//资源URL
     private String resourceType;//资源类型，1：菜单，2按钮
     private String parentId;//父节点ID
+    @Transient
     private String parentName;//上级节点名称
     private String target;//链接目标
     private String icon;//图标
     private String description;//描述
     private Integer displayOrder;//排序
+    @Transient
     private int cnt;//子节点数量
 
     public String getResourceId() {

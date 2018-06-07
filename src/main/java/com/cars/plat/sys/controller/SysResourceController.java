@@ -5,6 +5,7 @@ import com.cars.plat.sys.model.SysRole;
 import com.cars.plat.sys.model.SysUser;
 import com.cars.plat.sys.service.SysResourceService;
 import com.cars.plat.util.cache.EhCacheUtil;
+import com.cars.plat.util.date.DateUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +27,7 @@ import java.util.Map;
  * Created by wangyupeng on 2017/8/18.
  */
 @Controller
-@RequestMapping("/sysResource")
+@RequestMapping("/sys/sysResource")
 public class SysResourceController {
     @Autowired
     private SysResourceService sysResourceService;
@@ -54,7 +56,8 @@ public class SysResourceController {
     @ResponseBody
     @RequestMapping("/addResource")
     public int addResource(SysResource sysResource){
-        return sysResourceService.addResource(sysResource);
+        sysResource.setResourceId(DateUtil.getShortSystemTime());
+        return sysResourceService.insert(sysResource);
     }
 
     /**
@@ -71,7 +74,7 @@ public class SysResourceController {
     @ResponseBody
     @RequestMapping("/updateResource")
     public int updateResource(SysResource sysResource){
-        return sysResourceService.updateResource(sysResource);
+        return sysResourceService.update(sysResource);
     }
 
     /**
@@ -94,6 +97,7 @@ public class SysResourceController {
     @RequestMapping("/listModuleResource")
     public List<Map<String,String>> listModuleResource(SysResource sysResource){
         sysResource.setResourceType("1");
+        PageHelper.startPage(1, 9999);
         List<SysResource> listResource = sysResourceService.listResource(sysResource);
         SysResource s = new SysResource();
         s.setResourceId("0");
@@ -117,13 +121,11 @@ public class SysResourceController {
      */
     @ResponseBody
     @RequestMapping("/loadMenu")
-    public List<SysResource> loadMenu(){
+    public List<SysResource> loadMenu(@SessionAttribute SysUser userSession){
         Map<String,Object> map = new HashMap<>();
-        SysUser sysUser = (SysUser) SecurityUtils.getSubject().getSession().getAttribute("userSession");
         map.put("resourceType",1);
-        map.put("userName",sysUser.getUserName());
-        List<SysResource> resourceList = sysResourceService.loadUserResource(map);
-        return resourceList;
+        map.put("userName",userSession.getUserName());
+        return sysResourceService.loadUserResource(map);
     }
 
     /**

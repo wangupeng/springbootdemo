@@ -4,17 +4,7 @@
 
     <!-- 查询资源 -->
     <select id="listResource" parameterType="SysResource" resultType="SysResource">
-        select t.resource_id,
-        t.resource_name,
-        t.parent_id,
-        t.resource_url,
-        t.target,
-        t.icon,
-        t.display_order,
-        t.resource_type,
-        t.description,
-        t.display_order,
-        (select count(*) from DEMO_sys_resource where parent_id = t.resource_id) cnt
+        select t.*,(select count(*) from DEMO_sys_resource where parent_id = t.resource_id) cnt
         from DEMO.DEMO_sys_resource t
         where 1=1
         <if test="resourceId!=null">
@@ -31,16 +21,7 @@
 
     <!-- 根据ID查询资源 -->
     <select id="getResourceById" parameterType="String" resultType="SysResource">
-        select t.resource_id,
-            t.resource_name,
-            t.parent_id,
-            t.resource_url,
-            t.target,
-            t.icon,
-            t.display_order,
-            t.resource_type,
-            t.description,
-            (select resource_name from DEMO_sys_resource where resource_id = t.parent_id) parent_name
+        select t.*,(select resource_name from DEMO_sys_resource where resource_id = t.parent_id) parent_name
             from DEMO_sys_resource t
         where RESOURCE_ID = #{resourceId}
     </select>
@@ -61,21 +42,6 @@
         </if>
         ORDER BY display_order
     </select>
-
-    <!-- 新增资源 -->
-    <insert id="addResource" parameterType="SysResource">
-        insert into DEMO_SYS_RESOURCE (RESOURCE_ID,RESOURCE_NAME,RESOURCE_URL,RESOURCE_TYPE,PARENT_ID,TARGET,ICON,DESCRIPTION,DISPLAY_ORDER)
-        VALUES (#{resourceId},#{resourceName},#{resourceUrl},#{resourceType},#{parentId},#{target,jdbcType=VARCHAR},#{icon,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},#{displayOrder})
-    </insert>
-
-    <!-- 修改资源 -->
-    <update id="updateResource" parameterType="SysResource">
-        update DEMO_SYS_RESOURCE
-        set RESOURCE_NAME=#{resourceName},RESOURCE_URL=#{resourceUrl},
-        RESOURCE_TYPE=#{resourceType},PARENT_ID=#{parentId},
-        TARGET=#{target,jdbcType=VARCHAR},ICON=#{icon,jdbcType=VARCHAR},DESCRIPTION=#{description,jdbcType=VARCHAR},DISPLAY_ORDER=#{displayOrder}
-        where RESOURCE_ID=#{resourceId}
-    </update>
 
     <!-- 删除资源 -->
     <delete id="deleteResource" parameterType="String">

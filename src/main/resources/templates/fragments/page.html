@@ -36,8 +36,14 @@
         </div>
     </div>
     <script type="text/javascript">
-
+        var pathname = window.location.pathname;
+        pathname = pathname.substr(pathname.indexOf("/",2),pathname.length);
+        var f = $("form");
         $(function(){
+            if(f.length>0){
+                f.append("<input type='hidden' id='pageSize' name='pageSize'/>").append("<input type='hidden' id='pageNum' name='pageNum'/>");
+            }
+
             $("#fySelect").bind("change",function(){
                 page(1);
             });
@@ -45,8 +51,13 @@
         });
 
         function page(pageNum) {
-            $("form").append("<input type='hidden' name='pageSize' value='"+$("#fySelect").val()+"'/>");
-            $("form").append("<input type='hidden' name='pageNum' value='"+pageNum+"'/>").submit();
+            if(f.length>0){
+                $("#pageSize").val($("#fySelect").val());
+                $("#pageNum").val(pageNum);
+                f.submit();
+            }else{
+                window.location.href = '[[#{staticServer}]]'+pathname+"?pageSize="+$("#fySelect").val()+"&pageNum="+pageNum;
+            }
         }
     </script>
 </div>

@@ -1,12 +1,13 @@
 package com.cars.plat.sys.service;
 
+import com.cars.plat.common.base.BaseService;
 import com.cars.plat.sys.dao.SysResourceDao;
 import com.cars.plat.sys.dao.SysRoleResourceDao;
 import com.cars.plat.sys.model.SysResource;
 import com.cars.plat.util.date.DateUtil;
-import com.cars.plat.util.string.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -17,8 +18,8 @@ import java.util.Map;
 /**
  * Created by wangyupeng on 2017/8/18.
  */
-@Component
-public class SysResourceService {
+@Service
+public class SysResourceService extends BaseService<SysResource> {
     @Autowired
     private SysResourceDao sysResourceDao;
     @Autowired
@@ -29,8 +30,7 @@ public class SysResourceService {
      * @return
      */
     public List<SysResource> listResource(SysResource sysResource){
-        List<SysResource> list = sysResourceDao.listResource(sysResource);
-        return list;
+        return sysResourceDao.listResource(sysResource);
     }
 
     /**
@@ -56,31 +56,7 @@ public class SysResourceService {
      * @return
      */
     public SysResource getResourceById(String resourceId){
-        SysResource sysResource = sysResourceDao.getResourceById(resourceId);
-        return sysResource;
-    }
-
-    /**
-     * 添加资源
-     * @param sysResource
-     * @return
-     */
-    @Transactional
-    public int addResource(SysResource sysResource){
-        sysResource.setResourceId(DateUtil.getShortSystemTime());
-        int n = sysResourceDao.addResource(sysResource);
-        return n;
-    }
-
-    /**
-     * 更新资源
-     * @param sysResource
-     * @return
-     */
-    @Transactional
-    public int updateResource(SysResource sysResource){
-        int n = sysResourceDao.updateResource(sysResource);
-        return n;
+        return sysResourceDao.getResourceById(resourceId);
     }
 
     /**
@@ -108,13 +84,4 @@ public class SysResourceService {
         List<SysResource> resourceList = sysResourceDao.loadUserResource(map);
         return resourceList;
     }
-
-    /**
-     * 根据资源类型查询资源
-     * @param resourceType
-     * @return
-     */
-    /*public List<SysResource> listResourceByType(String resourceType){
-        return sysResourceDao.listResourceByType(resourceType);
-    }*/
 }

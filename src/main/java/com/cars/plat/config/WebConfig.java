@@ -43,9 +43,9 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
         registry.addViewController("/sys/sysRole/toAuthorize").setViewName("plat/sys/role/authorize.html");
 
         //添加资源
-        registry.addViewController("/sysResource/toAddResource").setViewName("plat/sys/resource/addResource.html");
+        registry.addViewController("/sys/sysResource/toAddResource").setViewName("plat/sys/resource/addResource.html");
         //修改资源
-        registry.addViewController("/sysResource/toUpdateResource").setViewName("plat/sys/resource/updateResource.html");
+        registry.addViewController("/sys/sysResource/toUpdateResource").setViewName("plat/sys/resource/updateResource.html");
 
         //添加任务
         registry.addViewController("/sysTask/toAddTask").setViewName("plat/sys/task/addTask.html");
